@@ -1,0 +1,53 @@
+-dontoptimize
+-dontusemixedcaseclassnames
+-keepattributes *Annotation*
+-dontpreverify
+-verbose
+-dontwarn android.support.**
+-ignorewarnings
+
+
+-keep public class com.google.vending.licensing.ILicensingService
+
+-keep public class com.android.vending.licensing.ILicensingService
+
+# keep setters in Views so that animations can still work.
+# see http://proguard.sourceforge.net/manual/examples.html#beans
+-keepclassmembers public class * extends android.view.View {
+    void set*(***);
+    *** get*();
+}
+
+# We want to keep methods in Activity that could be used in the XML attribute onClick
+-keepclassmembers class * extends android.app.Activity {
+    public void *(android.view.View);
+}
+
+-keep class * extends android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
+
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+# for runtime library############
+
+#-keep class com.sohu.android.plugin.** {*;}
+#-keep class com.sohu.push.** {*;}
+-keep class com.kercer.kerkee.** {*;}
+
+-keep class * implements com.sohu.push.notification.NotificationFilter {public *;}
+
+
+# Also keep - Enumerations. Keep the special static methods that are required in
+# enumeration classes.
+-keepclassmembers enum  * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Keep names - Native method names. Keep all native class/method names.
+-keepclasseswithmembers,allowshrinking class * {
+    native <methods>;
+}

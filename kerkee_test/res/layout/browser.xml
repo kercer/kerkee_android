@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/llTopNav"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@drawable/top_nav_bg"
+        android:orientation="horizontal" >
+
+        <include layout="@layout/header_nav_bar" />
+
+        <View
+            android:id="@+id/loadingProgressIndicator"
+            android:layout_width="0dip"
+            android:layout_height="2dip"
+            android:layout_alignParentBottom="true"
+            android:background="@color/oringe" />
+    </RelativeLayout>
+
+    <com.kercer.kerkee.webview.KCWebView
+        android:id="@+id/webview"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/bottom_bar_height"
+        android:background="@drawable/edit_panel_bg"
+        android:gravity="center_vertical" >
+
+        <ImageButton
+            android:id="@+id/btnBrowserBack"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/app_name"
+            android:saveEnabled="false"
+            android:src="@drawable/btn_browser_control_back_selector" />
+
+        <ImageButton
+            android:id="@+id/btnBrowserForward"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/btn_browser_control_forward_selector" />
+
+        <ImageButton
+            android:id="@+id/btnBrowserRefreshOrStopLoading"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/app_name"
+            android:saveEnabled="false"
+            android:src="@drawable/btn_browser_control_refresh_selector" />
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <CheckBox
+                android:id="@+id/cbBrowserBookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_browser_control_bookmark_selector"
+                android:button="@null"
+                android:enabled="false" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

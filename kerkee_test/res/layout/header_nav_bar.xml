@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/top_bar_height"
+                android:background="@drawable/top_nav_bg"
+                android:gravity="center_vertical"
+                >
+
+    <ImageButton
+            android:id="@+id/btnHeaderBarBack"
+            style="@style/home_top_nav_text_style"
+            android:contentDescription="@string/app_name" />
+
+    <TextView
+            android:id="@+id/tvHeaderBarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white_normal"
+            android:textSize="@dimen/header_text_size"
+            android:gravity="center"
+            android:singleLine="true"
+            android:layout_weight="1"/>
+    <ImageButton
+            android:id="@+id/btnSpace"
+            android:layout_width="48dip"
+            android:layout_height="fill_parent"
+            android:background="@null"
+            android:contentDescription="@string/app_name"/>
+
+
+</LinearLayout>

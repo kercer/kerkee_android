@@ -1,0 +1,26 @@
+bin/
+gen/
+obj/
+proguard/
+##libs/
+.classpath
+##.project
+##.cproject
+.settings
+pkgs/
+local.properties
+release.keystore
+.idea/
+out
+*.out
+artifacts
+project.properties
+.svn
+
+
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
