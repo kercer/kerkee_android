@@ -1,15 +1,7 @@
-//
-//  bridgeLib.js
-//  eNavi
-//
-//  Created by zihong on 14-2-10.
-//
-//
-
-(function ()
-{
+;(function (window) {
 	if (window.WebViewJSBridge)
 		return;
+
 	window.WebViewJSBridge = {};
 
 	console.log("--- jsBridgeClient init begin---");
@@ -25,8 +17,8 @@
 		callbackCache : [],
 		callbackId : 0,
 		processingMsg : false,
-
-		isReady : false
+		isReady : false,
+		isNotifyReady : false
 	};
 
 	ApiBridge.create = function ()
@@ -104,9 +96,9 @@
 	ApiBridge.log = function (msg)
 	{
 		ApiBridge.callNative("ApiBridge", "JSLog",
-		{
-			"msg" : msg
-		});
+			{
+				"msg" : msg
+			});
 	}
 
 	ApiBridge.getCallbackId = function ()
@@ -129,10 +121,16 @@
 		ApiBridge.callNative("ApiBridge", "onBridgeInitComplete", {}, callback);
 	}
 
-	ApiBridge.onNativeInitComplete = function ()
+	ApiBridge.onNativeInitComplete = function (callback)
 	{
 		ApiBridge.isReady = true;
 		console.log("--- jsBridgeClient onNativeInitComplete end ---");
+
+		if(callback){
+			callback();
+			ApiBridge.isNotifyReady = true;
+			console.log("--- device ready go--- ");
+		}
 	}
 
 	var jsBridgeClient = {};
@@ -142,26 +140,16 @@
 	// jsBridgeClient.Event.LOAD_PROGRESS = "load_progress";
 	jsBridgeClient.addEventListener = function (event, callback)
 	{
-		ApiBridge.callNative("jsBridgeClient", "addEventListener",
-		{
-			"event" : event
-		}, callback);
+		ApiBridge.callNative("event", "addEventListener",
+			{
+				"event" : event
+			}, callback);
 	}
 
 	/***************************************************************************
 	 * 接口
 	 **************************************************************************/
-
-	jsBridgeClient.onSetImage = function (srcSuffix, desUri)
-	{
-		// console.log("--- jsBridgeClient onSetImage ---");
-		var obj = document.querySelectorAll('img[src$="' + srcSuffix + '"]');
-		for (var i = 0; i < obj.length; ++i)
-		{
-			obj[i].src = desUri;
-		}
-	};
-
+	
 	jsBridgeClient.testJSBrige = function (aString)
 	{
 		ApiBridge.callNative("jsBridgeClient", "testJSBrige",
@@ -177,15 +165,46 @@
 			"info" : aString
 		}, callback);
 	}
+	
+
+	jsBridgeClient.onDeviceReady=function(handler)
+	{		
+		ApiBridge.onDeviceReady = handler;
+		
+		if (ApiBridge.isReady && !ApiBridge.isNotifyReady && handler)
+		{
+			console.log("-- device ready --");
+			handler();
+			ApiBridge.isNotifyReady = true;
+		}
+	};
+
+	jsBridgeClient.invoke=function(clz,method, args, callback){
+		if(callback){
+			ApiBridge.callNative(clz,method,args,callback);
+		}else{
+			ApiBridge.callNative(clz,method,args);
+		}
+	};
+
+	jsBridgeClient.onSetImage = function (srcSuffix, desUri)
+	{
+		// console.log("--- jsBridgeClient onSetImage ---");
+		var obj = document.querySelectorAll('img[src$="' + srcSuffix + '"]');
+		for (var i = 0; i < obj.length; ++i)
+		{
+			obj[i].src = desUri;
+		}
+	};
 
 	/* 滚动到页面底部时的回调函数 以及 设置的阀值 */
 	// 先用一个对象保存回调，后期统一优化
 	jsBridgeClient.registerHitPageBottomListener = function (callback, threshold)
 	{
 		ApiBridge.callNative("ApiBridge", "setHitPageBottomThreshold",
-		{
-			"threshold" : threshold
-		});
+			{
+				"threshold" : threshold
+			});
 		jsBridgeClient.onHitPageBottom = callback;
 	};
 
@@ -206,9 +225,9 @@
 		this.onreadystatechange = undefined;
 
 		ApiBridge.callNative('XMLHttpRequest', 'create',
-		{
-			"id" : this.id
-		});
+			{
+				"id" : this.id
+			});
 	}
 
 	_XMLHttpRequest.globalId = 0;
@@ -251,19 +270,19 @@
 	_XMLHttpRequest.prototype.open = function (method, url, async)
 	{
 		ApiBridge.callNative('XMLHttpRequest', 'open',
-		{
-			"id" : this.id,
-			"method" : method,
-			"url" : url,
-			"scheme" : window.location.protocol,
-			"host": window.location.host,
-			"port" : window.location.port,
-			"href" : window.location.href,
-			"referer" : document.referrer != "" ? document.referrer : null,
-			"useragent" : navigator.userAgent,
-			"cookie" : document.cookie != "" ? document.cookie : null,
-			"async"  : async
-		});
+			{
+				"id" : this.id,
+				"method" : method,
+				"url" : url,
+				"scheme" : window.location.protocol,
+				"host": window.location.hostname,
+				"port" : window.location.port,
+				"href" : window.location.href,
+				"referer" : document.referrer != "" ? document.referrer : null,
+				"useragent" : navigator.userAgent,
+				"cookie" : document.cookie != "" ? document.cookie : null,
+				"async"  : async
+			});
 	}
 
 	_XMLHttpRequest.prototype.send = function (data)
@@ -271,42 +290,42 @@
 		if (data != null)
 		{
 			ApiBridge.callNative('XMLHttpRequest', 'send',
-			{
-				"id" : this.id,
-				"data" : data
-			});
+				{
+					"id" : this.id,
+					"data" : data
+				});
 		}
 		else
 		{
 			ApiBridge.callNative('XMLHttpRequest', 'send',
-			{
-				"id" : this.id
-			});
+				{
+					"id" : this.id
+				});
 		}
 	}
 	_XMLHttpRequest.prototype.overrideMimeType = function (mimetype)
 	{
 		ApiBridge.callNative('XMLHttpRequest', 'overrideMimeType',
-		{
-			"id" : this.id,
-			"mimetype" : mimetype
-		});
+			{
+				"id" : this.id,
+				"mimetype" : mimetype
+			});
 	}
 	_XMLHttpRequest.prototype.abort = function ()
 	{
 		ApiBridge.callNative('XMLHttpRequest', 'abort',
-		{
-			"id" : this.id
-		});
+			{
+				"id" : this.id
+			});
 	}
 	_XMLHttpRequest.prototype.setRequestHeader = function (headerName, headerValue)
 	{
 		ApiBridge.callNative('XMLHttpRequest', 'setRequestHeader',
-		{
-			"id" : this.id,
-			"headerName" : headerName,
-			"headerValue" : headerValue
-		});
+			{
+				"id" : this.id,
+				"headerName" : headerName,
+				"headerValue" : headerValue
+			});
 	}
 	_XMLHttpRequest.prototype.getAllResponseHeaders = function ()
 	{
@@ -371,22 +390,22 @@
 	}
 
 	/***************************************************************************
-	 * 
+	 *
 	 **************************************************************************/
 
-	var windowOpen = function (url)
+	/*var windowOpen = function (url)
 	{
 		ApiBridge.callNative("JavascriptAPIInterceptor", "windowOpen",
-		{
-			"url" : url
-		});
-	};
+			{
+				"url" : url
+			});
+	};*/
 
 	// 注册对象
 	global.ApiBridge = ApiBridge;
 	global.jsBridgeClient = jsBridgeClient;
-	global.open = windowOpen;
-	global.console.log = ApiBridge.log;
+	//global.open = windowOpen;
+	//global.console.log = ApiBridge.log;
 	global.XMLHttpRequest = _XMLHttpRequest;
 
 	jsBridgeClient.register = function (_window)
@@ -398,11 +417,15 @@
 		_window.open = window.open;
 	};
 
-	ApiBridge.onBridgeInitComplete(function ()
-	{
-		ApiBridge.onNativeInitComplete();
+	ApiBridge.onBridgeInitComplete(function (){
+		
+		
+		ApiBridge.onNativeInitComplete( ApiBridge.onDeviceReady );
+		
+//		jsBridgeClient.onDeviceReady(function(){
+//			alert('onDeviceReady');
+//		});
+
 	});
 
-	console.log("--- jsBridgeClient init end ---");
-
-})();
+})(window);

@@ -17,7 +17,8 @@
 		callbackCache : [],
 		callbackId : 0,
 		processingMsg : false,
-		isReady : false
+		isReady : false,
+		isNotifyReady : false
 	};
 
 	ApiBridge.create = function ()
@@ -124,8 +125,10 @@
 	{
 		ApiBridge.isReady = true;
 		console.log("--- jsBridgeClient onNativeInitComplete end ---");
+
 		if(callback){
 			callback();
+			ApiBridge.isNotifyReady = true;
 			console.log("--- device ready go--- ");
 		}
 	}
@@ -146,14 +149,6 @@
 	/***************************************************************************
 	 * 接口
 	 **************************************************************************/
-
-	jsBridgeClient.nativeCallPage=function(msg,fn){
-		var _msg=msg;
-		if(fn){
-			fn();
-		}
-		return _msg;
-	};
 	
 	jsBridgeClient.testJSBrige = function (aString)
 	{
@@ -172,14 +167,15 @@
 	}
 	
 
-	jsBridgeClient.onDeviceReady=function(handler){
-		if(ApiBridge.isReady && handler){
-			console.log("--- device ready --- ");
+	jsBridgeClient.onDeviceReady=function(handler)
+	{		
+		ApiBridge.onDeviceReady = handler;
+		
+		if (ApiBridge.isReady && !ApiBridge.isNotifyReady && handler)
+		{
+			console.log("-- device ready --");
 			handler();
-		}else{
-			ApiBridge.onBridgeInitComplete(function (){
-				ApiBridge.onNativeInitComplete();
-			});
+			ApiBridge.isNotifyReady = true;
 		}
 	};
 
@@ -422,7 +418,14 @@
 	};
 
 	ApiBridge.onBridgeInitComplete(function (){
-		ApiBridge.onNativeInitComplete();
+		
+		
+		ApiBridge.onNativeInitComplete( ApiBridge.onDeviceReady );
+		
+//		jsBridgeClient.onDeviceReady(function(){
+//			alert('onDeviceReady');
+//		});
+
 	});
 
 })(window);
