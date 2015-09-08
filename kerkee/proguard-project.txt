@@ -59,14 +59,6 @@
 -dontwarn android.support.**
 
 
--keepclassmembers class com.sohu.push.deploy.nativeapi.LockNativeApi {
-   public void nativeLockEvent(int,java.lang.String);
-}
-
--keepclassmembers class com.sohu.push.deploy.nativeapi.PushNativeApi {
-   public void nativeArrivedMessage(long,byte[]);
-}
-
 -keep class com.kercer.kerkee.bridge.** {public *;}
 -keep class com.kercer.kerkee.browser.KCJSBridge {public *;}
 -keep class com.kercer.kerkee.log.KCLog {public *;}
