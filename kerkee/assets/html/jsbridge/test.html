@@ -1,6 +1,8 @@
-﻿<html>
+﻿<!DOCTYPE html>
+<html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 <title>Test</title>
 <script type="text/javascript">
 	
@@ -16,6 +18,11 @@
 		onclick="jsBridgeClient.testJSBrige('abcd'); ">
 	<input type="button" value="commonApi"
 		onclick="jsBridgeClient.commonApi('子鸿', function(json){console.log(JSON.stringify(json))}); ">
+		
+	<input type="button" value="addEventListener"
+		onclick="jsBridgeClient.addEventListener('eventname', function(){alert('add eventListener ok!')}); ">
+	
+		
 	<hr />
 	<script type="text/javascript">
 		function loadXMLDocGet ()
@@ -34,6 +41,7 @@
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
 				{
 					document.getElementById("myDivGet").innerHTML = xmlhttp.responseText;
+					console.log(xmlhttp.responseText);
 				}
 			}
 			xmlhttp.open("GET", "http://www.w3school.com.cn/ajax/demo_get.asp", true);
