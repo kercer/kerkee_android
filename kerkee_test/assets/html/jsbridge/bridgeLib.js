@@ -133,12 +133,24 @@
 		}
 	}
 	
-	ApiBridge.compile = function (aIdentity, aString)
+	ApiBridge.compile = function (aIdentity, aJS)
 	{
+		var value;
+		var error;
+		try 
+		{
+			value = eval(aJS);
+		}
+		catch(err) 
+		{
+			error = err;
+		}
+		
 		ApiBridge.callNative("ApiBridge", "compile",
 		{
 			"identity": aIdentity,
-			"returnValue" : aString
+			"returnValue" : value,
+			"error": error
 		});
 	}
 	

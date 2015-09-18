@@ -24,13 +24,8 @@ public class KCJSCompileExecutor
 		
 		String escapedJavascript = aJS.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"", "\\\\\"");
 		String finalCode = 
-				"try { " +
 					"ApiBridge.compile(" + mIdentity + 
-					", eval(\"" + escapedJavascript + "\"));" +
-				"} catch(err) {" +
-					"ApiBridge.compile(" + mIdentity +
-					", '');" +
-				"}";
+					", \"" + escapedJavascript + "\");";
 		KCLog.v( finalCode);
 		
 		KCJSExecutor.callJS(aWebview, finalCode);

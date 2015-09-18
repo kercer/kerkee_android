@@ -24,7 +24,6 @@ public class NewApiTest
 			@Override
 			public void returnCallback(Object aObject)
 			{
-				// TODO Auto-generated method stub
 				String a = (String) aObject;
 				KCLog.i(a);
 			}

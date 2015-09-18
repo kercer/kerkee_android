@@ -168,6 +168,18 @@ public class KCApiBridge
     {
     	String returnValue = aArgList.getArgValueString("returnValue");
     	String identity = aArgList.getArgValueString("identity");
+//    	String error = aArgList.getArgValueString("error");
+    	
+//    	JSONObject json = null;
+//    	try
+//		{
+//			 json = new JSONObject(returnValue);
+//		}
+//		catch (JSONException e)
+//		{
+//			e.printStackTrace();
+//		}
+    	
     	KCJSCompileExecutor.didCompile(Integer.valueOf(identity), returnValue);
     }
     
