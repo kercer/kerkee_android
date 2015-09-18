@@ -132,6 +132,28 @@
 			console.log("--- device ready go--- ");
 		}
 	}
+	
+	ApiBridge.compile = function (aIdentity, aJS)
+	{
+		var value;
+		var error;
+		try 
+		{
+			value = eval(aJS);
+		}
+		catch(err) 
+		{
+			error = err;
+		}
+		
+		ApiBridge.callNative("ApiBridge", "compile",
+		{
+			"identity": aIdentity,
+			"returnValue" : value,
+			"error": error
+		});
+	}
+	
 
 	var jsBridgeClient = {};
 	jsBridgeClient.Event = {};
@@ -145,6 +167,10 @@
 				"event" : event
 			}, callback);
 	}
+	
+
+	
+	
 
 	/***************************************************************************
 	 * 接口
