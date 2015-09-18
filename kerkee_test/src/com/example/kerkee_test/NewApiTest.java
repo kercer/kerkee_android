@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import com.kercer.kerkee.browser.KCJSBridge;
 import com.kercer.kerkee.bridge.KCArgList;
 import com.kercer.kerkee.bridge.KCJSDefine;
+import com.kercer.kerkee.bridge.KCJSCompileExecutor;
+import com.kercer.kerkee.bridge.KCReturnCallback;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.webview.KCWebView;
 
@@ -17,6 +19,18 @@ public class NewApiTest
 {
     public static void testJSBrige(final KCWebView aWebView, KCArgList aArgList)
     {
+    	KCJSCompileExecutor.compileJS(aWebView, "document.title", new KCReturnCallback()
+		{			
+			@Override
+			public void returnCallback(Object aObject)
+			{
+				// TODO Auto-generated method stub
+				String a = (String) aObject;
+				KCLog.i(a);
+			}
+		});
+    	
+    	
         String str = aArgList.toString();
         Toast.makeText(aWebView.getContext(), str,
                 Toast.LENGTH_SHORT).show();

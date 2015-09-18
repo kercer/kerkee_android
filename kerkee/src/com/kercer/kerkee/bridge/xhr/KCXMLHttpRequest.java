@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.kercer.kerkee.bridge.KCApiBridge;
+import com.kercer.kerkee.bridge.KCJSExecutor;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.net.KCHttpClient;
 import com.kercer.kerkee.util.KCUtil;
@@ -428,7 +429,7 @@ public class KCXMLHttpRequest
 
     private void callJSSetProperties(KCWebView webView, String jsonStr)
     {
-        KCApiBridge.callJSFunctionOnMainThread(webView, "XMLHttpRequest.setProperties", jsonStr);
+    	KCJSExecutor.callJSFunctionOnMainThread(webView, "XMLHttpRequest.setProperties", jsonStr);
     }
 
     private void closeHttpEntity(HttpEntity en)

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.bridge.KCClass;
+import com.kercer.kerkee.bridge.KCJSExecutor;
 import com.kercer.kerkee.net.KCHttpServer;
 import com.kercer.kerkee.util.KCAssetTool;
 import com.kercer.kerkee.webview.KCWebView;
@@ -70,37 +71,37 @@ public class KCJSBridge
 
     public static void callJSOnMainThread(final KCWebView aWebview, final String aJS)
     {
-        KCApiBridge.callJSOnMainThread(aWebview, aJS);
+    	KCJSExecutor.callJSOnMainThread(aWebview, aJS);
     }
     
     public static void callJS(final KCWebView aWebview, final String aJS)
     {
-        KCApiBridge.callJS(aWebview, aJS);
+    	KCJSExecutor.callJS(aWebview, aJS);
     }
     
     public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aArgs)
     {
-        KCApiBridge.callJSFunctionOnMainThread(aWebview, aFunName, aArgs);
+    	KCJSExecutor.callJSFunctionOnMainThread(aWebview, aFunName, aArgs);
     }
 
     public static void callbackJS(KCWebView aWebview, String aCallbackId)
     {
-        KCApiBridge.callbackJS(aWebview, aCallbackId);
+    	KCJSExecutor.callbackJS(aWebview, aCallbackId);
     }
     
     public static void callbackJS(KCWebView aWebview, String aCallbackId, String aStr)
     {
-        KCApiBridge.callbackJS(aWebview, aCallbackId, aStr);
+    	KCJSExecutor.callbackJS(aWebview, aCallbackId, aStr);
     }
     
     public static void callbackJS(KCWebView aWebview, String aCallbackId, JSONObject aJSONObject)
     {
-        KCApiBridge.callbackJS(aWebview, aCallbackId, aJSONObject);
+    	KCJSExecutor.callbackJS(aWebview, aCallbackId, aJSONObject);
     }
 
     public static void callbackJS(KCWebView aWebview, String aCallbackId, JSONArray aJSONArray)
     {
-        KCApiBridge.callbackJS(aWebview, aCallbackId, aJSONArray);
+    	KCJSExecutor.callbackJS(aWebview, aCallbackId, aJSONArray);
     }
     
     

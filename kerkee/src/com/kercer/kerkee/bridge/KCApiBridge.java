@@ -1,8 +1,5 @@
 package com.kercer.kerkee.bridge;
 
-import java.io.File;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,7 +7,6 @@ import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.net.KCHttpServer;
 import com.kercer.kerkee.util.KCTaskExecutor;
-import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee.webview.KCWebView;
 
@@ -46,7 +42,7 @@ public class KCApiBridge
             mJS += "document.getElementsByTagName('head')[0].appendChild(scriptBlock);";
         }
         
-        callJSOnMainThread(aWebview, mJS);
+        KCJSExecutor.callJSOnMainThread(aWebview, mJS);
     }
 
     public static boolean registClass(KCClass aClass)
@@ -151,7 +147,7 @@ public class KCApiBridge
 
     public static void callbackJSOnHitPageBottom(KCWebView aWebview)
     {
-        callJS(aWebview, "if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom()");
+    	KCJSExecutor.callJS(aWebview, "if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom()");
     }
 
     public static void JSLog(KCWebView aWebview, JSONObject aJSONObject)
@@ -159,13 +155,23 @@ public class KCApiBridge
         KCLog.e(aJSONObject.toString());
     }
     
+    
     public static void onBridgeInitComplete(KCWebView aWebView, KCArgList aArgList)
     {
         KCLog.e(aArgList.toString());
         aWebView.documentReady(true);
         String callbackId = (String)aArgList.getArgValue(KCJSDefine.kJS_callbackId);
-        callbackJS(aWebView, callbackId);
+        KCJSExecutor.callbackJS(aWebView, callbackId);
     }
+    
+    public static void compile(KCWebView aWebView, KCArgList aArgList)
+    {
+    	String returnValue = aArgList.getArgValueString("returnValue");
+    	String identity = aArgList.getArgValueString("identity");
+    	KCJSCompileExecutor.didCompile(Integer.valueOf(identity), returnValue);
+    }
+    
+    
 
     /**
      * @param aWebview
@@ -200,77 +206,8 @@ public class KCApiBridge
     
     
     
-    /********************************************************/
-    /*
-     * js opt
-     */
-    /********************************************************/
     
-    public static void callJSOnMainThread(final KCWebView aWebview, final String aJS)
-    {
-        KCTaskExecutor.runTaskOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                aWebview.loadUrlExt("javascript:" + aJS);
-            }
-        });
-    }
     
-    public static void callJS(final KCWebView aWebview, final String aJS)
-    {
-        if (aWebview == null)
-            return;
-        aWebview.loadUrlExt("javascript:" + aJS);
-    }
-    
-    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aArgs)
-    {
-        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append(aFunName).append('(');
-        if (aArgs != null)
-            sb.append(aArgs);
-        sb.append(')');
-        callJSOnMainThread(aWebview, sb.toString());
-    }
-    
-    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aArgs1, String aArgs2)
-    {
-        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append(aFunName).append('(');
-        if (aArgs1 != null)
-            sb.append(aArgs1);
-        if (aArgs2 != null) {
-        	sb.append(','+aArgs2);
-        }
-        sb.append(')');
-        callJSOnMainThread(aWebview, sb.toString());
-    }
 
-    public static void callbackJS(KCWebView aWebview, String aCallbackId)
-    {
-        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append("ApiBridge.onCallback(").append(aCallbackId).append(')');
-        callJSOnMainThread(aWebview, sb.toString());
-    }
-    
-    public static void callbackJS(KCWebView aWebview, String aCallbackId, String aStr)
-    {
-        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append("ApiBridge.onCallback(");
-        sb.append(aCallbackId).append(", '").append(aStr).append("')");
-        callJSOnMainThread(aWebview, sb.toString());
-    }
-    
-    public static void callbackJS(KCWebView aWebview, String aCallbackId, JSONObject aJSONObject)
-    {
-        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append("ApiBridge.onCallback(");
-        sb.append(aCallbackId).append(',').append(aJSONObject.toString()).append(')');
-        callJSOnMainThread(aWebview, sb.toString());
-    }
-
-    public static void callbackJS(KCWebView aWebview, String aCallbackId, JSONArray aJSONArray)
-    {
-        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append("ApiBridge.onCallback(");
-        sb.append(aCallbackId).append(',').append(aJSONArray.toString()).append(')');
-        callJSOnMainThread(aWebview, sb.toString());
-    }
 
 }

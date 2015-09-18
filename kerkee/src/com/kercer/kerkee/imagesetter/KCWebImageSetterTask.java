@@ -1,6 +1,7 @@
 package com.kercer.kerkee.imagesetter;
 
 import com.kercer.kerkee.bridge.KCApiBridge;
+import com.kercer.kerkee.bridge.KCJSExecutor;
 import com.kercer.kerkee.net.uri.KCURI;
 import com.kercer.kerkee.webview.KCWebView;
 
@@ -36,7 +37,7 @@ public class KCWebImageSetterTask
     public void executeTask()
     {
         final String srcSuffix = mUrl.substring(mUrl.lastIndexOf('/') + 1);
-        KCApiBridge.callJSOnMainThread(mWebView, "jsBridgeClient.onSetImage('" + srcSuffix + "','" + mUri.toString() + "')");
+        KCJSExecutor.callJSOnMainThread(mWebView, "jsBridgeClient.onSetImage('" + srcSuffix + "','" + mUri.toString() + "')");
     }
     
 }
