@@ -15,4 +15,8 @@ public class KCJSDefine
     
     //arg key
     public final static String kJS_callbackId = "callbackId";
+    public final static String kJS_returnValue = "returnValue";
+    public final static String kJS_identity = "identity";
+    public final static String kJS_error = "error";
+    
 }

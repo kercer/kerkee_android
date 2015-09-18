@@ -166,9 +166,9 @@ public class KCApiBridge
     
     public static void compile(KCWebView aWebView, KCArgList aArgList)
     {
-    	String returnValue = aArgList.getArgValueString("returnValue");
-    	String identity = aArgList.getArgValueString("identity");
-//    	String error = aArgList.getArgValueString("error");
+    	String returnValue = aArgList.getArgValueString(KCJSDefine.kJS_returnValue);
+    	String identity = aArgList.getArgValueString(KCJSDefine.kJS_identity);
+//    	String error = aArgList.getArgValueString(KCJSDefine.kJS_error);
     	
 //    	JSONObject json = null;
 //    	try
