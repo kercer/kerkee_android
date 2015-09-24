@@ -1,9 +1,11 @@
-package com.example.kerkee_test;
+package com.kercer.kerkee.activity;
 
 import java.io.File;
 
-import com.example.kerkee_test.R;
+import com.kercer.kerkee.api.KCApiJSBridgeClient;
+import com.kercer.kerkee.api.KCRegistMgr;
 import com.kercer.kerkee.browser.KCDefaultBrowser;
+import com.kercer.kerkee_example.R;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -29,8 +31,11 @@ public class MainActivity extends Activity
         KCDefaultBrowser browser = new KCDefaultBrowser(this);
         View view = browser.getView();
         setContentView(view);
-//        KCApiBridge.registClass("jsBridgeClient", NewApiTest.class);
-        browser.registJSBridgeClient(NewApiTest.class);
+        
+        //regist classes to JSBridge，the relationship between binding js objects and native classes
+        //and you can use default browser'b registJSBridgeClient function
+        KCRegistMgr.registClass();
+//        browser.registJSBridgeClient(KCApiJSBridgeClient.class);
         
 //        String resPath = browser.getResRootPath();
 //        String filePath = resPath + "/jsbridge/test.html";

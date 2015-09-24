@@ -1,4 +1,4 @@
-package com.example.kerkee_test;
+package com.kercer.kerkee.api;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 
 
-public class NewApiTest
+public class KCApiJSBridgeClient
 {
     public static void testJSBrige(final KCWebView aWebView, KCArgList aArgList)
     {

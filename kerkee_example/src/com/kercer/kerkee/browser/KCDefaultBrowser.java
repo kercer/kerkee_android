@@ -16,12 +16,12 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.kerkee_test.R;
 import com.kercer.kerkee.browser.page.KCPage;
 import com.kercer.kerkee.net.KCHttpServer;
 import com.kercer.kerkee.webview.KCWebChromeClient;
 import com.kercer.kerkee.webview.KCWebView;
 import com.kercer.kerkee.webview.KCWebViewClient;
+import com.kercer.kerkee_example.R;
 
 /**
  * 

@@ -86,9 +86,10 @@ public class KCWebViewClient extends WebViewClient
     @Override
     public WebResourceResponse shouldInterceptRequest(final WebView aWebView, final String aUrl)
     {
-    	//临时解决有时图片不能通过JS setImage设置成功的问题
-    	return super.shouldInterceptRequest(aWebView, aUrl);
-        /*KCWebView webView = (KCWebView)aWebView;
+//    	//临时解决有时图片不能通过JS setImage设置成功的问题
+//    	return super.shouldInterceptRequest(aWebView, aUrl);
+    	
+        KCWebView webView = (KCWebView)aWebView;
         
         String strMimeType = getFileMimeType(aUrl);
         if (strMimeType == null)
@@ -108,7 +109,7 @@ public class KCWebViewClient extends WebViewClient
             WebResourceResponse res = new WebResourceResponse(strMimeType, "utf-8", stream);
             return res;
         } 
-        return super.shouldInterceptRequest(aWebView, aUrl);*/
+        return super.shouldInterceptRequest(aWebView, aUrl);
     }
 
     
