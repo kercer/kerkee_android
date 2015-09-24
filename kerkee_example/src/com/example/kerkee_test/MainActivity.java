@@ -49,12 +49,6 @@ public class MainActivity extends Activity
 //       browser.loadUrl("http://119.90.33.14/integral/index.jsp");
 //        browser.loadUrl("http://182.92.184.220/hj/hi/index.html");
         
-        
-
-//        if (savedInstanceState == null)
-//        {
-//            getFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
-//        }
     }
 
     @Override
@@ -79,23 +73,5 @@ public class MainActivity extends Activity
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    /**
-//     * A placeholder fragment containing a simple view.
-//     */
-//    public static class PlaceholderFragment extends Fragment
-//    {
-//
-//        public PlaceholderFragment()
-//        {
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-//        {
-//            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-//            return rootView;
-//        }
-//    }
 
 }
