@@ -37,22 +37,8 @@ public class MainActivity extends Activity
         KCRegistMgr.registClass();
 //        browser.registJSBridgeClient(KCApiJSBridgeClient.class);
         
-//        String resPath = browser.getResRootPath();
-//        String filePath = resPath + "/jsbridge/test.html";
-//        
-//        File sdPath =Environment.getExternalStorageDirectory();
-//        String desPath =  sdPath+"/test.html";
-//        String url = "file://" + desPath;
-//        boolean bResult = KCNativeUtil.copyFile(filePath, desPath);
-        
-//        browser.loadUrl(url);
-        
         browser.loadTestPage();
-//        browser.loadUrl("http://hd.enavi.189.cn/integral/active/listofnotice.htm");
-//        browser.loadUrl("http://119.90.33.14//integral/active/listofnotice.htm");
 //        browser.loadUrl("http://www.baidu.com");
-//       browser.loadUrl("http://119.90.33.14/integral/index.jsp");
-//        browser.loadUrl("http://182.92.184.220/hj/hi/index.html");
         
     }
 

@@ -14,7 +14,11 @@ import com.kercer.kerkee.webview.KCWebView;
 import android.widget.Toast;
 
 
-
+/**
+ * This is a JS object API, the JS object is jsBridgeClient
+ * @author zihong
+ *
+ */
 public class KCApiJSBridgeClient
 {
     public static void testJSBrige(final KCWebView aWebView, KCArgList aArgList)
