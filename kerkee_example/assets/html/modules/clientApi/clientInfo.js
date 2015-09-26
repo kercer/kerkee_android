@@ -137,6 +137,38 @@ define(['api/helper/util'], function (util) {
             },
 
             /**
+             * 获取当前客户端的文章内容请求字段
+             * @method getArticleNeedParam
+             * @public
+             * @param {Function} callBack 回调函数
+             * @return {Object}
+             * {
+             *    param: "newsId=58374047&subId=7614&from=newslite&channelId=1&position=2&page=1&cmt=2335",
+             *    secondProtocal: "news://newsId=58374047&subId=7614&from=newslite&channelId=1&position=2&page=1&cmt=2335"
+             * }
+             * <p>主要字段</p>
+             * <table>
+             * <tr><th>字段名称</th><th>字段说明</th></tr>
+             * <tr><td>param</td><td>文章请求参数关键字段</td></tr>
+             * <tr><td>secondProtocal</td><td>新闻二代协议</td></tr>
+             * </table>
+             * @example
+             *      clientInfo.getHost(function(host){
+             *          console.log(host.info);
+             * 	    }
+             * @since 1.0.0
+             */
+            getArticleNeedParam: function (callBack) {
+                this.sendData({
+                    method: "getArticleNeedParam",
+                    param: {
+                        "info": "getArticleNeedParam"
+                    },
+                    callBack: callBack
+                });
+            },
+
+            /**
              * h5调用native的log收集器
              * @method addLog
              * @public
@@ -236,6 +268,25 @@ define(['api/helper/util'], function (util) {
                 });
             },
 
+
+            /**
+             * 设置正文评论数
+             * @method setArticleCmtCount
+             * @public
+             * @param {String} count 评论数量
+             * @return {Null} void
+             * @example
+             * 	   clientInfo.setArticleCmtCount("20");
+             * @since 1.0.0
+             */
+            setArticleCmtCount: function (count) {
+                this.sendData({
+                    method: "setArticleCmtCount",
+                    param: {
+                        "count": count
+                    }
+                });
+            }
         });
 
         return ClientInfo;
