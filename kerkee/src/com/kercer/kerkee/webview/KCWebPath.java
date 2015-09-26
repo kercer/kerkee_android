@@ -60,7 +60,7 @@ public class KCWebPath
     
     public String getJSBridgeRelativePath()
     {
-        return "/jsbridge/bridgeLib.js";
+        return "/bridgeLib.js";
     }
     
     public String getWebImageCacheRelativePath()

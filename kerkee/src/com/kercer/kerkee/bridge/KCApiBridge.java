@@ -42,7 +42,7 @@ public class KCApiBridge
             mJS += "document.getElementsByTagName('head')[0].appendChild(scriptBlock);";
         }
         
-        KCJSExecutor.callJSOnMainThread(aWebview, mJS);
+//        KCJSExecutor.callJSOnMainThread(aWebview, mJS);
     }
 
     public static boolean registClass(KCClass aClass)
