@@ -1,54 +1,22 @@
 package com.kercer.kerkee.imagesetter;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.Context;
+import android.util.Base64;
 
 public class KCDefaultImageStream
 {
 
+	//data:image/png;base64,
+	//Transparent image
+	private final static String mDefaultImageBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAaSURBVHjaYvz//z8DMYCJgUgwqpA6CgECDADVEgMRar6RXAAAAABJRU5ErkJggg==";
 	private byte[] data = new byte[0];
 
 	public KCDefaultImageStream(Context aContext)
-	{
-		InputStream input = null;
-		try
-		{
-			input = aContext.getAssets().open("native_replace.png");
-			save(input);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			if (input != null)
-			{
-				try
-				{
-					input.close();
-				}
-				catch (Exception e)
-				{
-				}
-			}
-		}
-	}
-
-	private void save(InputStream input) throws IOException
-	{
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		byte[] buffer = new byte[200];
-		int len = -1;
-		while ((len = input.read(buffer)) != -1)
-		{
-			output.write(buffer, 0, len);
-		}
-		data = output.toByteArray();
+	{			
+		data = Base64.decode(mDefaultImageBase64, Base64.DEFAULT);  
 	}
 
 	public InputStream getInputStream()

@@ -163,4 +163,11 @@ public class KCUtilIO
 		return is;
 	}
 
+	public static byte[] toByteArray(InputStream input) throws IOException
+	{
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		copyStream(input, output, null);
+		return output.toByteArray();
+	}
+
 }
