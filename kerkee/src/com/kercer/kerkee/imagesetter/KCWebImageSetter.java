@@ -85,7 +85,7 @@ public class KCWebImageSetter extends Thread
         {
             pendingTasks.add(aTask);
             pendingTasks.notifyAll();
-            KCLog.i("addTask succeeded:" + aTask.mUrl);
+//            KCLog.i("addTask succeeded:" + aTask.mUrl);
         }
     }
 

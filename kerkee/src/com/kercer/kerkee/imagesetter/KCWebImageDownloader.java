@@ -214,7 +214,7 @@ public class KCWebImageDownloader
             this.mTmpDestFile = aTmpDestFile;
             this.mDestFilePath = aDestFilePath;
             this.mWebView = aWebView;
-            KCLog.i("download image: " + aUri + ", " + aDestFilePath);
+//            KCLog.i("download image: " + aUri + ", " + aDestFilePath);
         }
 
         public void onProgressUpdate(long downloadedBytes, long fileLength)
@@ -266,7 +266,7 @@ public class KCWebImageDownloader
                 e.printStackTrace();
             }
             
-            KCLog.i("download image succeeded: " + mUri.toString() + ", " + mDestFilePath);
+//            KCLog.i("download image succeeded: " + mUri.toString() + ", " + mDestFilePath);
         }
 
         public void onError(Exception e)

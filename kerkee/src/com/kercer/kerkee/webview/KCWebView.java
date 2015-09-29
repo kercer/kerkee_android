@@ -175,8 +175,8 @@ public class KCWebView extends WebView
 
         try
         {
-            if (KCLog.DEBUG)
-                KCLog.i(">>>> loadUrl1: " + url + ", " + additionalHttpHeaders);
+//            if (KCLog.DEBUG)
+//                KCLog.i(">>>> loadUrl1: " + url + ", " + additionalHttpHeaders);
             super.loadUrl(url, additionalHttpHeaders);
         }
         catch (Exception e)
@@ -197,8 +197,8 @@ public class KCWebView extends WebView
 
         try
         {
-            if (KCLog.DEBUG)
-                KCLog.i(">>>> loadUrl2: " + url);
+//            if (KCLog.DEBUG)
+//                KCLog.i(">>>> loadUrl2: " + url);
             super.loadUrl(url);
         }
         catch (Exception e)
