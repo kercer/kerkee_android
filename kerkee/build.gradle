@@ -2,7 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'android-library'
 
-
+def kerkeeNdkLibsDir = new File("$buildDir/kerkee-ndk/all")
 def thirdPartyNdkDir = new File("$buildDir/third-party-ndk")
 
 
@@ -67,12 +67,13 @@ def getNdkBuildFullPath() {
 
 task buildKerkeeNdkLib(dependsOn: [prepareThird], type: Exec) {
     inputs.file('jni')
-    outputs.dir("$buildDir/kerkee-ndk/all")
+//    outputs.dir("$kerkeeNdkLibsDir")
+    outputs.file("$kerkeeNdkLibsDir")
     commandLine getNdkBuildFullPath(),
 //            'NDK_PROJECT_PATH=null',
             "NDK_APPLICATION_MK=$projectDir/jni/Application.mk",
             'NDK_OUT=' + temporaryDir,
-            "NDK_LIBS_OUT=$buildDir/kerkee-ndk/all",
+            "NDK_LIBS_OUT=$kerkeeNdkLibsDir",
             "THIRD_PARTY_NDK_DIR=$thirdPartyNdkDir",
             '-C', file('jni').absolutePath,
             '--jobs', Runtime.runtime.availableProcessors()
@@ -86,7 +87,7 @@ task cleanKerkeeNdkLib(type: Exec) {
 }
 
 task packageKerkeeNdkLibs(dependsOn: buildKerkeeNdkLib, type: Copy) {
-    from "$buildDir/kerkee-ndk/all"
+    from "$kerkeeNdkLibsDir"
 //    exclude '**/libjsc.so'
     into "libs"
 }
