@@ -1,5 +1,6 @@
 bin/
 gen/
+# Android/IJ
 obj/
 proguard/
 ##libs/
@@ -8,15 +9,23 @@ proguard/
 ##.cproject
 .settings
 pkgs/
-local.properties
 release.keystore
-.idea/
 out
 *.out
 artifacts
 project.properties
 .svn
+build/
 
+local.properties
+*.iml
+.idea/
+.gradle
+
+# Node
+node_modules
+*.log
+.nvm
 
 ## generic files to ignore
 *~
