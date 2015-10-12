@@ -93,7 +93,7 @@ task packageKerkeeNdkLibs(dependsOn: buildKerkeeNdkLib, type: Copy) {
 }
 
 android {
-    compileSdkVersion 14
+    compileSdkVersion 19
     buildToolsVersion "23.0.1"
 
     defaultConfig {
