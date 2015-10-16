@@ -40,7 +40,7 @@ public class KCUtilIO
 	 * @return <b>true</b> - if stream copied successfully; <b>false</b> - if copying was interrupted by listener
 	 * @throws IOException
 	 */
-	public static boolean copyStream(InputStream is, OutputStream os, CopyListener listener) throws IOException
+	public static boolean copyStream(InputStream is, OutputStream os, KCCopyListener listener) throws IOException
 	{
 		return copyStream(is, os, listener, DEFAULT_BUFFER_SIZE);
 	}
@@ -60,7 +60,7 @@ public class KCUtilIO
 	 * @return <b>true</b> - if stream copied successfully; <b>false</b> - if copying was interrupted by listener
 	 * @throws IOException
 	 */
-	public static boolean copyStream(InputStream is, OutputStream os, CopyListener listener, int bufferSize) throws IOException
+	public static boolean copyStream(InputStream is, OutputStream os, KCCopyListener listener, int bufferSize) throws IOException
 	{
 		int current = 0;
 		int total = is.available();
@@ -84,7 +84,7 @@ public class KCUtilIO
 		return true;
 	}
 
-	private static boolean shouldStopLoading(CopyListener listener, int current, int total)
+	private static boolean shouldStopLoading(KCCopyListener listener, int current, int total)
 	{
 		if (listener != null)
 		{
@@ -138,7 +138,7 @@ public class KCUtilIO
 	}
 
 	/** Listener and controller for copy process */
-	public static interface CopyListener
+	public static interface KCCopyListener
 	{
 		/**
 		 * @param current
