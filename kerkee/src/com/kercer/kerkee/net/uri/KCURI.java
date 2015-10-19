@@ -1,6 +1,5 @@
 package com.kercer.kerkee.net.uri;
 
-import java.io.File;
 import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -15,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -74,7 +73,7 @@ public class KCURI
     private int mPort = -1;
     private String mPath = null;
     private String mFragment = null;
-    
+
     private List<String> mPathSegments = null;
 
     private char mDelimiter = DEFAULT_DELIMITER;
@@ -121,7 +120,7 @@ public class KCURI
 
     /**
      * See section 5.2.3 of RFC 3986 for more details
-     * 
+     *
      * @param basePath
      * @param relativePath
      * @return
@@ -185,7 +184,7 @@ public class KCURI
         KCURI uri = new KCURI().withScheme(aUrl.getProtocol()).withUserInfo(aUrl.getUserInfo()).withHost(aUrl.getHost()).withPort(aUrl.getPort()).withPath(aUrl.getPath()).withQuery(aUrl.getQuery());
         return uri;
     }
-    
+
     public KCURI()
     {
     }
@@ -319,7 +318,7 @@ public class KCURI
     /**
      * Sets the request URI component consisting of path and query parameters, e.g.
      * 'path/to/resource?q=all&search=foo'
-     * 
+     *
      * @param aRequest
      * @return
      * @throws URISyntaxException
@@ -337,7 +336,7 @@ public class KCURI
         parseQuery(aKey, aValue);
         return this;
     }
-    
+
     /**
      * remove the first aKey in mQueries
      * @param aKey
@@ -361,7 +360,7 @@ public class KCURI
         }
         return this;
     }
-    
+
     public KCURI removeParamAll(String aKey)
     {
         aKey = (aKey != null && !aKey.isEmpty()) ? aKey : null;
@@ -430,7 +429,7 @@ public class KCURI
     {
         return (mHost != null && mPath != null && !mPath.startsWith("/")) ? "/" + mPath : mPath;
     }
-    
+
     /**
      * Gets the decoded path segments.
      *
@@ -458,7 +457,7 @@ public class KCURI
         }
         return segment;
     }
-    
+
     /**
      * remove last path segment,if last segment is not null or the path is not empty
      * then parse path
@@ -473,7 +472,7 @@ public class KCURI
             pathSegmentsToPath();
         }
     }
-    
+
 
     public String getQuery()
     {
@@ -489,7 +488,7 @@ public class KCURI
     {
         return mQueries;
     }
-    
+
     /**
      * Searches the query string for the first value with the given key.
      *
@@ -519,7 +518,7 @@ public class KCURI
 
     /**
      * Returns the HTTP request URI, consisting of path and the query components of the URI.
-     * 
+     *
      * @return
      */
     public String requestURI()
@@ -535,7 +534,7 @@ public class KCURI
     /**
      * Returns the HTTP authority part. The authority consists of user info (if available) the
      * host (named, ipv4, ipv6 or ipfuture) and the port (if available and different from default).
-     * 
+     *
      * @return The authority part of the URI.
      */
     public String authority()
@@ -557,7 +556,7 @@ public class KCURI
      * Returns the composite site component, consisting of scheme and authority, e.g.
      * The site component of the URI 'http://user:pass@www.example.com:1234/path?query=true#fragment'
      * is 'http://user:pass@www.example.com:1234'
-     * 
+     *
      * @return
      */
     public String site()
@@ -567,7 +566,7 @@ public class KCURI
 
         StringBuilder builder = new StringBuilder();
         builder.append(scheme != null ? scheme + ":" : "");
-        if (isDefined(scheme) && isDefined(authority))
+        if (isDefined(scheme) /*&& isDefined(authority)*/)
         {
             builder.append("//");
         }
@@ -597,7 +596,7 @@ public class KCURI
 
     /**
      * For more details see {@link #join(URI)}
-     * 
+     *
      * @param aUri
      * @return
      * @throws URISyntaxException
@@ -610,13 +609,13 @@ public class KCURI
     /**
      * Joins the URI with another one, useful for Reference resolution, e.g. specifying a relative URI
      * to a different one, acting as Base URI.
-     * 
+     *
      * A relative path can only be joined when a base URI is known. A base URI must conform to the
      * absolute URI syntax (see section 4.3 of RFC 3986). A base URI is an absolute URI with scheme,
      * authority. How a base URI can be obtained of a reference is described in section 5 of RFC 3986.
-     * 
+     *
      * The algorithm used is taken from section 5.2.2
-     * 
+     *
      * @param relativePath
      * @return
      * @throws URISyntaxException
@@ -671,7 +670,7 @@ public class KCURI
      * This is the most common way to retrieve a representation of the URI, useful in situations where it
      * is mandatory only to use ASCII characters. This method might not be useful when displaying the string
      * in a User Interface.
-     * 
+     *
      * @return A representation of the URI that only uses ASCII characters (in the range of 0 - 127)
      * @throws URISyntaxException
      */
@@ -828,12 +827,12 @@ public class KCURI
             this.mPathSegments = createPathSegments();
         }
     }
-    
+
     private void pathSegmentsToPath()
     {
         this.mPath = pathSegmentsToString();
     }
-    
+
     private List<String> createPathSegments()
     {
         StringTokenizer tokenizer = new StringTokenizer(getPath(), "/");
@@ -845,7 +844,7 @@ public class KCURI
         }
         return list;
     }
-    
+
     private String pathSegmentsToString()
     {
         List<String> list = getPathSegments();
@@ -856,15 +855,15 @@ public class KCURI
             stringBuffer.append("/");
             stringBuffer.append(segment);
         }
-        
-        if(stringBuffer.length() == 0) 
+
+        if(stringBuffer.length() == 0)
             stringBuffer.append("/");
-        
+
         return stringBuffer.toString();
     }
-    
-    
-    
+
+
+
 
     private void parseQuery(String aKey, String aValue)
     {
