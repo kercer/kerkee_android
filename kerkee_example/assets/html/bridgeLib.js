@@ -132,20 +132,22 @@
 			console.log("--- device ready go--- ");
 		}
 	}
-	
+
 	ApiBridge.compile = function (aIdentity, aJS)
 	{
 		var value;
 		var error;
-		try 
+		try
 		{
 			value = eval(aJS);
 		}
-		catch(err) 
+		catch(e)
 		{
-			error = err;
+			error = "name: " + e.name +"; errorNumber: " + (e.number & 0xFFFF ) + "; message: " + e.message;
+//            error.name = e.name;
+//            error.message = e.message;
 		}
-		
+
 		ApiBridge.callNative("ApiBridge", "compile",
 		{
 			"identity": aIdentity,
@@ -153,7 +155,7 @@
 			"error": error
 		});
 	}
-	
+
 
 	var jsBridgeClient = {};
 	jsBridgeClient.Event = {};
@@ -167,15 +169,15 @@
 				"event" : event
 			}, callback);
 	}
-	
 
-	
-	
+
+
+
 
 	/***************************************************************************
 	 * 接口
 	 **************************************************************************/
-	
+
 	jsBridgeClient.testJSBrige = function (aString)
 	{
 		ApiBridge.callNative("jsBridgeClient", "testJSBrige",
@@ -191,12 +193,12 @@
 			"info" : aString
 		}, callback);
 	}
-	
+
 
 	jsBridgeClient.onDeviceReady=function(handler)
-	{		
+	{
 		ApiBridge.onDeviceReady = handler;
-		
+
 		if (ApiBridge.isReady && !ApiBridge.isNotifyReady && handler)
 		{
 			console.log("-- device ready --");
@@ -444,10 +446,10 @@
 	};
 
 	ApiBridge.onBridgeInitComplete(function (){
-		
-		
+
+
 		ApiBridge.onNativeInitComplete( ApiBridge.onDeviceReady );
-		
+
 //		jsBridgeClient.onDeviceReady(function(){
 //			alert('onDeviceReady');
 //		});

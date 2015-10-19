@@ -36,8 +36,12 @@ function ($,template,clientUI,clientInfo,util,widget,testApi) {
                 console.log("callback:"+data);
             },"test getTestInfo fun");
         });
-    };
 
+        window.testReturnString = function (){
+//        alert("Test testString")
+        return "Im testReturnString";
+        };
+    };
 
     TestDo.prototype.init=function(){
         var t=this;

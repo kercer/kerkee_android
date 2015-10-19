@@ -1,22 +1,21 @@
 package com.kercer.kerkee.browser;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.view.ViewGroup;
 
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.bridge.KCClass;
 import com.kercer.kerkee.bridge.KCJSExecutor;
-import com.kercer.kerkee.net.KCHttpServer;
 import com.kercer.kerkee.util.KCAssetTool;
 import com.kercer.kerkee.webview.KCWebView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -24,11 +23,11 @@ public class KCJSBridge
 {
     protected KCWebView mWebView;
     private final String VERSION_NAME = "1.0.0";
-    
+
     public KCJSBridge(KCWebView aWebView)
     {
         this.mWebView = aWebView;
-        
+
         if (!isExitAsset())
             copyAssetHtmlDir();
 
@@ -36,12 +35,12 @@ public class KCJSBridge
 //        if(!KCHttpServer.isRunning())
 //        	KCHttpServer.startServer(KCHttpServer.getPort(), wwwRoot);
     }
-    
+
     public String getVersion()
     {
     	return VERSION_NAME;
     }
-    
+
 
     /********************************************************/
     /*
@@ -49,11 +48,11 @@ public class KCJSBridge
      */
     /********************************************************/
 
-    public boolean registJSBridgeClient(Class<?> aClass)
+    public static boolean registJSBridgeClient(Class<?> aClass)
     {
         return KCApiBridge.registJSBridgeClient(aClass);
     }
-    
+
     public static boolean registClass(KCClass aClass)
     {
         return KCApiBridge.registClass(aClass);
@@ -63,7 +62,7 @@ public class KCJSBridge
     {
         return KCApiBridge.registClass(aJSObjectName, aClass);
     }
-    
+
     public static void removeClass(String aJSObjectName)
     {
         KCApiBridge.removeClass(aJSObjectName);
@@ -73,12 +72,12 @@ public class KCJSBridge
     {
     	KCJSExecutor.callJSOnMainThread(aWebview, aJS);
     }
-    
+
     public static void callJS(final KCWebView aWebview, final String aJS)
     {
     	KCJSExecutor.callJS(aWebview, aJS);
     }
-    
+
     public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aArgs)
     {
     	KCJSExecutor.callJSFunctionOnMainThread(aWebview, aFunName, aArgs);
@@ -88,12 +87,12 @@ public class KCJSBridge
     {
     	KCJSExecutor.callbackJS(aWebview, aCallbackId);
     }
-    
+
     public static void callbackJS(KCWebView aWebview, String aCallbackId, String aStr)
     {
     	KCJSExecutor.callbackJS(aWebview, aCallbackId, aStr);
     }
-    
+
     public static void callbackJS(KCWebView aWebview, String aCallbackId, JSONObject aJSONObject)
     {
     	KCJSExecutor.callbackJS(aWebview, aCallbackId, aJSONObject);
@@ -103,14 +102,14 @@ public class KCJSBridge
     {
     	KCJSExecutor.callbackJS(aWebview, aCallbackId, aJSONArray);
     }
-    
-    
+
+
     /********************************************************/
     /*
-     * 
+     *
      */
     /********************************************************/
-    
+
     private boolean isExitAsset()
     {
         String cfgPath = mWebView.getWebPath().getCfgPath();
@@ -132,8 +131,8 @@ public class KCJSBridge
             e.printStackTrace();
         }
     }
-    
-    
+
+
     public KCWebView getWebView()
     {
         return mWebView;
@@ -143,7 +142,7 @@ public class KCJSBridge
     {
         return mWebView == null ? null : mWebView.getWebPath().getResRootPath();
     }
-    
+
     public void destroy()
     {
         ViewGroup vg = (ViewGroup) mWebView.getParent();

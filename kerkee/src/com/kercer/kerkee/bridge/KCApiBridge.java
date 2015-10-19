@@ -1,8 +1,5 @@
 package com.kercer.kerkee.bridge;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.net.KCHttpServer;
@@ -10,8 +7,11 @@ import com.kercer.kerkee.util.KCTaskExecutor;
 import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee.webview.KCWebView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -25,7 +25,7 @@ public class KCApiBridge
     {
     	if (!aScheme.equals(KCScheme.FILE) && !KCHttpServer.isRunning())
     		return;
-    	
+
         if (mJS == null)
         {
             KCWebPath webPath = aWebview.getWebPath();
@@ -41,7 +41,7 @@ public class KCApiBridge
             mJS += "scriptBlock.onload=function(){console.log('--- jsBridgeClient onLoad ---');};";
             mJS += "document.getElementsByTagName('head')[0].appendChild(scriptBlock);";
         }
-        
+
         KCJSExecutor.callJSOnMainThread(aWebview, mJS);
     }
 
@@ -84,9 +84,9 @@ public class KCApiBridge
                 }
 
                 KCMethod method = null;
-                
+
                 KCLog.d(">>>>>>>>> callNative: " + className + "." + methodName + ", " + method + ", " + aJSONStr);
-                
+
                 boolean isArgList = true;
 
                 if (argList.size() > 0)
@@ -94,7 +94,7 @@ public class KCApiBridge
                     try
                     {
                         method = clz.getMethod(methodName, KCWebView.class, KCArgList.class);
-                        
+
                         //use this when method get from cache,Compatibility with previous versions
                         Class<?>[] argsType = method.getNavMethod().getParameterTypes();
                         for (Class<?> tmpClass : argsType)
@@ -154,8 +154,8 @@ public class KCApiBridge
     {
         KCLog.e(aJSONObject.toString());
     }
-    
-    
+
+
     public static void onBridgeInitComplete(KCWebView aWebView, KCArgList aArgList)
     {
         KCLog.e(aArgList.toString());
@@ -163,13 +163,13 @@ public class KCApiBridge
         String callbackId = (String)aArgList.getArgValue(KCJSDefine.kJS_callbackId);
         KCJSExecutor.callbackJS(aWebView, callbackId);
     }
-    
+
     public static void compile(KCWebView aWebView, KCArgList aArgList)
     {
     	String returnValue = aArgList.getArgValueString(KCJSDefine.kJS_returnValue);
     	String identity = aArgList.getArgValueString(KCJSDefine.kJS_identity);
-//    	String error = aArgList.getArgValueString(KCJSDefine.kJS_error);
-    	
+    	String error = aArgList.getArgValueString(KCJSDefine.kJS_error);
+
 //    	JSONObject json = null;
 //    	try
 //		{
@@ -179,11 +179,11 @@ public class KCApiBridge
 //		{
 //			e.printStackTrace();
 //		}
-    	
-    	KCJSCompileExecutor.didCompile(Integer.valueOf(identity), returnValue);
+
+    	KCJSCompileExecutor.didCompile(Integer.valueOf(identity), returnValue, error);
     }
-    
-    
+
+
 
     /**
      * @param aWebview
@@ -215,11 +215,11 @@ public class KCApiBridge
         {
         }
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 
 
 }
