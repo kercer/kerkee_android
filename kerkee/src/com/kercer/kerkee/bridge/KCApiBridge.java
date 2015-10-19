@@ -166,7 +166,7 @@ public class KCApiBridge
 
     public static void compile(KCWebView aWebView, KCArgList aArgList)
     {
-    	String returnValue = aArgList.getArgValueString(KCJSDefine.kJS_returnValue);
+    	Object returnValue = aArgList.getArgValue(KCJSDefine.kJS_returnValue);
     	String identity = aArgList.getArgValueString(KCJSDefine.kJS_identity);
     	String error = aArgList.getArgValueString(KCJSDefine.kJS_error);
 

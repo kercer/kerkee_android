@@ -143,9 +143,12 @@
 		}
 		catch(e)
 		{
-			error = "name: " + e.name +"; errorNumber: " + (e.number & 0xFFFF ) + "; message: " + e.message;
-//            error.name = e.name;
-//            error.message = e.message;
+//			error = "name: " + e.name +"; errorNumber: " + (e.number & 0xFFFF ) + "; message: " + e.message;
+            var err = {};
+            err.name = e.name;
+            err.message = e.message;
+            err.number = e.number & 0xFFFF;
+            error = err;
 		}
 
 		ApiBridge.callNative("ApiBridge", "compile",

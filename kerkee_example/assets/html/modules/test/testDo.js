@@ -39,6 +39,12 @@ function ($,template,clientUI,clientInfo,util,widget,testApi) {
 
         window.testReturnString = function (){
 //        alert("Test testString")
+//        var test = {};
+//        test.a = "t1";
+//        test.b = "t2";
+//        test.c = "t3";
+//        test.d = "t4";
+//        return test;
         return "Im testReturnString";
         };
     };

@@ -35,7 +35,7 @@ public class KCJSCompileExecutor
 	}
 
 
-	protected static void didCompile(Integer aIdentity, String aReturnValue, String aError)
+	protected static void didCompile(Integer aIdentity, Object aReturnValue, String aError)
 	{
 		KCCallback callback = mCallBackMap.remove(aIdentity);
 		if (callback != null)
