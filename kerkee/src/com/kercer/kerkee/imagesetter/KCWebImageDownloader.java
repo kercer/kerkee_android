@@ -76,12 +76,11 @@ public class KCWebImageDownloader
         final String pathURI = aUri.getPath();
 
         String cacheUri = null;
-        if (aWebPath.getBridgeScheme().equals(KCScheme.FILE))
-        {
-            final String filePath = mWebImageCache.getCacheDir().getAbsolutePath() + pathURI;
-            cacheUri = "file://"+filePath;
-        }
-        else
+
+        final String filePath = mWebImageCache.getCacheDir().getAbsolutePath() + pathURI;
+        cacheUri = "file://"+filePath;
+
+        if (!aWebPath.getBridgeScheme().equals(KCScheme.FILE))
         {
             if (KCHttpServer.isRunning())
             {
@@ -89,14 +88,8 @@ public class KCWebImageDownloader
                 if (localHostUrl != null)
                     cacheUri =localHostUrl + (isLocalTip ? File.separator : aWebPath.getWebImageCacheRelativePath()) + pathURI;
             }
-            else
-            {
-                final String filePath = mWebImageCache.getCacheDir().getAbsolutePath() + pathURI;
-                cacheUri = "file://"+filePath;
-            }
-
-
         }
+
         return cacheUri;
     }
 
