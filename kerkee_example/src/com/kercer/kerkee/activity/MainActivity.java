@@ -1,23 +1,17 @@
 package com.kercer.kerkee.activity;
 
-import java.io.File;
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
-import com.kercer.kerkee.api.KCApiJSBridgeClient;
 import com.kercer.kerkee.api.KCRegistMgr;
 import com.kercer.kerkee.browser.KCDefaultBrowser;
 import com.kercer.kerkee_example.R;
 
-import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public class MainActivity extends Activity
 {
@@ -27,19 +21,22 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
-        
+
         KCDefaultBrowser browser = new KCDefaultBrowser(this);
         View view = browser.getView();
         setContentView(view);
-        
+
         //regist classes to JSBridge，the relationship between binding js objects and native classes
         //and you can use default browser'b registJSBridgeClient function
         KCRegistMgr.registClass();
 //        browser.registJSBridgeClient(KCApiJSBridgeClient.class);
-        
+
+        Method[] targetMethods = getClass().getDeclaredMethods();
+        String s = Modifier.toString(targetMethods[3].getModifiers()) ;
+
         browser.loadTestPage();
 //        browser.loadUrl("http://www.baidu.com");
-        
+
     }
 
     @Override
@@ -63,6 +60,11 @@ public class MainActivity extends Activity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void test()
+    {
+
     }
 
 }

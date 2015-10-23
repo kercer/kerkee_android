@@ -4,6 +4,7 @@ import com.kercer.kerkee.log.KCLog;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
@@ -47,6 +48,39 @@ public class KCMethod
     {
        return mMethod.getParameterTypes().length;
     }
+
+    public Class<?>[] getArgTypes()
+    {
+        return mMethod.getParameterTypes();
+    }
+
+    public boolean isSameArgList(final Class<?>[] aArgTypes)
+    {
+        if (aArgTypes == null || aArgTypes.length != getArgsCount()) return false;
+
+        int length = aArgTypes.length;
+        Class<?>[] arglist = getArgTypes();
+        for (int i = 0; i < length; ++i)
+        {
+            if (aArgTypes[i] != arglist[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int getModifiers()
+    {
+        return mMethod.getModifiers();
+    }
+
+    public boolean isStatic()
+    {
+        return Modifier.isStatic(getModifiers());
+    }
+
+
 
     public Object invoke(Object aReceiver, Object... aArgs) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {

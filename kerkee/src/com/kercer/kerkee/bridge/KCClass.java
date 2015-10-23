@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -16,40 +16,40 @@ public class KCClass
     private Class<?> mClz;
     //the key is method name
     private HashMap<String, List<KCMethod>> mMethods = new HashMap<String, List<KCMethod>>();
-    
-    
+
+
     public KCClass(String aJSClzName,  Class<?> aClass)
     {
         mJSClzName = aJSClzName;
         mClz = aClass;
     }
-    
+
     public static KCClass newClass(String aJSClzName,  Class<?> aClass)
     {
         return new KCClass(aJSClzName, aClass);
     }
-    
+
     public Class<?> getNavClass()
     {
         return mClz;
     }
-    
+
     public String getJSClz()
     {
         return mJSClzName;
     }
-    
+
     public void addMethod(String aMethodName, KCArgList aArgList)
     {
       //TODO
     }
-    
+
     public List<KCMethod> getMethods(String aName)
     {
        return mMethods.get(aName);
     }
-    
-    
+
+
     public KCMethod getMethod(String aMethodName, Class<?>... aParameterTypes) throws NoSuchMethodException
     {
         List<KCMethod> listMethods = getMethods(aMethodName);
@@ -57,27 +57,32 @@ public class KCClass
         {
             listMethods = new ArrayList<KCMethod>();
         }
-        
-        KCMethod method = null;
+
+        KCMethod jsMethod = null;
         for(int i = 0; i < listMethods.size(); ++i)
         {
             KCMethod tmpMethod = listMethods.get(i);
             if (tmpMethod == null) continue;
-            if (aParameterTypes.length == tmpMethod.getArgsCount())
-                method = tmpMethod;
+            if (tmpMethod.isSameArgList(aParameterTypes))
+            {
+                jsMethod = tmpMethod;
+            }
         }
-        
-        if (method == null)
-        {            
+
+        if (jsMethod == null)
+        {
             Method tmp = mClz.getMethod(aMethodName, aParameterTypes);
-            method = new KCMethod(this, tmp);
-            listMethods.add(method);
+            jsMethod = new KCMethod(this, tmp);
+            listMethods.add(jsMethod);
             mMethods.put(aMethodName, listMethods);
         }
-        return method;
+        return jsMethod;
     }
-    
-    
-    
-    
+
+    public KCMethod getMethod(String aMethodName, KCArgList aArgList) throws NoSuchMethodException
+    {
+        //TODO
+        return null;
+    }
+
 }

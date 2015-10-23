@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class KCArgList
 {
-    private List<KCArg> mArgs = new ArrayList<KCArg>();
+    private List<KCArg> mArgs = new ArrayList<KCArg>(2);
 //    private HashMap<String, KCArg> mArgs = new HashMap<String, KCArg>();
 
 
@@ -110,6 +110,20 @@ public class KCArgList
         if (arg != null)
             return arg.getType();
         return null;
+    }
+
+    Class<?>[] getTypes()
+    {
+        int lengh = size();
+        Class<?>[] types = new Class[lengh];
+
+        for (int i = 0; i < lengh; ++i)
+        {
+            KCArg arg = get(i);
+            if (arg != null)
+                types[i] = arg.getType();
+        }
+        return  types;
     }
 
     @Override
