@@ -21,6 +21,12 @@ public class KCApiBridge
     private final static KCClassMrg mClassMrg = new KCClassMrg();
     private static String mJS;
 
+
+    public static KCClass getClass(String aJSObjectName)
+    {
+        return mClassMrg.getClass(aJSObjectName);
+    }
+
     public static void initJSBridgeEnvironment(KCWebView aWebview, KCScheme aScheme)
     {
     	if (!aScheme.equals(KCScheme.FILE) && !KCHttpServer.isRunning())
