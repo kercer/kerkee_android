@@ -160,7 +160,7 @@ public class KCApiBridge
 	{
 		KCLog.e(aArgList.toString());
 		aWebView.documentReady(true);
-		String callbackId = (String) aArgList.getArgValue(KCJSDefine.kJS_callbackId);
+		String callbackId = aArgList.getArgValueString(KCJSDefine.kJS_callbackId);
 		KCJSExecutor.callbackJS(aWebView, callbackId);
 	}
 

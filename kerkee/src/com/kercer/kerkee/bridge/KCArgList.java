@@ -38,6 +38,13 @@ public class KCArgList
         return mArgs.get(aIndex);
     }
 
+    public KCJSCallback getCallback()
+    {
+    	//TODO
+    	
+    	return null;
+    }
+    
     public Object getArgValue(int aIndex)
     {
         KCArg arg = get(aIndex);

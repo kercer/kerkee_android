@@ -29,7 +29,7 @@ public class KCClassMrg
     public boolean registObject(KCJSObject aObject)
     {
         if (aObject == null) return false;
-        String jsObjectName = aObject.getObjectName();
+        String jsObjectName = aObject.getJSObjectName();
         if (jsObjectName != null)
         {
             mJSObjectMap.put(jsObjectName, aObject);
@@ -42,7 +42,7 @@ public class KCClassMrg
     {
     	KCJSObject jsObject = null;
     	if (aObject == null) return jsObject;
-    	String jsObjectName = aObject.getObjectName();
+    	String jsObjectName = aObject.getJSObjectName();
     	if(jsObjectName != null)
     	{
     		jsObject = mJSObjectMap.remove(jsObjectName);

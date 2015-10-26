@@ -59,10 +59,18 @@ public class KCClassParser
                     if (key != null)
                     {
                         Object value = mArgsJSON.get(key);
-                        KCArg arg = new KCArg(key, value);
+                        KCArg arg = null;
+                        
+                        if(key.equals(KCJSDefine.kJS_callbackId))
+                        {
+                        	arg = new KCArg(key, new KCJSCallback(value.toString()), KCJSCallback.class);
+                        }
+                        else
+                        {
+                        	arg = new KCArg(key, value);
+						}
                         mArgList.addArg(arg);
-                    }
-                    
+                    }                    
                 }
             }
         }

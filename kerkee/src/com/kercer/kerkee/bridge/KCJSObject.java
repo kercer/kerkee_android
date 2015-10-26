@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public abstract class KCJSObject
 {
-    abstract public String getObjectName();
+    abstract public String getJSObjectName();
 
     public final Map<String, KCMethod> getMethods()
     {
@@ -25,7 +25,7 @@ public abstract class KCJSObject
                 {
                     // We do not support method overloading since js sees a function as an object regardless
                     // of number of params.
-                    throw new IllegalArgumentException("Java Class " + getObjectName() + " method name already registered: " + methodName);
+                    throw new IllegalArgumentException("Java Class " + getJSObjectName() + " method name already registered: " + methodName);
                 }
                 methods.put(methodName, new KCMethod(targetMethod));
             }

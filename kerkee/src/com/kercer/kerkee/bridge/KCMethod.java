@@ -162,7 +162,7 @@ public class KCMethod
             }
             catch (Exception e)
             {
-                throw new RuntimeException( e.getMessage() + " (constructing arguments for " + aObject.getObjectName() +  "." + mMethod.getName() + " at argument index " + i + ")",  e);
+                throw new RuntimeException( e.getMessage() + " (constructing arguments for " + aObject.getJSObjectName() +  "." + mMethod.getName() + " at argument index " + i + ")",  e);
             }
 
             try
@@ -172,12 +172,12 @@ public class KCMethod
             catch (IllegalArgumentException ie)
             {
                 throw new RuntimeException(
-                        "Could not invoke " + aObject.getObjectName() + "." + mMethod.getName(), ie);
+                        "Could not invoke " + aObject.getJSObjectName() + "." + mMethod.getName(), ie);
             }
             catch (IllegalAccessException iae)
             {
                 throw new RuntimeException(
-                        "Could not invoke " + aObject.getObjectName() + "." + mMethod.getName(), iae);
+                        "Could not invoke " + aObject.getJSObjectName() + "." + mMethod.getName(), iae);
             }
             catch (InvocationTargetException ite)
             {
@@ -187,7 +187,7 @@ public class KCMethod
                 {
                     throw (RuntimeException) ite.getCause();
                 }
-                throw new RuntimeException( "Could not invoke " + aObject.getObjectName() + "." + mMethod.getName(), ite);
+                throw new RuntimeException( "Could not invoke " + aObject.getJSObjectName() + "." + mMethod.getName(), ite);
             }
         }
         finally
