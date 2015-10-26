@@ -78,11 +78,11 @@ public class KCApiBridge
 			KCClassParser parser = new KCClassParser(aJSONStr);
 			try
 			{
-				String className = parser.getJSClzName();
+				String jsClzName = parser.getJSClzName();
 				String methodName = parser.getJSMethodName();
 				KCArgList argList = parser.getArgList();
 
-				KCClass clz = mClassMrg.getClass(className);
+				KCClass clz = mClassMrg.getClass(jsClzName);
 				if (clz != null)
 				{
 					clz.addMethod(methodName, argList);
@@ -90,7 +90,7 @@ public class KCApiBridge
 
 				KCMethod method = null;
 
-				KCLog.d(">>>>>>>>> callNative: " + className + "." + methodName + ", " + method + ", " + aJSONStr);
+				KCLog.d(">>>>>>>>> callNative: " + jsClzName + "." + methodName + ", " + method + ", " + aJSONStr);
 
 				boolean isArgList = true;
 
@@ -117,6 +117,7 @@ public class KCApiBridge
 				if(!isStatic)
 				{
 					// get KCJSObject
+					receiver = mClassMrg.getJSObject(jsClzName);
 				}
 
 				String result;

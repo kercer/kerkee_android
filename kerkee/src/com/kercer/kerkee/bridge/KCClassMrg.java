@@ -38,6 +38,19 @@ public class KCClassMrg
 
         return true;
     }
+    public KCJSObject removeObject(KCJSObject aObject)
+    {
+    	KCJSObject jsObject = null;
+    	if (aObject == null) return jsObject;
+    	String jsObjectName = aObject.getObjectName();
+    	if(jsObjectName != null)
+    	{
+    		jsObject = mJSObjectMap.remove(jsObjectName);
+    		removeClass(jsObjectName);
+    	}
+    	return jsObject;
+    }
+    
 
     public boolean registClass(KCClass aClass)
     {
@@ -61,15 +74,17 @@ public class KCClassMrg
     public void removeClass(String aJSObjectName)
     {
         if (aJSObjectName == null) return;
-        if (mClassMap.containsKey(aJSObjectName))
-        {
-            mClassMap.remove(aJSObjectName);
-        }
+        mClassMap.remove(aJSObjectName);
     }
 
     public KCClass getClass(String aClassName)
     {
         return mClassMap.get(aClassName);
+    }
+    
+    public KCJSObject getJSObject(String aJSObjectName)
+    {
+    	return mJSObjectMap.get(aJSObjectName);
     }
 
 

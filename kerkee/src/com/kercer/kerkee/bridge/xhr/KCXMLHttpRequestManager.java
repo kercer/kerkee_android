@@ -3,11 +3,7 @@ package com.kercer.kerkee.bridge.xhr;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.net.Uri;
+import java.util.Locale;
 
 import com.kercer.kerkee.bridge.KCArgList;
 import com.kercer.kerkee.log.KCLog;
@@ -53,7 +49,7 @@ public class KCXMLHttpRequestManager
 
             int id = args.getInt("id");
             String url = args.getString("url");
-            String method = getArgString(args, "method", "GET").toUpperCase();
+            String method = getArgString(args, "method", "GET").toUpperCase(Locale.getDefault());
             String urlHash = KCUtil.getMD5String(url);
 
             KCXMLHttpRequest xhr = mRequestMap.get(keyFromWebViewAndId(webView, id));
@@ -100,7 +96,6 @@ public class KCXMLHttpRequestManager
         }
         catch (URISyntaxException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (Exception e)
@@ -192,7 +187,6 @@ public class KCXMLHttpRequestManager
         }
         catch (Exception e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
