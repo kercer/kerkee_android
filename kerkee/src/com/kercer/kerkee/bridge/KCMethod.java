@@ -1,6 +1,7 @@
 package com.kercer.kerkee.bridge;
 
 import com.kercer.kerkee.log.KCLog;
+import com.kercer.kerkee.webview.KCWebView;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -82,76 +83,79 @@ public class KCMethod
 
 
 
-    public Object invoke(Object aReceiver, Object... aArgs) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+    public Object invoke(KCJSObject aReceiver, Object... aArgs) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {
         return mMethod.invoke(aReceiver, aArgs);
     }
 
 
-    public Object invoke(KCJSObject aObject, KCArgList aArgList)
+    public Object invoke(KCJSObject aObject, KCWebView aWebView, KCArgList aArgList)
     {
         KCLog.i("call begin  KCMethod invoke");
         Object returnObj = null;
         try
         {
-            Class[] types = mMethod.getParameterTypes();
+            Class<?>[] types = mMethod.getParameterTypes();
             if (types.length != aArgList.size())
             {
                 throw new RuntimeException(
                         "JavaModule" + "." + mMethod.getName() + " got " + aArgList.size() +
                                 " arguments, expected " + types.length);
             }
-            Object[] arguments = new Object[types.length];
+            Object[] argValues = new Object[types.length];
 
             int i = 0;
+            int j = 0;
+            
             try
             {
-                for (; i < types.length; i++)
+                for (; i < types.length; i++, j++)
                 {
-                    Class argumentClass = types[i];
-                    if (argumentClass == Boolean.class || argumentClass == boolean.class)
+                    Class<?> nativeArgType = types[i];
+                    
+                    if (nativeArgType == Boolean.class || nativeArgType == boolean.class)
                     {
-                        arguments[i] = Boolean.valueOf(aArgList.getBoolean(i));
+                        argValues[i] = Boolean.valueOf(aArgList.getBoolean(i));
                     }
-                    else if (argumentClass == Integer.class || argumentClass == int.class)
+                    else if (nativeArgType == Integer.class || nativeArgType == int.class)
                     {
-                        arguments[i] = Integer.valueOf((int) aArgList.getInt(i));
+                        argValues[i] = Integer.valueOf((int) aArgList.getInt(i));
                     }
-                    else if (argumentClass == Double.class || argumentClass == double.class)
+                    else if (nativeArgType == Double.class || nativeArgType == double.class)
                     {
-                        arguments[i] = Double.valueOf(aArgList.getDouble(i));
+                        argValues[i] = Double.valueOf(aArgList.getDouble(i));
                     }
-                    else if (argumentClass == Float.class || argumentClass == float.class)
+                    else if (nativeArgType == Float.class || nativeArgType == float.class)
                     {
-                        arguments[i] = Float.valueOf((float) aArgList.getDouble(i));
+                        argValues[i] = Float.valueOf((float) aArgList.getDouble(i));
                     }
-                    else if (argumentClass == String.class)
+                    else if (nativeArgType == String.class)
                     {
-                        arguments[i] = aArgList.getString(i);
+                        argValues[i] = aArgList.getString(i);
                     }
 //                    else if (argumentClass == Callback.class)
 //                    {
 //                        if (aArgList.isNull(i))
 //                        {
-//                            arguments[i] = null;
+//                            argValues[i] = null;
 //                        }
 //                        else
 //                        {
 //                            int id = (int) aArgList.getDouble(i);
-//                            arguments[i] = new CallbackImpl(catalystInstance, id);
+//                            argValues[i] = new CallbackImpl(catalystInstance, id);
 //                        }
 //                    }
 //                    else if (argumentClass == Map.class)
 //                    {
-//                        arguments[i] = parameters.getMap(i);
+//                        argValues[i] = parameters.getMap(i);
 //                    }
 //                    else if (argumentClass == Array.class)
 //                    {
-//                        arguments[i] = parameters.getArray(i);
+//                        argValues[i] = parameters.getArray(i);
 //                    }
                     else
                     {
-                        throw new RuntimeException("Got unknown argument class: " + argumentClass.getSimpleName());
+                        throw new RuntimeException("Got unknown argument class: " + nativeArgType.getSimpleName());
                     }
                 }
 
@@ -163,7 +167,7 @@ public class KCMethod
 
             try
             {
-                returnObj = mMethod.invoke(aObject, arguments);
+                returnObj = invoke(aObject, argValues);
             }
             catch (IllegalArgumentException ie)
             {

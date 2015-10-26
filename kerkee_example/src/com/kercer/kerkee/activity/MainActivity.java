@@ -12,6 +12,7 @@ import com.kercer.kerkee_example.R;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 public class MainActivity extends Activity
 {
@@ -33,6 +34,8 @@ public class MainActivity extends Activity
 
         Method[] targetMethods = getClass().getDeclaredMethods();
         String s = Modifier.toString(targetMethods[3].getModifiers()) ;
+        Class<?>[] a = targetMethods[3].getParameterTypes();
+        Type[] b = targetMethods[3].getGenericParameterTypes();
 
         browser.loadTestPage();
 //        browser.loadUrl("http://www.baidu.com");
@@ -62,7 +65,7 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-    public static void test()
+    public static void test(String a, int b, boolean c)
     {
 
     }

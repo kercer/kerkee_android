@@ -97,17 +97,6 @@ public class KCApiBridge
 				try
 				{
 					method = clz.getMethod(methodName, KCWebView.class, KCArgList.class);
-
-					// use this when method get from cache,Compatibility with previous versions
-					Class<?>[] argsType = method.getArgTypes();
-					for (Class<?> tmpClass : argsType)
-					{
-						if (tmpClass == JSONObject.class)
-						{
-							isArgList = false;
-							break;
-						}
-					}
 				}
 				catch (Exception e)
 				{
@@ -124,13 +113,15 @@ public class KCApiBridge
 				}
 
 				boolean isStatic = method.isStatic();
-				Object receiver = null;
+				KCJSObject receiver = null;
 				if(!isStatic)
 				{
 					// get KCJSObject
 				}
 
 				String result;
+				Object[] argValues = new Object[2];
+				argValues[0] = webView;
 				if (method.getArgsCount() == 2)
 				{
 					Object value = null;
@@ -138,13 +129,10 @@ public class KCApiBridge
 						value = argList;
 					else
 						value = parser.getArgsJSON();
-
-					result = (String) method.invoke(receiver, webView, value);
-				}
-				else
-				{
-					result = (String) method.invoke(receiver, webView);
-				}
+					argValues[1] = value;
+				}				
+				
+				result = (String)method.invoke(receiver, argValues);
 				return result == null ? "" : result;
 
 			}
@@ -162,9 +150,9 @@ public class KCApiBridge
 		KCJSExecutor.callJS(aWebview, "if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom()");
 	}
 
-	public static void JSLog(KCWebView aWebview, JSONObject aJSONObject)
+	public static void JSLog(KCWebView aWebview, KCArgList aArgList)
 	{
-		KCLog.e(aJSONObject.toString());
+		KCLog.e(aArgList.getString("msg"));
 	}
 
 	public static void onBridgeInitComplete(KCWebView aWebView, KCArgList aArgList)

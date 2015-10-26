@@ -41,7 +41,37 @@ public class KCClass
 
     public void addMethod(String aMethodName, KCArgList aArgList)
     {
-      //TODO
+ //   	seachMethod(aMethodName, aArgList);
+    }
+
+    protected Method seachMethod(String aMethodName, KCArgList aArgList)
+    {
+    	Method method = null;
+    	List<Method> nativeMethodsList = getNativeMethods(aMethodName);
+    	int count = nativeMethodsList.size();
+    	for(int i = 0; i < count; ++i)
+    	{
+            Method nativeMethod = nativeMethodsList.get(i);
+            Class<?>[] parameterTypes = nativeMethod.getParameterTypes();
+    	}
+
+    	return method;
+    }
+
+    protected List<Method> getNativeMethods(String aName)
+    {
+    	List<Method> list = new ArrayList<Method>();
+    	Method[] nativeMethods = mClz.getMethods();
+    	for(int i = 0; i < nativeMethods.length; ++i)
+    	{
+    		Method method = nativeMethods[i];
+    		if (aName.equals(method.getName()))
+    		{
+    			list.add(method);
+    		}
+    	}
+
+    	return list;
     }
 
     public List<KCMethod> getMethods(String aName)
@@ -81,8 +111,10 @@ public class KCClass
 
     public KCMethod getMethod(String aMethodName, KCArgList aArgList) throws NoSuchMethodException
     {
-        //TODO
-        return null;
+        if (aArgList == null || aMethodName == null) return null;
+        Class<?>[] argListTypes = aArgList.getTypes();
+        KCMethod jsMethod = getMethod(aMethodName, argListTypes);
+        return jsMethod;
     }
 
 }

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.net.Uri;
 
+import com.kercer.kerkee.bridge.KCArgList;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.net.uri.KCURI;
 import com.kercer.kerkee.util.KCUtil;
@@ -38,12 +39,12 @@ public class KCXMLHttpRequestManager
         return xhr;
     }
     
-    public static void create(KCWebView webView, JSONObject args)
+    public static void create(KCWebView webView, KCArgList args)
     {
         
     }
 
-    public static void open(KCWebView webView, JSONObject args)
+    public static void open(KCWebView webView, KCArgList args)
     {
         try
         {
@@ -52,7 +53,7 @@ public class KCXMLHttpRequestManager
 
             int id = args.getInt("id");
             String url = args.getString("url");
-            String method = getJSONString(args, "method", "GET").toUpperCase();
+            String method = getArgString(args, "method", "GET").toUpperCase();
             String urlHash = KCUtil.getMD5String(url);
 
             KCXMLHttpRequest xhr = mRequestMap.get(keyFromWebViewAndId(webView, id));
@@ -61,13 +62,13 @@ public class KCXMLHttpRequestManager
 
             xhr = createXMLHttpRequest(webView, id, urlHash);
             String ua = webView.getSettings().getUserAgentString();
-            String scheme = getJSONString(args, "scheme", null);
-            String host = getJSONString(args, "host", null);
-            String port = getJSONString(args, "port", "");
-            String referer = getJSONString(args, "referer", null);
-            String cookie = getJSONString(args, "cookie", null);
-            boolean async = getJSONBoolean(args, "async", true);
-            String href = getJSONString(args, "href", null);
+            String scheme = getArgString(args, "scheme", null);
+            String host = getArgString(args, "host", null);
+            String port = getArgString(args, "port", "");
+            String referer = getArgString(args, "referer", null);
+            String cookie = getArgString(args, "cookie", null);
+            boolean async = getArgBoolean(args, "async", true);
+            String href = getArgString(args, "href", null);
 
             KCURI uriUrl = KCURI.parse(url);
             boolean isAbsolute = uriUrl.isAbsolute();
@@ -97,20 +98,20 @@ public class KCXMLHttpRequestManager
             
             xhr.open(webView, method, url, async, ua, referer, cookie);
         }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
         catch (URISyntaxException e)
         {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
 
     }
 
     // there's currently no error checking
-    public static void send(KCWebView webView, JSONObject args)
+    public static void send(KCWebView webView, KCArgList args)
     {
         KCXMLHttpRequest xhr;
         try
@@ -130,7 +131,7 @@ public class KCXMLHttpRequestManager
                 }
             }
         }
-        catch (JSONException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -138,7 +139,7 @@ public class KCXMLHttpRequestManager
     }
 
     // there's currently no error checking
-    public static void abort(KCWebView webView, JSONObject args)
+    public static void abort(KCWebView webView, KCArgList args)
     {
         KCXMLHttpRequest xhr;
         try
@@ -150,14 +151,14 @@ public class KCXMLHttpRequestManager
                 xhr.abort();
             }
         }
-        catch (JSONException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
 
     }
 
-    public static void setRequestHeader(KCWebView webView, JSONObject args)
+    public static void setRequestHeader(KCWebView webView, KCArgList args)
     {
         try
         {
@@ -169,14 +170,14 @@ public class KCXMLHttpRequestManager
                 xhr.setRequestHeader(headerName, headerValue);
             }
         }
-        catch (JSONException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
 
     }
 
-    public static void overrideMimeType(KCWebView webView, JSONObject args)
+    public static void overrideMimeType(KCWebView webView, KCArgList args)
     {
 
         KCXMLHttpRequest xhr;
@@ -189,7 +190,7 @@ public class KCXMLHttpRequestManager
                 xhr.overrideMimeType(mimetype);
             }
         }
-        catch (JSONException e)
+        catch (Exception e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -202,27 +203,27 @@ public class KCXMLHttpRequestManager
         mRequestMap.remove(keyFromWebViewAndId(webView, id));
     }
 
-    private static String getJSONString(JSONObject jsonObj, String name, String defaultValue)
+    private static String getArgString(KCArgList aArgList, String name, String defaultValue)
     {
         try
         {
-            String value = jsonObj.getString(name);
+            String value = aArgList.getString(name);
             return (value != null) ? value : defaultValue ;
         }
-        catch (JSONException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
         return defaultValue;
     }
 
-    private static boolean getJSONBoolean(JSONObject jsonObj, String name, boolean defaultValue)
+    private static boolean getArgBoolean(KCArgList aArgList, String name, boolean defaultValue)
     {
         try
         {
-            return jsonObj.getBoolean(name);
+            return aArgList.getBoolean(name);
         }
-        catch (JSONException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

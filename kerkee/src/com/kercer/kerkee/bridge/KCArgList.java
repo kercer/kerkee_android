@@ -3,6 +3,8 @@ package com.kercer.kerkee.bridge;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
+
 /**
  *
  * @author zihong
@@ -26,6 +28,11 @@ public class KCArgList
 //        mArgs.put(key, aArg);
         mArgs.add(aArg);
         return true;
+    }
+    
+    public boolean has(String aKey)
+    {
+    	return getArgValue(aKey) != null ? true : false;
     }
 
     public KCArg get(int aIndex)
@@ -74,16 +81,26 @@ public class KCArgList
         return value == null ? null : value.toString();
     }
 
+    public String getString(String aKey)
+    {
+    	Object value = getArgValue(aKey);
+        return value == null ? null : value.toString();
+    }
 
 //    boolean isNull(int index)
 //    {
 //
 //    }
 
-    boolean getBoolean(int aIndex)
+    public boolean getBoolean(int aIndex)
     {
         String obj = getArgValueString(aIndex);
         return Boolean.parseBoolean(obj);
+    }
+    public boolean getBoolean(String aKey)
+    {
+    	String obj = getString(aKey);
+    	return Boolean.parseBoolean(obj);
     }
 
     double getDouble(int aIndex)
@@ -91,11 +108,18 @@ public class KCArgList
         String obj = getArgValueString(aIndex);
         return Double.parseDouble(obj);
     }
-    int getInt(int aIndex)
+    
+    public int getInt(int aIndex)
     {
         String obj = getArgValueString(aIndex);
         return Integer.parseInt(obj);
     }
+    public int getInt(String aKey)
+    {
+    	String obj = getArgValueString(aKey);
+    	return Integer.parseInt(obj);
+    }
+    
     String getString(int aIndex)
     {
         return getArgValueString(aIndex);
