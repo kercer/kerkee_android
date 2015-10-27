@@ -44,6 +44,11 @@ public class KCMethod
     {
         return mMethod;
     }
+    
+    public String getMethodName()
+    {
+    	return mJSMethodName;
+    }
 
     public int getArgsCount()
     {
@@ -55,6 +60,11 @@ public class KCMethod
         return mMethod.getParameterTypes();
     }
 
+    public boolean isSameMethod(final Method aMethod)
+    {
+    	return mMethod.equals(aMethod);
+    }
+    
     public boolean isSameArgList(final Class<?>[] aArgTypes)
     {
         if (aArgTypes == null || aArgTypes.length != getArgsCount()) return false;
@@ -104,12 +114,10 @@ public class KCMethod
             }
             Object[] argValues = new Object[types.length];
 
-            int i = 0;
-            int j = 0;
-            
+            int i = 0;            
             try
             {
-                for (; i < types.length; i++, j++)
+                for (; i < types.length; i++)
                 {
                     Class<?> nativeArgType = types[i];
                     

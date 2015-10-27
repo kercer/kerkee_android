@@ -18,12 +18,12 @@ import org.json.JSONObject;
 public class KCApiBridge
 {
 
-	private final static KCClassMrg mClassMrg = new KCClassMrg();
+	private final static KCRegister mRegister = new KCRegister();
 	private static String mJS;
 
 	public static KCClass getClass(String aJSObjectName)
 	{
-		return mClassMrg.getClass(aJSObjectName);
+		return mRegister.getClass(aJSObjectName);
 	}
 
 	public static void initJSBridgeEnvironment(KCWebView aWebview, KCScheme aScheme)
@@ -50,14 +50,14 @@ public class KCApiBridge
 		KCJSExecutor.callJSOnMainThread(aWebview, mJS);
 	}
 
-	public static boolean registClass(KCClass aClass)
+	public static KCClass registClass(KCClass aClass)
 	{
-		return mClassMrg.registClass(aClass) ;
+		return mRegister.registClass(aClass) ;
 	}
 
 	public static KCClass registClass(String aJSObjectName, Class<?> aClass)
 	{
-		return mClassMrg.registClass(aJSObjectName, aClass);
+		return mRegister.registClass(aJSObjectName, aClass);
 	}
 
 	public static KCClass registJSBridgeClient(Class<?> aClass)
@@ -68,7 +68,7 @@ public class KCApiBridge
 
 	public static void removeClass(String aJSObjectName)
 	{
-		mClassMrg.removeClass(aJSObjectName);
+		mRegister.removeClass(aJSObjectName);
 	}
 
 	public static String callNative(KCWebView webView, String aJSONStr)
@@ -82,7 +82,7 @@ public class KCApiBridge
 				String methodName = parser.getJSMethodName();
 				KCArgList argList = parser.getArgList();
 
-				KCClass clz = mClassMrg.getClass(jsClzName);
+				KCClass clz = mRegister.getClass(jsClzName);
 				if (clz != null)
 				{
 					clz.addMethod(methodName, argList);
@@ -117,7 +117,7 @@ public class KCApiBridge
 				if(!isStatic)
 				{
 					// get KCJSObject
-					receiver = mClassMrg.getJSObject(jsClzName);
+					receiver = mRegister.getJSObject(jsClzName);
 				}
 
 				String result;

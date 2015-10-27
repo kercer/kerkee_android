@@ -2,6 +2,7 @@ package com.kercer.kerkee.bridge;
 
 import com.kercer.kerkee.bridge.event.KCEvent;
 import com.kercer.kerkee.bridge.xhr.KCXMLHttpRequestManager;
+import com.kercer.kerkee.util.KCTaskExecutor;
 
 import java.util.HashMap;
 
@@ -10,7 +11,7 @@ import java.util.HashMap;
  * @author zihong
  *
  */
-public class KCClassMrg
+public class KCRegister
 {
     private final static HashMap<String, KCClass> mClassMap = new HashMap<String, KCClass>();
 //    private final static HashMap<String, KCMethod> mMethodCache = new HashMap<String, KCMethod>();  //key is identity for KCMethod
@@ -25,45 +26,61 @@ public class KCClassMrg
 
     }
 
-
-    public KCClass registObject(KCJSObject aObject)
+    public KCClass registObject(final KCJSObject aObject)
     {
         if (aObject == null) return null;
         String jsObjectName = aObject.getJSObjectName();
+        KCClass clz = null;
         if (jsObjectName != null)
         {
             mJSObjectMap.put(jsObjectName, aObject);
-            return registClass(jsObjectName, aObject.getClass());
+            clz = registClass(jsObjectName, aObject.getClass());
         }
 
-        return null;
+        return clz;
     }
     public KCClass removeObject(KCJSObject aObject)
     {
     	if (aObject == null) return null;
     	String jsObjectName = aObject.getJSObjectName();
+    	KCClass clz = null;
     	if(jsObjectName != null)
     	{
     		mJSObjectMap.remove(jsObjectName);
-    		return removeClass(jsObjectName);
+    		clz = removeClass(jsObjectName);
     	}
-    	return null;
+    	return clz;
     }
     
 
-    public boolean registClass(KCClass aClass)
+    public KCClass registClass(KCClass aClass)
     {
-        return registClass(aClass.getJSClz(), aClass.getNavClass()) != null ? true : false;
+        return registClass(aClass.getJSClz(), aClass.getNavClass()) ;
     }
 
     public KCClass registClass(String aJSObjectName, Class<?> aClass)
     {
         if (aJSObjectName == null || aClass == null) return null;
         KCClass clz = KCClass.newClass(aJSObjectName, aClass);
-        mClassMap.put(aJSObjectName, KCClass.newClass(aJSObjectName, aClass));
+        mClassMap.put(aJSObjectName, clz);
 //            String js = String.format("if(%s && global.%s) global.%s=%s", aJSObjectName, aJSObjectName, aJSObjectName, aJSObjectName);
 //            callJS(aWebView, js, true);
+        
+        loadMethodsAsyn(clz);
+        
             return clz;
+    }
+    
+    private void loadMethodsAsyn(final KCClass aClass)
+    {
+        KCTaskExecutor.executeTask(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				aClass.loadMethods();
+			}
+		});
     }
 
     public KCClass removeClass(String aJSObjectName)

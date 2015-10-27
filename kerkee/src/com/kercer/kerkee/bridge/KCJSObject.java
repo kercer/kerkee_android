@@ -8,9 +8,9 @@ import java.util.Map;
  * Created by zihong on 15/10/23.
  */
 public abstract class KCJSObject
-{
-    abstract public String getJSObjectName();
-
+{	
+    abstract public String getJSObjectName();    
+    
     public final Map<String, KCMethod> getMethods()
     {
         Map<String, KCMethod> methods = new HashMap<String, KCMethod>();

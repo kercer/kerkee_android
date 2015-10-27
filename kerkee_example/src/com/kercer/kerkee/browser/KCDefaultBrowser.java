@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.kercer.kerkee.browser.page.KCPage;
-import com.kercer.kerkee.net.KCHttpServer;
 import com.kercer.kerkee.webview.KCWebChromeClient;
 import com.kercer.kerkee.webview.KCWebView;
 import com.kercer.kerkee.webview.KCWebViewClient;
@@ -99,7 +98,7 @@ public class KCDefaultBrowser extends KCPage implements View.OnClickListener
 
     public boolean registJSBridgeClient(Class<?> aClass)
     {
-        return mJSBridge.registJSBridgeClient(aClass);
+        return KCJSBridge.registJSBridgeClient(aClass) != null ? true : false;
     }
 
     public KCWebView getWebView()

@@ -53,7 +53,7 @@ public class KCJSBridge
         return KCApiBridge.registJSBridgeClient(aClass);
     }
 
-    public static boolean registClass(KCClass aClass)
+    public static KCClass registClass(KCClass aClass)
     {
         return KCApiBridge.registClass(aClass);
     }
