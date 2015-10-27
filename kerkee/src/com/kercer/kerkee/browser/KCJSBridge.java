@@ -4,7 +4,9 @@ import android.view.ViewGroup;
 
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.bridge.KCClass;
+import com.kercer.kerkee.bridge.KCJSDefine;
 import com.kercer.kerkee.bridge.KCJSExecutor;
+import com.kercer.kerkee.bridge.KCJSObject;
 import com.kercer.kerkee.util.KCAssetTool;
 import com.kercer.kerkee.webview.KCWebView;
 
@@ -50,24 +52,42 @@ public class KCJSBridge
 
     public static KCClass registJSBridgeClient(Class<?> aClass)
     {
-        return KCApiBridge.registJSBridgeClient(aClass);
+        return registClass(KCJSDefine.kJS_jsBridgeClient, aClass);
     }
 
     public static KCClass registClass(KCClass aClass)
     {
-        return KCApiBridge.registClass(aClass);
+        return KCApiBridge.getRegister().registClass(aClass);
     }
 
     public static KCClass registClass(String aJSObjectName, Class<?> aClass)
     {
-        return KCApiBridge.registClass(aJSObjectName, aClass);
+        return KCApiBridge.getRegister().registClass(aJSObjectName, aClass);
     }
+    
+    public static KCClass registObject(final KCJSObject aObject)
+    {
+    	return KCApiBridge.getRegister().registObject(aObject);
+    }
+    public KCClass removeObject(KCJSObject aObject)
+    {
+    	return KCApiBridge.getRegister().removeObject(aObject);
+    }
+    
 
     public static void removeClass(String aJSObjectName)
     {
-        KCApiBridge.removeClass(aJSObjectName);
+        KCApiBridge.getRegister().removeClass(aJSObjectName);
     }
+    
 
+    
+    
+    /********************************************************/
+    /*
+     * js call
+     */
+    /********************************************************/    
     public static void callJSOnMainThread(final KCWebView aWebview, final String aJS)
     {
     	KCJSExecutor.callJSOnMainThread(aWebview, aJS);

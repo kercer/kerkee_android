@@ -21,11 +21,6 @@ public class KCApiBridge
 	private final static KCRegister mRegister = new KCRegister();
 	private static String mJS;
 
-	public static KCClass getClass(String aJSObjectName)
-	{
-		return mRegister.getClass(aJSObjectName);
-	}
-
 	public static void initJSBridgeEnvironment(KCWebView aWebview, KCScheme aScheme)
 	{
 		if (!aScheme.equals(KCScheme.FILE) && !KCHttpServer.isRunning())
@@ -50,25 +45,14 @@ public class KCApiBridge
 		KCJSExecutor.callJSOnMainThread(aWebview, mJS);
 	}
 
-	public static KCClass registClass(KCClass aClass)
+	public static KCRegister getRegister()
 	{
-		return mRegister.registClass(aClass) ;
+		return mRegister;
 	}
-
-	public static KCClass registClass(String aJSObjectName, Class<?> aClass)
+	
+	public static KCClass getClass(String aJSObjectName)
 	{
-		return mRegister.registClass(aJSObjectName, aClass);
-	}
-
-	public static KCClass registJSBridgeClient(Class<?> aClass)
-	{
-		removeClass(KCJSDefine.kJS_jsBridgeClient);
-		return registClass(KCJSDefine.kJS_jsBridgeClient, aClass);
-	}
-
-	public static void removeClass(String aJSObjectName)
-	{
-		mRegister.removeClass(aJSObjectName);
+		return mRegister.getClass(aJSObjectName);
 	}
 
 	public static String callNative(KCWebView webView, String aJSONStr)
