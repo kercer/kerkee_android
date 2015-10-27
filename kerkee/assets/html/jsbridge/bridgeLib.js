@@ -1,4 +1,4 @@
-;(function (window) {
+;(function(window){
 	if (window.WebViewJSBridge)
 		return;
 
@@ -8,7 +8,8 @@
 
 	// 暂时这个来判断平台
 	var ua = navigator.userAgent;
-	var isIOS = ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1 || ua.indexOf("iPod") != -1;
+	var isIOS = ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1
+			|| ua.indexOf("iPod") != -1;
 
 	var global = this;
 	var ApiBridge =
@@ -21,14 +22,14 @@
 		isNotifyReady : false
 	};
 
-	ApiBridge.create = function ()
+	ApiBridge.create = function()
 	{
 		ApiBridge.bridgeIframe = document.createElement("iframe");
 		ApiBridge.bridgeIframe.style.display = 'none';
 		document.documentElement.appendChild(ApiBridge.bridgeIframe);
 	};
 
-	ApiBridge.callNative = function (clz, method, args, callback)
+	ApiBridge.callNative = function(clz, method, args, callback)
 	{
 		var msgJson = {};
 		msgJson.clz = clz;
@@ -75,12 +76,12 @@
 
 	};
 
-	ApiBridge.prepareProcessingMessages = function ()
+	ApiBridge.prepareProcessingMessages = function()
 	{
 		ApiBridge.processingMsg = true;
 	};
 
-	ApiBridge.fetchMessages = function ()
+	ApiBridge.fetchMessages = function()
 	{
 		if (ApiBridge.msgQueue.length > 0)
 		{
@@ -93,20 +94,20 @@
 		return null;
 	};
 
-	ApiBridge.log = function (msg)
+	ApiBridge.log = function(msg)
 	{
 		ApiBridge.callNative("ApiBridge", "JSLog",
-			{
-				"msg" : msg
-			});
+		{
+			"msg" : msg
+		});
 	}
 
-	ApiBridge.getCallbackId = function ()
+	ApiBridge.getCallbackId = function()
 	{
 		return ApiBridge.callbackId++;
 	}
 
-	ApiBridge.onCallback = function (callbackId, obj)
+	ApiBridge.onCallback = function(callbackId, obj)
 	{
 		if (ApiBridge.callbackCache[callbackId])
 		{
@@ -116,67 +117,68 @@
 		}
 	}
 
-	ApiBridge.onBridgeInitComplete = function (callback)
+	ApiBridge.onBridgeInitComplete = function(callback)
 	{
 		ApiBridge.callNative("ApiBridge", "onBridgeInitComplete", {}, callback);
 	}
 
-	ApiBridge.onNativeInitComplete = function (callback)
+	ApiBridge.onNativeInitComplete = function(callback)
 	{
 		ApiBridge.isReady = true;
 		console.log("--- jsBridgeClient onNativeInitComplete end ---");
 
-		if(callback){
+		if (callback)
+		{
 			callback();
 			ApiBridge.isNotifyReady = true;
 			console.log("--- device ready go--- ");
 		}
 	}
-	
-	ApiBridge.compile = function (aIdentity, aJS)
+
+	ApiBridge.compile = function(aIdentity, aJS)
 	{
 		var value;
 		var error;
-		try 
+		try
 		{
 			value = eval(aJS);
 		}
-		catch(err) 
+		catch (e)
 		{
+			// error = "name: " + e.name +"; errorNumber: " + (e.number & 0xFFFF ) + "; message: " + e.message;
+			var err = {};
+			err.name = e.name;
+			err.message = e.message;
+			err.number = e.number & 0xFFFF;
 			error = err;
 		}
-		
+
 		ApiBridge.callNative("ApiBridge", "compile",
 		{
-			"identity": aIdentity,
+			"identity" : aIdentity,
 			"returnValue" : value,
-			"error": error
+			"error" : error
 		});
 	}
-	
 
 	var jsBridgeClient = {};
 	jsBridgeClient.Event = {};
 	// jsBridgeClient.Event.LOADED = "loaded";
 	// jsBridgeClient.Event.LOAD_ERROR = "load_error";
 	// jsBridgeClient.Event.LOAD_PROGRESS = "load_progress";
-	jsBridgeClient.addEventListener = function (event, callback)
+	jsBridgeClient.addEventListener = function(event, callback)
 	{
 		ApiBridge.callNative("event", "addEventListener",
-			{
-				"event" : event
-			}, callback);
+		{
+			"event" : event
+		}, callback);
 	}
-	
 
-	
-	
-
-	/***************************************************************************
+	/***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
 	 * 接口
-	 **************************************************************************/
-	
-	jsBridgeClient.testJSBrige = function (aString)
+	 **************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+
+	jsBridgeClient.testJSBrige = function(aString)
 	{
 		ApiBridge.callNative("jsBridgeClient", "testJSBrige",
 		{
@@ -184,19 +186,18 @@
 		});
 	};
 
-	jsBridgeClient.commonApi = function (aString, callback)
+	jsBridgeClient.commonApi = function(aString, callback)
 	{
 		ApiBridge.callNative("jsBridgeClient", "commonApi",
 		{
 			"info" : aString
 		}, callback);
 	}
-	
 
-	jsBridgeClient.onDeviceReady=function(handler)
-	{		
+	jsBridgeClient.onDeviceReady = function(handler)
+	{
 		ApiBridge.onDeviceReady = handler;
-		
+
 		if (ApiBridge.isReady && !ApiBridge.isNotifyReady && handler)
 		{
 			console.log("-- device ready --");
@@ -205,15 +206,19 @@
 		}
 	};
 
-	jsBridgeClient.invoke=function(clz,method, args, callback){
-		if(callback){
-			ApiBridge.callNative(clz,method,args,callback);
-		}else{
-			ApiBridge.callNative(clz,method,args);
+	jsBridgeClient.invoke = function(clz, method, args, callback)
+	{
+		if (callback)
+		{
+			ApiBridge.callNative(clz, method, args, callback);
+		}
+		else
+		{
+			ApiBridge.callNative(clz, method, args);
 		}
 	};
 
-	jsBridgeClient.onSetImage = function (srcSuffix, desUri)
+	jsBridgeClient.onSetImage = function(srcSuffix, desUri)
 	{
 		// console.log("--- jsBridgeClient onSetImage ---");
 		var obj = document.querySelectorAll('img[src$="' + srcSuffix + '"]');
@@ -225,20 +230,20 @@
 
 	/* 滚动到页面底部时的回调函数 以及 设置的阀值 */
 	// 先用一个对象保存回调，后期统一优化
-	jsBridgeClient.registerHitPageBottomListener = function (callback, threshold)
+	jsBridgeClient.registerHitPageBottomListener = function(callback, threshold)
 	{
 		ApiBridge.callNative("ApiBridge", "setHitPageBottomThreshold",
-			{
-				"threshold" : threshold
-			});
+		{
+			"threshold" : threshold
+		});
 		jsBridgeClient.onHitPageBottom = callback;
 	};
 
-	/***************************************************************************
+	/***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
 	 * XMLHttpRequest实现
-	 **************************************************************************/
+	 **************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
-	var _XMLHttpRequest = function ()
+	var _XMLHttpRequest = function()
 	{
 		this.id = _XMLHttpRequest.globalId++;
 		_XMLHttpRequest.cache[this.id] = this;
@@ -251,14 +256,14 @@
 		this.onreadystatechange = undefined;
 
 		ApiBridge.callNative('XMLHttpRequest', 'create',
-			{
-				"id" : this.id
-			});
+		{
+			"id" : this.id
+		});
 	}
 
 	_XMLHttpRequest.globalId = 0;
 	_XMLHttpRequest.cache = [];
-	_XMLHttpRequest.setProperties = function (jsonObj)
+	_XMLHttpRequest.setProperties = function(jsonObj)
 	{
 		var id = jsonObj.id;
 		if (_XMLHttpRequest.cache[id])
@@ -293,67 +298,68 @@
 		}
 	}
 
-	_XMLHttpRequest.prototype.open = function (method, url, async)
+	_XMLHttpRequest.prototype.open = function(method, url, async)
 	{
 		ApiBridge.callNative('XMLHttpRequest', 'open',
-			{
-				"id" : this.id,
-				"method" : method,
-				"url" : url,
-				"scheme" : window.location.protocol,
-				"host": window.location.hostname,
-				"port" : window.location.port,
-				"href" : window.location.href,
-				"referer" : document.referrer != "" ? document.referrer : null,
-				"useragent" : navigator.userAgent,
-				"cookie" : document.cookie != "" ? document.cookie : null,
-				"async"  : async
-			});
+		{
+			"id" : this.id,
+			"method" : method,
+			"url" : url,
+			"scheme" : window.location.protocol,
+			"host" : window.location.hostname,
+			"port" : window.location.port,
+			"href" : window.location.href,
+			"referer" : document.referrer != "" ? document.referrer : null,
+			"useragent" : navigator.userAgent,
+			"cookie" : document.cookie != "" ? document.cookie : null,
+			"async" : async
+		});
 	}
 
-	_XMLHttpRequest.prototype.send = function (data)
+	_XMLHttpRequest.prototype.send = function(data)
 	{
 		if (data != null)
 		{
 			ApiBridge.callNative('XMLHttpRequest', 'send',
-				{
-					"id" : this.id,
-					"data" : data
-				});
+			{
+				"id" : this.id,
+				"data" : data
+			});
 		}
 		else
 		{
 			ApiBridge.callNative('XMLHttpRequest', 'send',
-				{
-					"id" : this.id
-				});
-		}
-	}
-	_XMLHttpRequest.prototype.overrideMimeType = function (mimetype)
-	{
-		ApiBridge.callNative('XMLHttpRequest', 'overrideMimeType',
-			{
-				"id" : this.id,
-				"mimetype" : mimetype
-			});
-	}
-	_XMLHttpRequest.prototype.abort = function ()
-	{
-		ApiBridge.callNative('XMLHttpRequest', 'abort',
 			{
 				"id" : this.id
 			});
+		}
 	}
-	_XMLHttpRequest.prototype.setRequestHeader = function (headerName, headerValue)
+	_XMLHttpRequest.prototype.overrideMimeType = function(mimetype)
+	{
+		ApiBridge.callNative('XMLHttpRequest', 'overrideMimeType',
+		{
+			"id" : this.id,
+			"mimetype" : mimetype
+		});
+	}
+	_XMLHttpRequest.prototype.abort = function()
+	{
+		ApiBridge.callNative('XMLHttpRequest', 'abort',
+		{
+			"id" : this.id
+		});
+	}
+	_XMLHttpRequest.prototype.setRequestHeader = function(headerName,
+			headerValue)
 	{
 		ApiBridge.callNative('XMLHttpRequest', 'setRequestHeader',
-			{
-				"id" : this.id,
-				"headerName" : headerName,
-				"headerValue" : headerValue
-			});
+		{
+			"id" : this.id,
+			"headerName" : headerName,
+			"headerValue" : headerValue
+		});
 	}
-	_XMLHttpRequest.prototype.getAllResponseHeaders = function ()
+	_XMLHttpRequest.prototype.getAllResponseHeaders = function()
 	{
 		var strHeaders = '';
 		for ( var name in this.headers)
@@ -362,7 +368,7 @@
 		}
 		return strHeaders;
 	}
-	_XMLHttpRequest.prototype.getResponseHeader = function (headerName)
+	_XMLHttpRequest.prototype.getResponseHeader = function(headerName)
 	{
 		var strHeaders;
 		var upperCaseHeaderName = headerName.toUpperCase();
@@ -373,7 +379,7 @@
 		}
 		return strHeaders;
 	}
-	_XMLHttpRequest.deleteObject = function (id)
+	_XMLHttpRequest.deleteObject = function(id)
 	{
 		if (_XMLHttpRequest.cache[id])
 		{
@@ -381,13 +387,14 @@
 		}
 	}
 
-	/***************************************************************************
+	/***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
 	 * 操作Docment
-	 **************************************************************************/
+	 **************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
-	jsBridgeClient.deleteFirstElement = function (className)
+	jsBridgeClient.deleteFirstElement = function(className)
 	{
-		var all = document.all ? document.all : document.getElementsByTagName('*');
+		var all = document.all ? document.all : document
+				.getElementsByTagName('*');
 		var elements = new Array();
 		for (var e = 0; e < all.length; e++)
 		{
@@ -400,9 +407,10 @@
 		}
 	}
 
-	function getElementsByClassName (className)
+	function getElementsByClassName(className)
 	{
-		var all = document.all ? document.all : document.getElementsByTagName('*');
+		var all = document.all ? document.all : document
+				.getElementsByTagName('*');
 		var elements = new Array();
 		for (var e = 0; e < all.length; e++)
 		{
@@ -415,26 +423,22 @@
 		return elements;
 	}
 
-	/***************************************************************************
-	 *
-	 **************************************************************************/
+	/***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+	 * 
+	 **************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
-	/*var windowOpen = function (url)
-	{
-		ApiBridge.callNative("JavascriptAPIInterceptor", "windowOpen",
-			{
-				"url" : url
-			});
-	};*/
+	/*
+	 * var windowOpen = function (url) { ApiBridge.callNative("JavascriptAPIInterceptor", "windowOpen", { "url" : url }); };
+	 */
 
 	// 注册对象
 	global.ApiBridge = ApiBridge;
 	global.jsBridgeClient = jsBridgeClient;
-	//global.open = windowOpen;
-	//global.console.log = ApiBridge.log;
+	// global.open = windowOpen;
+	global.console.log = ApiBridge.log;
 	global.XMLHttpRequest = _XMLHttpRequest;
 
-	jsBridgeClient.register = function (_window)
+	jsBridgeClient.register = function(_window)
 	{
 		_window.ApiBridge = window.ApiBridge;
 		_window.jsBridgeClient = window.jsBridgeClient;
@@ -443,14 +447,14 @@
 		_window.open = window.open;
 	};
 
-	ApiBridge.onBridgeInitComplete(function (){
-		
-		
-		ApiBridge.onNativeInitComplete( ApiBridge.onDeviceReady );
-		
-//		jsBridgeClient.onDeviceReady(function(){
-//			alert('onDeviceReady');
-//		});
+	ApiBridge.onBridgeInitComplete(function()
+	{
+
+		ApiBridge.onNativeInitComplete(ApiBridge.onDeviceReady);
+
+		// jsBridgeClient.onDeviceReady(function(){
+		// alert('onDeviceReady');
+		// });
 
 	});
 
