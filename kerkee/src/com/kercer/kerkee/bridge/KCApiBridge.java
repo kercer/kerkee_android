@@ -52,15 +52,15 @@ public class KCApiBridge
 
 	public static boolean registClass(KCClass aClass)
 	{
-		return mClassMrg.registClass(aClass);
+		return mClassMrg.registClass(aClass) ;
 	}
 
-	public static boolean registClass(String aJSObjectName, Class<?> aClass)
+	public static KCClass registClass(String aJSObjectName, Class<?> aClass)
 	{
 		return mClassMrg.registClass(aJSObjectName, aClass);
 	}
 
-	public static boolean registJSBridgeClient(Class<?> aClass)
+	public static KCClass registJSBridgeClient(Class<?> aClass)
 	{
 		removeClass(KCJSDefine.kJS_jsBridgeClient);
 		return registClass(KCJSDefine.kJS_jsBridgeClient, aClass);

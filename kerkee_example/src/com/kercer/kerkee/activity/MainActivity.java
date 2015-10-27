@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.kercer.kerkee.api.KCRegistMgr;
+import com.kercer.kerkee.bridge.KCJSObject;
+import com.kercer.kerkee.bridge.KerkeeMethod;
 import com.kercer.kerkee.browser.KCDefaultBrowser;
 import com.kercer.kerkee_example.R;
 
@@ -16,6 +18,22 @@ import java.lang.reflect.Type;
 
 public class MainActivity extends Activity
 {
+	public class KCTest extends KCJSObject
+	{
+
+		@Override
+		public String getJSObjectName()
+		{
+			return "test";
+		}
+		
+		@KerkeeMethod
+		public String testString()
+		{
+			return null;
+		}
+		
+	}
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,6 +54,10 @@ public class MainActivity extends Activity
         String s = Modifier.toString(targetMethods[3].getModifiers()) ;
         Class<?>[] a = targetMethods[3].getParameterTypes();
         Type[] b = targetMethods[3].getGenericParameterTypes();
+        
+        KCTest test = new KCTest();
+        test.getMethods();
+        
 
         browser.loadTestPage();
 //        browser.loadUrl("http://www.baidu.com");

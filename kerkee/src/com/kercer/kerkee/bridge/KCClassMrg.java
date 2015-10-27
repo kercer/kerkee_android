@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class KCClassMrg
 {
     private final static HashMap<String, KCClass> mClassMap = new HashMap<String, KCClass>();
-    private final static HashMap<String, KCMethod> mMethodCache = new HashMap<String, KCMethod>();  //key is identity for KCMethod
+//    private final static HashMap<String, KCMethod> mMethodCache = new HashMap<String, KCMethod>();  //key is identity for KCMethod
     private final static HashMap<String, KCJSObject> mJSObjectMap = new HashMap<String, KCJSObject>();
 
     static
@@ -26,55 +26,50 @@ public class KCClassMrg
     }
 
 
-    public boolean registObject(KCJSObject aObject)
+    public KCClass registObject(KCJSObject aObject)
     {
-        if (aObject == null) return false;
+        if (aObject == null) return null;
         String jsObjectName = aObject.getJSObjectName();
         if (jsObjectName != null)
         {
             mJSObjectMap.put(jsObjectName, aObject);
-            registClass(jsObjectName, aObject.getClass());
+            return registClass(jsObjectName, aObject.getClass());
         }
 
-        return true;
+        return null;
     }
-    public KCJSObject removeObject(KCJSObject aObject)
+    public KCClass removeObject(KCJSObject aObject)
     {
-    	KCJSObject jsObject = null;
-    	if (aObject == null) return jsObject;
+    	if (aObject == null) return null;
     	String jsObjectName = aObject.getJSObjectName();
     	if(jsObjectName != null)
     	{
-    		jsObject = mJSObjectMap.remove(jsObjectName);
-    		removeClass(jsObjectName);
+    		mJSObjectMap.remove(jsObjectName);
+    		return removeClass(jsObjectName);
     	}
-    	return jsObject;
+    	return null;
     }
     
 
     public boolean registClass(KCClass aClass)
     {
-        return registClass(aClass.getJSClz(), aClass.getNavClass());
+        return registClass(aClass.getJSClz(), aClass.getNavClass()) != null ? true : false;
     }
 
-    public boolean registClass(String aJSObjectName, Class<?> aClass)
+    public KCClass registClass(String aJSObjectName, Class<?> aClass)
     {
-        if (aJSObjectName == null || aClass == null) return false;
-//        if (!mClassMap.containsKey(aJSObjectName))
-//        {
-            mClassMap.put(aJSObjectName, KCClass.newClass(aJSObjectName, aClass));
+        if (aJSObjectName == null || aClass == null) return null;
+        KCClass clz = KCClass.newClass(aJSObjectName, aClass);
+        mClassMap.put(aJSObjectName, KCClass.newClass(aJSObjectName, aClass));
 //            String js = String.format("if(%s && global.%s) global.%s=%s", aJSObjectName, aJSObjectName, aJSObjectName, aJSObjectName);
 //            callJS(aWebView, js, true);
-            return true;
-//        }
-
-//        return false;
+            return clz;
     }
 
-    public void removeClass(String aJSObjectName)
+    public KCClass removeClass(String aJSObjectName)
     {
-        if (aJSObjectName == null) return;
-        mClassMap.remove(aJSObjectName);
+        if (aJSObjectName == null) return null;
+       return mClassMap.remove(aJSObjectName);
     }
 
     public KCClass getClass(String aClassName)

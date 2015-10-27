@@ -48,7 +48,7 @@ public class KCJSBridge
      */
     /********************************************************/
 
-    public static boolean registJSBridgeClient(Class<?> aClass)
+    public static KCClass registJSBridgeClient(Class<?> aClass)
     {
         return KCApiBridge.registJSBridgeClient(aClass);
     }
@@ -58,7 +58,7 @@ public class KCJSBridge
         return KCApiBridge.registClass(aClass);
     }
 
-    public static boolean registClass(String aJSObjectName, Class<?> aClass)
+    public static KCClass registClass(String aJSObjectName, Class<?> aClass)
     {
         return KCApiBridge.registClass(aJSObjectName, aClass);
     }

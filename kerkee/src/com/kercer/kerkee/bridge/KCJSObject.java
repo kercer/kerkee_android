@@ -18,7 +18,7 @@ public abstract class KCJSObject
         for (int i = 0; i < targetMethods.length; i++)
         {
             Method targetMethod = targetMethods[i];
-            if (targetMethod.getAnnotation(KCJSMethod.class) != null)
+            if (targetMethod.getAnnotation(KerkeeMethod.class) != null)
             {
                 String methodName = targetMethod.getName();
                 if (methods.containsKey(methodName))
