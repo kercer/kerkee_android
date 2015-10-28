@@ -1,6 +1,8 @@
 package com.kercer.kerkee.net;
 
-import java.io.IOException;
+import android.net.Proxy;
+
+import com.kercer.kerkee.log.KCLog;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
@@ -27,12 +29,10 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
 
-import com.kercer.kerkee.log.KCLog;
-
-import android.net.Proxy;
+import java.io.IOException;
 
 /**
- * 
+ *
  * @author zihong
  *
  */

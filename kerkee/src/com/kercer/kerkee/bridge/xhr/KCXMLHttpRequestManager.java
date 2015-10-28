@@ -1,18 +1,19 @@
 package com.kercer.kerkee.bridge.xhr;
 
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
 import com.kercer.kerkee.bridge.KCArgList;
+import com.kercer.kerkee.bridge.KCJSNull;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.net.uri.KCURI;
 import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebView;
 
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -34,10 +35,10 @@ public class KCXMLHttpRequestManager
         }
         return xhr;
     }
-    
+
     public static void create(KCWebView webView, KCArgList args)
     {
-        
+
     }
 
     public static void open(KCWebView webView, KCArgList args)
@@ -75,7 +76,7 @@ public class KCXMLHttpRequestManager
 
                 if(nSegmentCount == 1 && !url.startsWith("/"))
                 {
-                    KCURI uriHref = KCURI.parse(href); 
+                    KCURI uriHref = KCURI.parse(href);
                     uriHref.removeLastPathSegment();
                     url = uriHref.site()+uriHref.getPath()+"/" + url;
                 }
@@ -89,9 +90,9 @@ public class KCXMLHttpRequestManager
                 {
                     url = href;
                 }
-                
+
             }
-            
+
             xhr.open(webView, method, url, async, ua, referer, cookie);
         }
         catch (URISyntaxException e)
@@ -202,7 +203,7 @@ public class KCXMLHttpRequestManager
         try
         {
             String value = aArgList.getString(name);
-            return (value != null) ? value : defaultValue ;
+            return !KCJSNull.isNull(value) ? value : defaultValue ;
         }
         catch (Exception e)
         {

@@ -1,12 +1,12 @@
 package com.kercer.kerkee.bridge.xhr;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.StringTokenizer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import android.os.SystemClock;
+
+import com.kercer.kerkee.bridge.KCJSExecutor;
+import com.kercer.kerkee.log.KCLog;
+import com.kercer.kerkee.net.KCHttpClient;
+import com.kercer.kerkee.util.KCUtil;
+import com.kercer.kerkee.webview.KCWebView;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -21,17 +21,16 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.kercer.kerkee.bridge.KCApiBridge;
-import com.kercer.kerkee.bridge.KCJSExecutor;
-import com.kercer.kerkee.log.KCLog;
-import com.kercer.kerkee.net.KCHttpClient;
-import com.kercer.kerkee.util.KCUtil;
-import com.kercer.kerkee.webview.KCWebView;
-
-import android.os.SystemClock;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.StringTokenizer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -220,7 +219,7 @@ public class KCXMLHttpRequest
                             if (sl.getStatusCode() == HttpStatus.SC_OK)
                             {
                                 // send the received response headers to the JS layer
-                                setCookieToWebView(response);
+                                setCookieToWebView(webView, response);
                                 handleHeaders(webView, response, sl);
 
                                 entity = response.getEntity();
@@ -418,13 +417,14 @@ public class KCXMLHttpRequest
         readCharset(mimeType);
     }
 
-    private void setCookieToWebView(HttpResponse response)
+    //httpClient setCookie
+    private void setCookieToWebView(KCWebView webView, HttpResponse response)
     {
-        //      Header[] cookies = response.getHeaders("Set-Cookie");
-        //      for (int i = 0; i < cookies.length; ++i) {
-        //          ApiBridge.callJs("javascript:document.cookie='"
-        //                  + cookies[i].getValue() + "'");
-        //      }
+//        Header[] cookies = response.getHeaders("Set-Cookie");
+//        for (int i = 0; i < cookies.length; ++i)
+//        {
+//            KCJSExecutor.callJS(webView, "javascript:document.cookie='" + cookies[i].getValue() + "'");
+//        }
     }
 
     private void callJSSetProperties(KCWebView webView, String jsonStr)
