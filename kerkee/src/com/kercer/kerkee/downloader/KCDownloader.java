@@ -5,9 +5,9 @@ import java.io.InputStream;
 import java.util.Locale;
 
 /**
- * Provides retrieving of {@link InputStream} of image by URI.<br />
+ * Provides retrieving of {@link InputStream} of image by URI.
  * Implementations have to be thread-safe.
- * 
+ *
  * @author zihong
  */
 public interface KCDownloader
@@ -17,7 +17,7 @@ public interface KCDownloader
      * Retrieves {@link InputStream} of image by URI.
      *
      * @param imageUri Image URI
-     * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+     * @param extra    Auxiliary object
      *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
      * @return {@link InputStream} of image
      * @throws IOException                   if some I/O error occurs during getting image stream

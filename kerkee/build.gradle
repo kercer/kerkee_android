@@ -159,3 +159,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
+
+
+apply from: 'release.gradle'

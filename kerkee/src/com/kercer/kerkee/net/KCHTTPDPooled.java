@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URLEncoder;
@@ -28,9 +27,9 @@ import java.util.Vector;
 /**
  * A wrapper on top of NanoHTTPD that provides a managed connection pool. Since Nano starts immediately, it immediately kills the started threads,
  * sets up the connection pool, and waits for connections on a background thread (like Nano). All other functionality inherited from NanoHTTPD.
- * 
+ *
  * @author zihong
- * 
+ *
  */
 
 public class KCHTTPDPooled
@@ -54,10 +53,8 @@ public class KCHTTPDPooled
 	protected File myRootDir;
 
 	/**
-	 * 
-	 * @param port
+	 *
 	 * @param wwwroot
-	 * @throws IOException
 	 */
 	public KCHTTPDPooled(File wwwroot)
 	{
@@ -68,8 +65,7 @@ public class KCHTTPDPooled
 	 * Starts a HTTP server to given port.
 	 * <p>
 	 * Throws an IOException if the socket is already in use
-	 * 
-	 * @throws IOException
+	 *
 	 */
 	public int getPort()
 	{
@@ -144,9 +140,9 @@ public class KCHTTPDPooled
 	/**
 	 * Override this to customize the server.
 	 * <p>
-	 * 
+	 *
 	 * (By default, this delegates to serveFile() and allows directory listing.)
-	 * 
+	 *
 	 * @param uri
 	 *            Percent-decoded URI without parameters, for example "/index.cgi"
 	 * @param method
@@ -348,7 +344,7 @@ public class KCHTTPDPooled
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		protected void processRequest()
 		{

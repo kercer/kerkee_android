@@ -1,0 +1,81 @@
+//apply plugin: 'maven'
+//apply plugin: 'signing'
+
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+version = "1.0.0"                                                               // #CONFIG# // project version
+
+def siteUrl = 'https://github.com/kercer/kerkee_android'                        // #CONFIG# // project homepage
+def gitUrl = 'https://github.com/kercer/kerkee_android.git'                     // #CONFIG# // project git
+group = "com.kercer"                                                          // #CONFIG# // Maven Group ID for the artifact (pageckage name is ok)
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                name 'kerkee for android'                                   // #CONFIG# // project title
+                description 'kerkee is a hybrid app framework,This repository is kerkee for android'
+                url siteUrl
+                // Set your license
+                licenses {
+                    license {
+                        name 'GNU GENERAL PUBLIC LICENSE, Version 3'
+                        url 'http://www.gnu.org/licenses/'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'zihong'                                           // #CONFIG# // your user id (you can write your nickname)
+                        name 'zihong'                                       // #CONFIG# // your user name
+                        email 'zihong87@gmail.com'                               // #CONFIG# // your email
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "kerkee"                                                 // #CONFIG# project name in jcenter
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["GPL-3.0"]
+        publish = true
+    }
+}

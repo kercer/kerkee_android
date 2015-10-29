@@ -274,7 +274,7 @@ public class KCXMLHttpRequest
     }
 
     /**
-     * for POST only start data transmission(sending the request HEADER & BODY
+     * for POST only start data transmission(sending the request HEADER and BODY
      * and reading the response)
      */
     public void send(final KCWebView webView, final String data)

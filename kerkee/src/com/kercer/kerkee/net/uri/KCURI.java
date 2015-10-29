@@ -317,7 +317,6 @@ public class KCURI
 
     /**
      * Sets the request URI component consisting of path and query parameters, e.g.
-     * 'path/to/resource?q=all&search=foo'
      *
      * @param aRequest
      * @return
@@ -595,7 +594,6 @@ public class KCURI
     }
 
     /**
-     * For more details see {@link #join(URI)}
      *
      * @param aUri
      * @return
@@ -616,7 +614,6 @@ public class KCURI
      *
      * The algorithm used is taken from section 5.2.2
      *
-     * @param relativePath
      * @return
      * @throws URISyntaxException
      */

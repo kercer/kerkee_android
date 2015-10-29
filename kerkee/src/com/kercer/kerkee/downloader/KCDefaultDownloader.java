@@ -1,5 +1,14 @@
 package com.kercer.kerkee.downloader;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.net.Uri;
+import android.provider.MediaStore;
+
+import com.kercer.kerkee.util.KCUtilIO;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,17 +21,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.kercer.kerkee.util.KCUtilIO;
-
-import android.content.ContentResolver;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.net.Uri;
-import android.provider.MediaStore;
-
 /**
- * Provides retrieving of {@link InputStream} of image by URI from network or file system or app resources.<br />
+ * Provides retrieving of {@link InputStream} of image by URI from network or file system or app resources.
  * {@link URLConnection} is used to retrieve image stream from network.
  *
  * @author zihong
@@ -89,7 +89,7 @@ public class KCDefaultDownloader implements KCDownloader
      * Retrieves {@link InputStream} of image by URI (image is located in the network).
      *
      * @param imageUri Image URI
-     * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+     * @param extra    Auxiliary object which was passed
      *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
      * @return {@link InputStream} of image
      * @throws IOException if some I/O error occurs during network request or if no InputStream could be created for
@@ -124,7 +124,7 @@ public class KCDefaultDownloader implements KCDownloader
      * Create {@linkplain HttpURLConnection HTTP connection} for incoming URL
      *
      * @param url   URL to connect to
-     * @param extra Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+     * @param extra Auxiliary object
      *              DisplayImageOptions.extraForDownloader(Object)}; can be null
      * @return {@linkplain HttpURLConnection Connection} for incoming URL. Connection isn't established so it still configurable.
      * @throws IOException if some I/O error occurs during network request or if no InputStream could be created for
@@ -143,7 +143,7 @@ public class KCDefaultDownloader implements KCDownloader
      * Retrieves {@link InputStream} of image by URI (image is located on the local file system or SD card).
      *
      * @param imageUri Image URI
-     * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+     * @param extra    Auxiliary object which was passed
      *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
      * @return {@link InputStream} of image
      * @throws IOException if some I/O error occurs reading from file system
@@ -158,7 +158,7 @@ public class KCDefaultDownloader implements KCDownloader
      * Retrieves {@link InputStream} of image by URI (image is accessed using {@link ContentResolver}).
      *
      * @param imageUri Image URI
-     * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+     * @param extra    Auxiliary object
      *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
      * @return {@link InputStream} of image
      * @throws FileNotFoundException if the provided URI could not be opened
@@ -187,7 +187,7 @@ public class KCDefaultDownloader implements KCDownloader
      * Retrieves {@link InputStream} of image by URI (image is located in assets of application).
      *
      * @param imageUri Image URI
-     * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+     * @param extra    Auxiliary object
      *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
      * @return {@link InputStream} of image
      * @throws IOException if some I/O error occurs file reading
@@ -202,7 +202,7 @@ public class KCDefaultDownloader implements KCDownloader
      * Retrieves {@link InputStream} of image by URI (image is located in drawable resources of application).
      *
      * @param imageUri Image URI
-     * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+     * @param extra    Auxiliary object
      *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
      * @return {@link InputStream} of image
      */
@@ -215,12 +215,12 @@ public class KCDefaultDownloader implements KCDownloader
 
     /**
      * Retrieves {@link InputStream} of image by URI from other source with unsupported scheme. Should be overriden by
-     * successors to implement image downloading from special sources.<br />
+     * successors to implement image downloading from special sources.
      * This method is called only if image URI has unsupported scheme. Throws {@link UnsupportedOperationException} by
      * default.
      *
      * @param imageUri Image URI
-     * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
+     * @param extra    Auxiliary object
      *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
      * @return {@link InputStream} of image
      * @throws IOException                   if some I/O error occurs
