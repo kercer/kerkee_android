@@ -89,7 +89,7 @@ task cleanKerkeeNdkLib(type: Exec) {
 task packageKerkeeNdkLibs(dependsOn: buildKerkeeNdkLib, type: Copy) {
     from "$kerkeeNdkLibsDir"
 //    exclude '**/libjsc.so'
-    into "libs"
+    into 'libs'
 }
 
 android {
