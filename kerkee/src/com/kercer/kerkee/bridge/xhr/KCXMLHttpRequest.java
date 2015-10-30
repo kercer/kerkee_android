@@ -1,23 +1,21 @@
 package com.kercer.kerkee.bridge.xhr;
 
-import android.os.SystemClock;
-
 import com.kercer.kerkee.bridge.KCJSExecutor;
 import com.kercer.kerkee.log.KCLog;
-import com.kercer.kerkee.net.KCHttpClient;
 import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebView;
+import com.kercer.kernet.http.KCHttpListener;
+import com.kercer.kernet.http.KCHttpRequest;
+import com.kercer.kernet.http.KCHttpResponse;
+import com.kercer.kernet.http.KCHttpResult;
+import com.kercer.kernet.http.KerNet;
+import com.kercer.kernet.http.base.KCHeader;
+import com.kercer.kernet.http.base.KCHttpDefine;
+import com.kercer.kernet.http.base.KCStatusLine;
+import com.kercer.kernet.http.error.KCAuthFailureError;
+import com.kercer.kernet.http.error.KCNetError;
+import com.kercer.kernet.http.request.KCStringRequest;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,9 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.StringTokenizer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  *
@@ -46,24 +41,19 @@ public class KCXMLHttpRequest
     private final static String POST = "POST";
     private final static String HEAD = "HEAD";
 
-    //    private final static String KC_CACHE_TIME_HEADER = "kc-cache-time";
-
-    private HttpRequestBase mHttpRequest;
+    private KCStringRequest mHttpRequest;
 
     private int mState = UNSET;
     private int mId;
     private String mUrlHash;
     private boolean mAsync;
 
-    private final static ExecutorService mWorkerExecutor = Executors.newFixedThreadPool(3);
-
     private final static String DEFAULT_RESPONSE_CHARSET = "UTF-8";
     private String mResponseCharset; // for example: gbk, gb2312, etc.
 
-    private final static int RETRY_MAX_COUNT = 1;
-    private final static int RETRY_WAIT_TIME = 3000;
-
     private boolean mAborted;
+
+    private String mBody;
 
     public KCXMLHttpRequest(int id, String urlHash)
     {
@@ -102,11 +92,11 @@ public class KCXMLHttpRequest
         if (mHttpRequest != null)
         {
             if (userAgent != null)
-                mHttpRequest.setHeader("User-Agent", userAgent);
+                mHttpRequest.addHeader(KCHeader.header("User-Agent", userAgent));
             if (referer != null)
-                mHttpRequest.setHeader("Referer", referer);
+                mHttpRequest.addHeader(KCHeader.header("Referer", referer));
             if (cookie != null)
-                mHttpRequest.setHeader("Cookie", cookie);
+                mHttpRequest.addHeader(KCHeader.header("Cookie", cookie));
         }
     }
 
@@ -117,22 +107,101 @@ public class KCXMLHttpRequest
     private void createHttpRequest(final KCWebView webView, final String method, final String url)
     {
         URI uri = URI.create(KCUtil.replacePlusWithPercent20(url));
+        int nMethod = -1;
         if (GET.equalsIgnoreCase(method))
         {
-            mHttpRequest = new HttpGet(uri);
+            nMethod = KCHttpRequest.Method.GET;
         }
         else if (POST.equalsIgnoreCase(method))
         {
-            mHttpRequest = new HttpPost(uri);
+            nMethod = KCHttpRequest.Method.POST;
         }
         else if (HEAD.equalsIgnoreCase(method))
         {
-            mHttpRequest = new HttpHead(uri);
+            nMethod = KCHttpRequest.Method.HEAD;
+        }
+
+
+        if (nMethod >= 0)
+        {
+            final KCHttpResponse[] httpResponse = new KCHttpResponse[1];
+
+            mHttpRequest = new KCStringRequest(nMethod, uri.toString(), new KCHttpResult.KCHttpResultListener<String>() {
+
+                @Override
+                public void onHttpResult(String response)
+                {
+                    final KCStatusLine sl = httpResponse[0].getStatusLine();
+                    try
+                    {
+                        // send the received response headers to the JS layer
+                        setCookieToWebView(webView, httpResponse[0]);
+                        handleHeaders(webView, httpResponse[0], sl);
+
+                        returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), response, false);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+
+                        if (!mHttpRequest.isCanceled())
+                        {
+                            returnError(webView, 500, e.getMessage());
+                        }
+
+                    }
+                    finally
+                    {
+                        KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
+                    }
+
+                }
+            }, new KCHttpListener() {
+
+                @Override
+                public void onHttpError(KCNetError error)
+                {
+                    final KCStatusLine sl = error.networkResponse.getStatusLine();
+                    returnError(webView, sl.getStatusCode(), sl.getReasonPhrase());
+                }
+
+                @Override
+                public void onHttpComplete(KCHttpRequest<?> request, KCHttpResponse response)
+                {
+                    httpResponse[0] = response;
+                }
+            })
+            {
+
+//                @Override
+//                protected Map<String, String> getParams() throws KCAuthFailureError
+//                {
+//                    Map<String, String> params = new HashMap<String, String>(1);
+//                    params.put("key", mBody);
+//                    return params;
+//                }
+
+                @Override
+                public byte[] getBody() throws KCAuthFailureError
+                {
+                    try {
+                        //can set charset
+                        return mBody.getBytes(getParamsEncoding());
+                    }
+                    catch (Exception e)
+                    {
+                    }
+
+                    return super.getBody();
+                }
+            };
         }
         else
         {
             returnError(webView, 405, "Method Not Allowed");
         }
+
+
     }
 
     private void returnError(KCWebView webView, int statusCode, String statusText)
@@ -188,150 +257,30 @@ public class KCXMLHttpRequest
             return;
         }
 
-        mWorkerExecutor.execute(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    int curRetryCount = 0;
-                    while (++curRetryCount <= RETRY_MAX_COUNT)
-                    {
-                        HttpEntity entity = null;
-                        InputStream is = null;
-
-                        if (mAborted)
-                            return;
-
-                        try
-                        {
-                            KCLog.i(">>>> XHR send: " + mHttpRequest.getURI());
-                            // send the request
-                            HttpResponse response = KCHttpClient.getHttpClient().execute(mHttpRequest);
-                            StatusLine sl = response.getStatusLine();
-                            if (KCLog.DEBUG)
-                            {
-                                KCLog.i(">>>> XHR response status: " + sl.getStatusCode());
-                                KCLog.d(">>>> XHR content length: " + response.getFirstHeader("Content-Length"));
-                            }
-
-                            if (sl.getStatusCode() == HttpStatus.SC_OK)
-                            {
-                                // send the received response headers to the JS layer
-                                setCookieToWebView(webView, response);
-                                handleHeaders(webView, response, sl);
-
-                                entity = response.getEntity();
-                                is = entity.getContent();
-                                String responseText = readResponseBody(is);
-
-                                KCLog.d(">>>> XHR READ content length: " + responseText.length());
-
-                                returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), responseText, false);
-                                break;
-                            }
-                            else if (curRetryCount == RETRY_MAX_COUNT)
-                            {
-                                KCLog.i(">>>> XHR reach retry max count, status: " + sl.getStatusCode());
-                                returnError(webView, sl.getStatusCode(), sl.getReasonPhrase());
-                                break;
-                            }
-                            KCLog.i(">>>> XHR unknown status: " + sl.getStatusCode());
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-
-                            KCLog.i(">>>> XHR exception: " + e.getMessage());
-                            if (!mHttpRequest.isAborted())
-                            {
-                                if (curRetryCount < RETRY_MAX_COUNT)
-                                {
-                                    SystemClock.sleep(RETRY_WAIT_TIME);
-                                }
-                                else
-                                {
-                                    returnError(webView, 500, e.getMessage());
-                                    KCLog.i(">>>> XHR exception: " + e.getMessage());
-                                    break;
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            KCUtil.closeCloseable(is);
-                            closeHttpEntity(entity);
-                        }
-                    }
-                }
-                finally
-                {
-                    KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
-                }
-            }
-        });
+        KerNet.newRequestRunner(webView.getContext()).startAsyn(mHttpRequest);
     }
 
     /**
      * for POST only start data transmission(sending the request HEADER and BODY
      * and reading the response)
      */
+
     public void send(final KCWebView webView, final String data)
     {
-        if (mHttpRequest == null || !POST.equals(mHttpRequest.getMethod().toUpperCase()))
-            return;
 
-        mWorkerExecutor.execute(new Runnable()
+        if (mHttpRequest == null || mHttpRequest.getMethod() != KCHttpRequest.Method.POST)
         {
-            @Override
-            public void run()
-            {
-                // Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                HttpEntity entity = null;
-                InputStream is = null;
+            KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
+            return;
+        }
 
-                try
-                {
-                    StringEntity formParametersEntity = new StringEntity(data);
-                    formParametersEntity.setContentType("application/x-www-form-urlencoded");
-                    ((HttpPost) mHttpRequest).setEntity(formParametersEntity);
-                    HttpResponse response = KCHttpClient.getHttpClient().execute(mHttpRequest);
-                    StatusLine sl = response.getStatusLine();
+        mBody = data;
 
-                    if (sl.getStatusCode() == HttpStatus.SC_OK)
-                    {
-                        //setCookieToWebView(response);
-                        handleHeaders(webView, response, sl);
+        send(webView);
 
-                        entity = response.getEntity();
-                        is = entity.getContent();
-                        String responseText = readResponseBody(is);
-
-                        returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), responseText, false);
-                    }
-                    else
-                    {
-                        returnError(webView, sl.getStatusCode(), sl.getReasonPhrase());
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-
-                    if (!mHttpRequest.isAborted())
-                    {
-                        returnError(webView, 500, e.getMessage());
-                    }
-                }
-                finally
-                {
-                    KCUtil.closeCloseable(is);
-                    closeHttpEntity(entity);
-                }
-            }
-        });
     }
+
+
 
     //if statusCode is 200, reasonPhrase is "OK"
     private void returnResult(KCWebView webView, int statusCode, String reasonPhrase, String responseText, boolean alreadyInUIThread) throws JSONException
@@ -365,17 +314,17 @@ public class KCXMLHttpRequest
     }
 
     // send headers to the JS layer
-    private void handleHeaders(KCWebView webView, HttpResponse response, StatusLine sl) throws JSONException
+    private void handleHeaders(KCWebView webView, KCHttpResponse response, KCStatusLine sl) throws JSONException
     {
-        Header[] headers = response.getAllHeaders();
+        KCHeader[] headers = response.getAllHeaders();
         JSONObject jsonHeaders = new JSONObject();
-        for (Header h : headers)
+        for (KCHeader h : headers)
         {
             String name = h.getName();
             String value = h.getValue();
-            if (name.equals("Content-Type"))
+            if (name.equalsIgnoreCase(KCHttpDefine.HEADER_CONTENT_TYPE))
             {
-                readCharset(value);
+                mResponseCharset = readCharset(value, DEFAULT_RESPONSE_CHARSET);
             }
             jsonHeaders.put(name, value);
         }
@@ -391,34 +340,69 @@ public class KCXMLHttpRequest
 
     public void setRequestHeader(String headerName, String headerValue)
     {
+        if (headerName == null || headerValue == null) return;
+
         if ("host".equalsIgnoreCase(headerName))
         { // this header must not be set this way
             return;
         }
-        mHttpRequest.setHeader(headerName, headerValue);
+        else if(KCHttpDefine.HEADER_CONTENT_TYPE.equalsIgnoreCase(headerName))
+        {
+            String charset = readCharset(headerValue, null);
+            if (charset == null)
+            {
+                String valueTrim = headerValue;
+                valueTrim = valueTrim.trim();
+
+                if (valueTrim.charAt(valueTrim.length()-1) == ';')
+                {
+                    valueTrim = valueTrim.substring(0, valueTrim.length()-1);
+                }
+                headerValue = valueTrim + KCHttpDefine.CHARSET_PARAM + DEFAULT_RESPONSE_CHARSET;
+            }
+        }
+        mHttpRequest.addHeader(KCHeader.header(headerName, headerValue));
     }
 
     // "text/html;charset=gbk", "gbk" will be extracted, others will be ignored.
-    private void readCharset(String mimeType)
+    private String readCharset(String mimeType, String defaultCharset)
     {
-        StringTokenizer st = new StringTokenizer(mimeType, ";=");
-        while (st.hasMoreTokens())
+        if (mimeType != null)
         {
-            if (st.nextToken().trim().equalsIgnoreCase("charset"))
+            String[] params = mimeType.split(";");
+            for (int i = 1; i < params.length; i++)
             {
-                if (st.hasMoreTokens())
-                    mResponseCharset = st.nextToken().trim();
+                String[] pair = params[i].trim().split("=");
+                if (pair.length == 2)
+                {
+                    if (pair[0].equalsIgnoreCase("charset"))
+                    {
+                        return pair[1];
+                    }
+                }
             }
         }
+
+        return defaultCharset;
+
+//        StringTokenizer st = new StringTokenizer(mimeType, ";=");
+//        while (st.hasMoreTokens())
+//        {
+//            if (st.nextToken().trim().equalsIgnoreCase("charset"))
+//            {
+//                if (st.hasMoreTokens())
+//                    mResponseCharset = st.nextToken().trim();
+//            }
+//        }
     }
 
     public void overrideMimeType(String mimeType)
     {
-        readCharset(mimeType);
+        readCharset(mimeType, DEFAULT_RESPONSE_CHARSET);
     }
 
     //httpClient setCookie
-    private void setCookieToWebView(KCWebView webView, HttpResponse response)
+    private void setCookieToWebView(KCWebView webView, KCHttpResponse response)
     {
 //        Header[] cookies = response.getHeaders("Set-Cookie");
 //        for (int i = 0; i < cookies.length; ++i)
@@ -429,22 +413,7 @@ public class KCXMLHttpRequest
 
     private void callJSSetProperties(KCWebView webView, String jsonStr)
     {
-    	KCJSExecutor.callJSFunctionOnMainThread(webView, "XMLHttpRequest.setProperties", jsonStr);
-    }
-
-    private void closeHttpEntity(HttpEntity en)
-    {
-        if (en != null)
-        {
-            try
-            {
-                en.consumeContent();
-            }
-            catch (IOException e)
-            {
-                KCLog.e(e.toString());
-            }
-        }
+        KCJSExecutor.callJSFunctionOnMainThread(webView, "XMLHttpRequest.setProperties", jsonStr);
     }
 
     public synchronized boolean isOpened()
@@ -455,9 +424,9 @@ public class KCXMLHttpRequest
     public synchronized void abort()
     {
         mAborted = true;
-        if (mState != DONE && !mHttpRequest.isAborted())
+        if (mState != DONE && !mHttpRequest.isCanceled())
         {
-            mHttpRequest.abort();
+            mHttpRequest.cancel();
         }
     }
 }
