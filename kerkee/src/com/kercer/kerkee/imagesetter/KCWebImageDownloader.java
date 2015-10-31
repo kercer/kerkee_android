@@ -7,14 +7,15 @@ import android.graphics.BitmapFactory;
 
 import com.kercer.kerkee.downloader.KCDefaultDownloader;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
-import com.kercer.kerkee.downloader.KCUtilDownload;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.net.KCHttpServer;
 import com.kercer.kerkee.net.uri.KCURI;
 import com.kercer.kerkee.util.KCNativeUtil;
-import com.kercer.kerkee.util.KCUtilFile;
+import com.kercer.kerkee.util.KCTaskExecutor;
 import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee.webview.KCWebView;
+import com.kercer.kernet.download.KCDownloadEngine;
+import com.kercer.kernet.download.KCDownloadListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,8 +23,6 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  *
@@ -32,25 +31,25 @@ import java.util.concurrent.Executors;
  */
 public class KCWebImageDownloader
 {
-    private ExecutorService mThreadService;
+    KCDownloadEngine mDownloadEngine;
 
     //the key is url string
     private final ConcurrentHashMap<String, String> mDownloadingImageMap = new ConcurrentHashMap<String, String>();
 
-    private final static String TMP = ".tmp";
-
     Context mContext;
     KCWebImageSetter mWebImageSetter;
-    KCDefaultDownloader mDownloader;
+    KCDefaultDownloader mLoader;
     KCWebImageCache mWebImageCache;
 
     public KCWebImageDownloader(final Context aContext, KCWebPath aWebPath)
     {
         mContext = aContext;
-        mThreadService = Executors.newFixedThreadPool(8);
+
+        mDownloadEngine = new KCDownloadEngine("kerkee", 5);
+
         mWebImageSetter = new KCWebImageSetter();
         mWebImageSetter.start();
-        mDownloader = new KCDefaultDownloader(aContext);
+        mLoader = new KCDefaultDownloader(aContext);
         mWebImageCache = new KCWebImageCache(aContext);
         KCScheme scheme = aWebPath.getBridgeScheme();
         //scheme possible null
@@ -59,15 +58,23 @@ public class KCWebImageDownloader
             mWebImageCache.setCacheDir(new File(aWebPath.getWebImageCachePath()));
         }
 
-        FilenameFilter filenameFilter = new FilenameFilter()
+        KCTaskExecutor.executeTask(new Runnable()
         {
             @Override
-            public boolean accept(File dir, String name)
+            public void run()
             {
-                return !name.endsWith(TMP);
+                FilenameFilter filenameFilter = new FilenameFilter()
+                {
+                    @Override
+                    public boolean accept(File dir, String name)
+                    {
+                        return true;
+                    }
+                };
+                mWebImageCache.loadCache(filenameFilter);
             }
-        };
-        mWebImageCache.loadCache(filenameFilter);
+        });
+
     }
 
 
@@ -122,7 +129,7 @@ public class KCWebImageDownloader
             //when onSetImage, callback native again whit file scheme, why it callback again?
             if (KCScheme.ofUri(aUrl).equals(KCScheme.FILE))
             {
-                 inputStream = mDownloader.getStream(aUrl, null);
+                 inputStream = mLoader.getStream(aUrl, null);
                  webImage.setInputStream(inputStream);
                  return webImage;
             }
@@ -144,7 +151,7 @@ public class KCWebImageDownloader
                         cacheUri = localHostPathToFilePath(tmpUri);
                     }
 
-                    inputStream = mDownloader.getStream(cacheUri, null);
+                    inputStream = mLoader.getStream(cacheUri, null);
                     webImage.setInputStream(inputStream);
                 }
 
@@ -156,14 +163,7 @@ public class KCWebImageDownloader
             if (!mDownloadingImageMap.containsKey(aUrl))
             {
                 mDownloadingImageMap.put(aUrl, "");
-                mThreadService.execute(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        download(aWebView, tmpLocalUri);
-                    }
-                });
+                download(aWebView, tmpLocalUri);
             }
         }
         catch (Exception e)
@@ -180,7 +180,7 @@ public class KCWebImageDownloader
         {
             String pathURI = aUri.getPath();
             String filePath = mWebImageCache.getCacheDir().getAbsolutePath() + pathURI;
-            File tmpDestFile = new File(filePath + TMP);
+            File tmpDestFile = new File(filePath);
 
             if (!KCNativeUtil.fileExists(tmpDestFile.getParent()))
                 // ensures the directory exists.
@@ -190,9 +190,8 @@ public class KCWebImageDownloader
             if (downloadUrl != null)
             {
                 String tmpDestFilePath = tmpDestFile.getAbsolutePath();
-                FileOutputStream fileOutputStream = new FileOutputStream(tmpDestFilePath);
-                KCWebImageDownloaderListener imageDownloadProgressListener = new KCWebImageDownloaderListener(aUri, tmpDestFile, filePath, aWebView);
-                KCUtilDownload.downloadFile(downloadUrl, fileOutputStream, 3, imageDownloadProgressListener);
+                KCWebImageDownloaderListener imageDownloadProgressListener = new KCWebImageDownloaderListener(aUri, filePath, aWebView);
+                mDownloadEngine.startDownload(downloadUrl, tmpDestFilePath, imageDownloadProgressListener, true, true);
             }
             else
             {
@@ -206,52 +205,54 @@ public class KCWebImageDownloader
     }
 
     @SuppressLint("DefaultLocale")
-    class KCWebImageDownloaderListener implements KCUtilDownload.KCUtilDownloadListener
+    class KCWebImageDownloaderListener implements KCDownloadListener
     {
         private KCURI mUri;
-        private File mTmpDestFile;
         private String mDestFilePath;
         private KCWebView mWebView;
 
-        public KCWebImageDownloaderListener(KCURI aUri, File aTmpDestFile, String aDestFilePath, KCWebView aWebView)
+        public KCWebImageDownloaderListener(KCURI aUri, String aDestFilePath, KCWebView aWebView)
         {
             this.mUri = aUri;
-            this.mTmpDestFile = aTmpDestFile;
             this.mDestFilePath = aDestFilePath;
             this.mWebView = aWebView;
 //            KCLog.i("download image: " + aUri + ", " + aDestFilePath);
         }
 
-        public void onProgressUpdate(long downloadedBytes, long fileLength)
-        {
+        @Override
+        public void onPrepare() {
+
         }
 
-        public void onComplete()
+        @Override
+        public void onReceiveFileLength(long downloadedBytes, long fileLength) {
+
+        }
+
+        @Override
+        public void onProgressUpdate(long downloadedBytes, long fileLength, int speed) {
+
+        }
+
+        @Override
+        public void onComplete(long downloadedBytes, long fileLength, int totalTimeInSeconds)
         {
             if (mDestFilePath.toLowerCase().endsWith(".gif"))
             {
                 try
                 {
-                    Bitmap bitmap = BitmapFactory.decodeFile(mTmpDestFile.getAbsolutePath());
+                    Bitmap bitmap = BitmapFactory.decodeFile(mDestFilePath);
                     bitmap.compress(Bitmap.CompressFormat.PNG, 0, new FileOutputStream(mDestFilePath));
 
                     if (bitmap != null && !bitmap.isRecycled())
                     {
                         bitmap.recycle();
                     }
-
-                    new File(mTmpDestFile.getAbsolutePath()).delete();
                 }
                 catch (Exception e)
                 {
-                    KCUtilFile.rename(mTmpDestFile.getAbsolutePath(), mDestFilePath);
                 }
             }
-            else
-            {
-                KCUtilFile.rename(mTmpDestFile.getAbsolutePath(), mDestFilePath);
-            }
-
 
             mWebImageCache.add(mUri);
             mDownloadingImageMap.remove(mUri.toString());
@@ -274,9 +275,9 @@ public class KCWebImageDownloader
 //            KCLog.i("download image succeeded: " + mUri.toString() + ", " + mDestFilePath);
         }
 
-        public void onError(Exception e)
+        @Override
+        public void onError(long downloadedBytes, Throwable e)
         {
-            mTmpDestFile.delete();
             mWebImageCache.remove(mUri);
             mDownloadingImageMap.remove(mUri.toString());
 

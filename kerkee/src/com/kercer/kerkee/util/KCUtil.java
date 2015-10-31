@@ -2,18 +2,13 @@ package com.kercer.kerkee.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
-import org.apache.http.HttpEntity;
-
-import android.content.Context;
-
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -62,21 +57,7 @@ public class KCUtil
             //            e.printStackTrace();
         }
     }
-    
-    public static void closeHttpEntity(HttpEntity en)
-    {
-        if (en != null) 
-        {
-            try 
-            {
-                en.consumeContent();
-            } 
-            catch (IOException e) 
-            {
-//                e.printStackTrace();
-            }
-        }
-    }
+
 
     /**
      * 获取md5值
@@ -142,8 +123,8 @@ public class KCUtil
         return url;
     }
 
-    
-    
+
+
     public static String readInputStreamAsString(InputStream is) throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
