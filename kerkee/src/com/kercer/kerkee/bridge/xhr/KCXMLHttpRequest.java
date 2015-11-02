@@ -10,6 +10,7 @@ import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult;
 import com.kercer.kernet.http.KerNet;
 import com.kercer.kernet.http.base.KCHeader;
+import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCHttpDefine;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCAuthFailureError;
@@ -134,10 +135,6 @@ public class KCXMLHttpRequest
                     final KCStatusLine sl = httpResponse[0].getStatusLine();
                     try
                     {
-                        // send the received response headers to the JS layer
-                        setCookieToWebView(webView, httpResponse[0]);
-                        handleHeaders(webView, httpResponse[0], sl);
-
                         returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), response, false);
                     }
                     catch (Exception e)
@@ -159,6 +156,21 @@ public class KCXMLHttpRequest
             }, new KCHttpListener() {
 
                 @Override
+                public void onResponseHeaders(KCStatusLine aStatusLine,  KCHeaderGroup aHeaderGroup)
+                {
+                    try
+                    {
+                        // send the received response headers to the JS layer
+                        setCookieToWebView(webView, aHeaderGroup);
+                        handleHeaders(webView, aHeaderGroup, aStatusLine);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
                 public void onHttpError(KCNetError error)
                 {
                     final KCStatusLine sl = error.networkResponse.getStatusLine();
@@ -172,19 +184,11 @@ public class KCXMLHttpRequest
                 }
             })
             {
-
-//                @Override
-//                protected Map<String, String> getParams() throws KCAuthFailureError
-//                {
-//                    Map<String, String> params = new HashMap<String, String>(1);
-//                    params.put("key", mBody);
-//                    return params;
-//                }
-
                 @Override
                 public byte[] getBody() throws KCAuthFailureError
                 {
-                    try {
+                    try
+                    {
                         //can set charset
                         return mBody.getBytes(getParamsEncoding());
                     }
@@ -314,9 +318,9 @@ public class KCXMLHttpRequest
     }
 
     // send headers to the JS layer
-    private void handleHeaders(KCWebView webView, KCHttpResponse response, KCStatusLine sl) throws JSONException
+    private void handleHeaders(KCWebView webView, KCHeaderGroup headerGroup, KCStatusLine sl) throws JSONException
     {
-        KCHeader[] headers = response.getAllHeaders();
+        KCHeader[] headers = headerGroup.getAllHeaders();
         JSONObject jsonHeaders = new JSONObject();
         for (KCHeader h : headers)
         {
@@ -384,16 +388,6 @@ public class KCXMLHttpRequest
         }
 
         return defaultCharset;
-
-//        StringTokenizer st = new StringTokenizer(mimeType, ";=");
-//        while (st.hasMoreTokens())
-//        {
-//            if (st.nextToken().trim().equalsIgnoreCase("charset"))
-//            {
-//                if (st.hasMoreTokens())
-//                    mResponseCharset = st.nextToken().trim();
-//            }
-//        }
     }
 
     public void overrideMimeType(String mimeType)
@@ -402,7 +396,7 @@ public class KCXMLHttpRequest
     }
 
     //httpClient setCookie
-    private void setCookieToWebView(KCWebView webView, KCHttpResponse response)
+    private void setCookieToWebView(KCWebView webView, KCHeaderGroup headerGroup)
     {
 //        Header[] cookies = response.getHeaders("Set-Cookie");
 //        for (int i = 0; i < cookies.length; ++i)
