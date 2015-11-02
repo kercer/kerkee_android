@@ -125,36 +125,26 @@ public class KCXMLHttpRequest
 
         if (nMethod >= 0)
         {
-            final KCHttpResponse[] httpResponse = new KCHttpResponse[1];
-
-            mHttpRequest = new KCStringRequest(nMethod, uri.toString(), new KCHttpResult.KCHttpResultListener<String>() {
-
+            mHttpRequest = new KCStringRequest(nMethod, uri.toString())
+            {
                 @Override
-                public void onHttpResult(String response)
+                public byte[] getBody() throws KCAuthFailureError
                 {
-                    final KCStatusLine sl = httpResponse[0].getStatusLine();
                     try
                     {
-                        returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), response, false);
+                        //can set charset
+                        return mBody.getBytes(getParamsEncoding());
                     }
                     catch (Exception e)
                     {
-                        e.printStackTrace();
-
-                        if (!mHttpRequest.isCanceled())
-                        {
-                            returnError(webView, 500, e.getMessage());
-                        }
-
-                    }
-                    finally
-                    {
-                        KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
                     }
 
+                    return super.getBody();
                 }
-            }, new KCHttpListener() {
+            };
 
+            mHttpRequest.setListener(new KCHttpListener()
+            {
                 @Override
                 public void onResponseHeaders(KCStatusLine aStatusLine,  KCHeaderGroup aHeaderGroup)
                 {
@@ -180,25 +170,41 @@ public class KCXMLHttpRequest
                 @Override
                 public void onHttpComplete(KCHttpRequest<?> request, KCHttpResponse response)
                 {
-                    httpResponse[0] = response;
                 }
-            })
+            });
+
+
+            mHttpRequest.setHttpResultListener(new KCHttpResult.KCHttpResultListener<String>()
             {
                 @Override
-                public byte[] getBody() throws KCAuthFailureError
+                public void onHttpResult(final KCHttpResponse aResponse,final String aResult)
                 {
+                    final KCStatusLine sl = aResponse.getStatusLine();
                     try
                     {
-                        //can set charset
-                        return mBody.getBytes(getParamsEncoding());
+                        returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), aResult, false);
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
+
+                        if (!mHttpRequest.isCanceled())
+                        {
+                            returnError(webView, 500, e.getMessage());
+                        }
+
+                    }
+                    finally
+                    {
+                        KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
                     }
 
-                    return super.getBody();
                 }
-            };
+            });
+
+
+
+
         }
         else
         {
