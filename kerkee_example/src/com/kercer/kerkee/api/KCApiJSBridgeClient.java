@@ -6,7 +6,7 @@ import com.kercer.kerkee.bridge.KCArgList;
 import com.kercer.kerkee.bridge.KCJSCompileExecutor;
 import com.kercer.kerkee.bridge.KCJSDefine;
 import com.kercer.kerkee.bridge.KCJSError;
-import com.kercer.kerkee.bridge.KCReturnCallback;
+import com.kercer.kerkee.bridge.type.KCReturnCallback;
 import com.kercer.kerkee.browser.KCJSBridge;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.webview.KCWebView;

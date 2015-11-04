@@ -1,4 +1,4 @@
-package com.kercer.kerkee.bridge;
+package com.kercer.kerkee.bridge.type;
 
 /**
  * 

@@ -1,4 +1,6 @@
-package com.kercer.kerkee.bridge;
+package com.kercer.kerkee.bridge.type;
+
+import com.kercer.kerkee.bridge.KCJSError;
 
 public abstract class KCReturnCallback implements KCCallback
 {

@@ -1,5 +1,8 @@
 package com.kercer.kerkee.bridge;
 
+import com.kercer.kerkee.bridge.type.KCJSCallback;
+import com.kercer.kerkee.bridge.type.KCJSNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

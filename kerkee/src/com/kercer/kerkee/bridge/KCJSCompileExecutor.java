@@ -2,6 +2,7 @@ package com.kercer.kerkee.bridge;
 
 import android.annotation.SuppressLint;
 
+import com.kercer.kerkee.bridge.type.KCCallback;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.webview.KCWebView;
 

@@ -1,8 +1,9 @@
-package com.kercer.kerkee.bridge;
+package com.kercer.kerkee.bridge.type;
 
+import com.kercer.kerkee.bridge.KCJSExecutor;
 import com.kercer.kerkee.webview.KCWebView;
 
-public class KCJSCallback
+public class KCJSCallback implements KCJSType
 {
 	private String mCallbackId;
 	

@@ -1,11 +1,11 @@
-package com.kercer.kerkee.bridge;
+package com.kercer.kerkee.bridge.type;
 
 import org.json.JSONObject;
 
 /**
  * Created by zihong on 15/10/28.
  */
-public class KCJSNull
+public class KCJSNull implements KCJSType
 {
     public static final KCJSNull NULL = new KCJSNull();
 

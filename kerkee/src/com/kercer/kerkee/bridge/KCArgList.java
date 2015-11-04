@@ -1,5 +1,7 @@
 package com.kercer.kerkee.bridge;
 
+import com.kercer.kerkee.bridge.type.KCJSCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 
