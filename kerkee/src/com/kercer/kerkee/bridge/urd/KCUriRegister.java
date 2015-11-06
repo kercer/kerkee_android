@@ -1,22 +1,23 @@
 package com.kercer.kerkee.bridge.urd;
 
-import java.util.ArrayList;
-
 import com.kercer.kerkee.net.uri.KCURI;
+import com.kercer.kerkee.util.KCTaskExecutor;
+
+import java.util.ArrayList;
 
 /**
  * Created by liweisu on 15/9/6.
- * 
+ *
  * Optimization by zihong on 15/9/17
- * 
+ *
  */
 
-public class KCUriRegister implements IUrlRegister
+public class KCUriRegister implements IUriRegister
 {
-	private ArrayList<IUrlAction> mUriActions = new ArrayList<IUrlAction>();
-	
+	private ArrayList<IUriAction> mUriActions = new ArrayList<IUriAction>();
+	private IUriAction mDefaultAction;
 	private String mScheme;
-	
+
 	public KCUriRegister(String aScheme)
 	{
 		mScheme = aScheme;
@@ -24,19 +25,25 @@ public class KCUriRegister implements IUrlRegister
 
 	/**
 	 * Determine whether there is contains the action
-	 * 
+	 *
 	 * @param aAction
 	 * @return if has action in register return true, else return false
 	 */
-	public boolean containsAction(IUrlAction aAction)
+	public boolean containsAction(IUriAction aAction)
 	{
 		return (aAction != null && mUriActions.contains(aAction));
 	}
 
-	
-	
+
 	@Override
-	public boolean registerAction(IUrlAction aAction)
+	public boolean setDefaultAction(final IUriAction aDefaultAction)
+	{
+		mDefaultAction = aDefaultAction;
+		return true;
+	}
+
+	@Override
+	public boolean registerAction(final IUriAction aAction)
 	{
 		if (aAction != null && !mUriActions.contains(aAction))
 		{
@@ -47,7 +54,7 @@ public class KCUriRegister implements IUrlRegister
 	}
 
 	@Override
-	public boolean unregisterAction(IUrlAction aAction)
+	public boolean unregisterAction(final IUriAction aAction)
 	{
 		if (aAction != null && mUriActions.contains(aAction))
 		{
@@ -58,14 +65,36 @@ public class KCUriRegister implements IUrlRegister
 	}
 
 	@Override
-	public void dispatcher(KCURI aUriData)
+	public void dispatcher(final KCURI aUriData)
 	{
-		for (IUrlAction action : mUriActions)
+		boolean isSupported = false;
+		for (final IUriAction action : mUriActions)
 		{
 			if (action.accept(aUriData.getHost(), aUriData.getPath()))
 			{
-				action.invokeAction(aUriData.getQueries());
+				isSupported = true;
+
+				KCTaskExecutor.runTaskOnUiThread(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						action.invokeAction(aUriData.getQueries());
+					}
+				});
 			}
+		}
+
+		if (!isSupported && mDefaultAction !=null && mDefaultAction.accept(aUriData.getHost(),aUriData.getPath()))
+		{
+			KCTaskExecutor.runTaskOnUiThread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mDefaultAction.invokeAction(aUriData.getQueries());
+				}
+			});
 		}
 	}
 

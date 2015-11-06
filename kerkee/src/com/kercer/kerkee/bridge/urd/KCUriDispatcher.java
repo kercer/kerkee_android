@@ -1,23 +1,22 @@
 package com.kercer.kerkee.bridge.urd;
 
-import java.net.URISyntaxException;
-import java.util.HashMap;
+import android.text.TextUtils;
 
 import com.kercer.kerkee.net.uri.KCURI;
 
-import android.text.TextUtils;
-import android.util.Log;
+import java.net.URISyntaxException;
+import java.util.HashMap;
 
 /**
  * Created by liweisu on 15/9/6.
- * 
+ *
  * Optimization by zihong on 15/9/17
- * 
+ *
  */
 public final class KCUriDispatcher
 {
 	private static String mDefaultScheme;
-	private static HashMap<String, IUrlRegister> mUriRgisterMap = new HashMap<String, IUrlRegister>();
+	private static HashMap<String, IUriRegister> mUriRgisterMap = new HashMap<String, IUriRegister>();
 
 	private KCUriDispatcher()
 	{
@@ -36,12 +35,33 @@ public final class KCUriDispatcher
 		}
 		if (uri != null)
 		{
-			IUrlRegister uriRegister = getUrlRegister(uri.getScheme());
+			IUriRegister uriRegister = getUrlRegister(uri.getScheme());
 			if (uriRegister != null)
 			{
 				uriRegister.dispatcher(uri);
 			}
 		}
+	}
+
+	public static boolean isUrdProtocol(String url)
+	{
+		KCURI uri = null;
+		try
+		{
+			uri = KCURI.parse(url);
+		}
+		catch (URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
+		if(uri!=null)
+		{
+			if (mUriRgisterMap.containsKey(uri.getScheme()))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -53,10 +73,10 @@ public final class KCUriDispatcher
 		KCUriRegister uriRegister = null;
 		if (!TextUtils.isEmpty(aScheme))
 		{
-			mDefaultScheme = aScheme;			
+			mDefaultScheme = aScheme;
 			uriRegister = addUriRegisterWithScheme(aScheme);
 		}
-		
+
 		return uriRegister;
 	}
 
@@ -69,7 +89,7 @@ public final class KCUriDispatcher
 		{
 			return null;
 		}
-		
+
 		KCUriRegister uriRegister = (KCUriRegister)mUriRgisterMap.get(mDefaultScheme);
 		if (uriRegister == null)
 		{
@@ -77,7 +97,7 @@ public final class KCUriDispatcher
 		}
 		return uriRegister;
 	}
-	
+
 	/**
 	 * add Uri Register
 	 */
@@ -95,14 +115,14 @@ public final class KCUriDispatcher
 	/**
 	 * return a Uri Register
 	 */
-	public static synchronized IUrlRegister getUrlRegister(String aScheme)
+	public static synchronized IUriRegister getUrlRegister(String aScheme)
 	{
 		if (TextUtils.isEmpty(aScheme)) return null;
-		
-		return mUriRgisterMap.get(aScheme);		
+
+		return mUriRgisterMap.get(aScheme);
 	}
-	
-	public boolean addUriRegister(IUrlRegister aUriRegister)
+
+	public boolean addUriRegister(IUriRegister aUriRegister)
 	{
 		if (aUriRegister != null)
 		{

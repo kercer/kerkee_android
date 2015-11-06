@@ -6,11 +6,11 @@ import com.kercer.kerkee.net.uri.KCNameValuePair;
 
 /**
  * Created by liweisu on 15/9/6.
- * 
+ *
  * Optimization by zihong on 15/9/17
- * 
+ *
  */
-public interface IUrlAction
+public interface IUriAction
 {
 	/**
 	 * Determine whether to perform custom operations protocol,if accept return true,else return false.
