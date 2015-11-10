@@ -69,7 +69,7 @@ public class KCApiBridge
 				KCClass clz = mRegister.getClass(jsClzName);
 				if (clz != null)
 				{
-					clz.addMethod(methodName, argList);
+					clz.addJSMethod(methodName, argList);
 				}
 
 				KCMethod method = null;

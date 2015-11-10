@@ -39,7 +39,7 @@ public class KCClass
         return mJSClzName;
     }
 
-    public void addMethod(String aMethodName, KCArgList aArgList)
+    public void addJSMethod(String aMethodName, KCArgList aArgList)
     {
  //   	seachMethod(aMethodName, aArgList);
     }

@@ -45,7 +45,7 @@ public class KCMethod
         return mMethod;
     }
     
-    public String getMethodName()
+    public String getJSMethodName()
     {
     	return mJSMethodName;
     }
