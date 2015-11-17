@@ -39,13 +39,6 @@ public class KCArgList
     {
         return mArgs.get(aIndex);
     }
-
-    public KCJSCallback getCallback()
-    {
-    	//TODO
-    	
-    	return null;
-    }
     
     public Object getArgValue(int aIndex)
     {
@@ -92,6 +85,12 @@ public class KCArgList
     {
     	Object value = getArgValue(aKey);
         return value == null ? null : value.toString();
+    }
+
+    public KCJSCallback getCallback()
+    {
+        KCJSCallback callback = (KCJSCallback)getArgValue(KCJSDefine.kJS_callbackId);
+        return callback;
     }
 
 //    boolean isNull(int index)
