@@ -1,28 +1,25 @@
 package com.kercer.kerkee.webview;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import com.kercer.kerkee.bridge.KCApiBridge;
+import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
+import com.kercer.kerkee.imagesetter.KCDefaultImageStream;
+import com.kercer.kerkee.imagesetter.KCWebImageDownloader;
+import com.kercer.kerkee.log.KCLog;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.kercer.kerkee.bridge.KCApiBridge;
-import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
-import com.kercer.kerkee.imagesetter.KCWebImage;
-import com.kercer.kerkee.imagesetter.KCWebImageDownloader;
-import com.kercer.kerkee.imagesetter.KCDefaultImageStream;
-import com.kercer.kerkee.log.KCLog;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -32,7 +29,7 @@ public class KCWebViewClient extends WebViewClient
 	private static KCWebViewClient mInstance;
 
 	private KCWebImageDownloader mImageDownloader;
-	
+
 	private static KCDefaultImageStream mDefaultImageStream;
 
 
@@ -81,35 +78,35 @@ public class KCWebViewClient extends WebViewClient
 	}
 
 	// shouldInterceptRequest() CallbackProxy.java <- shouldInterceptRequest() BrowserFrame.java <- shouldInterceptRequest() WebCoreFrameBridge.cpp
-	@Override
-	public WebResourceResponse shouldInterceptRequest(final WebView aWebView, final String aUrl)
-	{
-		// //临时解决有时图片不能通过JS setImage设置成功的问题
-		// return super.shouldInterceptRequest(aWebView, aUrl);
-
-		KCWebView webView = (KCWebView) aWebView;
-
-		String strMimeType = getFileMimeType(aUrl);
-		if (strMimeType == null)
-			return null;
-		String lowerCaseUrl = strMimeType.toLowerCase();
-		if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg"))
-		{
-			if (mImageDownloader == null)
-				mImageDownloader = new KCWebImageDownloader(webView.getContext(), webView.getWebPath());
-
-			KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl, webView);
-
-			InputStream stream = webImage.getInputStream();
-			if (stream == null)
-			{
-				stream = getSavedStream(webView.getContext()).getInputStream();
-			}
-			WebResourceResponse res = new WebResourceResponse(strMimeType, "utf-8", stream);
-			return res;
-		}
-		return super.shouldInterceptRequest(aWebView, aUrl);
-	}
+//	@Override
+//	public WebResourceResponse shouldInterceptRequest(final WebView aWebView, final String aUrl)
+//	{
+//		// //临时解决有时图片不能通过JS setImage设置成功的问题
+//		// return super.shouldInterceptRequest(aWebView, aUrl);
+//
+//		KCWebView webView = (KCWebView) aWebView;
+//
+//		String strMimeType = getFileMimeType(aUrl);
+//		if (strMimeType == null)
+//			return null;
+//		String lowerCaseUrl = strMimeType.toLowerCase();
+//		if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg"))
+//		{
+//			if (mImageDownloader == null)
+//				mImageDownloader = new KCWebImageDownloader(webView.getContext(), webView.getWebPath());
+//
+//			KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl, webView);
+//
+//			InputStream stream = webImage.getInputStream();
+//			if (stream == null)
+//			{
+//				stream = getSavedStream(webView.getContext()).getInputStream();
+//			}
+//			WebResourceResponse res = new WebResourceResponse(strMimeType, "utf-8", stream);
+//			return res;
+//		}
+//		return super.shouldInterceptRequest(aWebView, aUrl);
+//	}
 
 	public String getMimeType(String aUrl)
 	{
@@ -136,7 +133,7 @@ public class KCWebViewClient extends WebViewClient
 
 	/**
 	 * Warning: this method is very slow mine type define in [jre_home]\lib\content-types.properties
-	 * 
+	 *
 	 * @param aUrl
 	 * @return
 	 * @throws java.io.IOException
@@ -158,8 +155,8 @@ public class KCWebViewClient extends WebViewClient
 		String type = fileNameMap.getContentTypeFor(aUrl);
 		return type;
 	}
-	
-	
+
+
 	public KCDefaultImageStream getSavedStream(Context aContext)
 	{
 		if (mDefaultImageStream == null)
