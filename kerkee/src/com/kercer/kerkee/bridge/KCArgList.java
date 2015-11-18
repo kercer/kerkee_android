@@ -13,8 +13,6 @@ import java.util.List;
 public class KCArgList
 {
     private List<KCArg> mArgs = new ArrayList<KCArg>(2);
-//    private HashMap<String, KCArg> mArgs = new HashMap<String, KCArg>();
-
 
     public int size()
     {
@@ -24,36 +22,47 @@ public class KCArgList
     public boolean addArg(KCArg aArg)
     {
         if (aArg == null) return false;
-//        String key = aArg.getArgName();
-//        mArgs.put(key, aArg);
         mArgs.add(aArg);
         return true;
     }
     
     public boolean has(String aKey)
     {
-    	return getArgValue(aKey) != null ? true : false;
+    	return getObject(aKey) != null ? true : false;
     }
 
     public KCArg get(int aIndex)
     {
         return mArgs.get(aIndex);
     }
-    
+
+    @Deprecated
+    public Object getArgValue(String aKey)
+    {
+        return getObject(aKey);
+    }
+    @Deprecated
     public Object getArgValue(int aIndex)
     {
-        KCArg arg = get(aIndex);
-        return arg != null ? arg.getValue() : null;
+        return get(aIndex);
+    }
+    @Deprecated
+    public String getArgValueString(String aKey)
+    {
+        return getString(aKey);
+    }
+    @Deprecated
+    public String getArgValueString(int aIndex)
+    {
+        return getString(aIndex);
     }
 
-    public Object getArgValue(String aKey)
+
+    public Object getObject(String aKey)
     {
         Object obj = null;
         if (aKey != null)
         {
-//            KCArg arg = mArgs.get(aKey);
-//            if (arg != null)
-//                obj = arg.getValue();
             int count = mArgs.size();
             for (int i = 0; i < count; ++i)
             {
@@ -69,27 +78,27 @@ public class KCArgList
         return obj;
     }
 
-    public String getArgValueString(String aKey)
+    public Object getObject(int aIndex)
     {
-    	Object value = getArgValue(aKey);
-        return value == null ? null : value.toString();
-    }
-
-    public String getArgValueString(int aIndex)
-    {
-        Object value = getArgValue(aIndex);
-        return value == null ? null : value.toString();
+        KCArg arg = get(aIndex);
+        return arg != null ? arg.getValue() : null;
     }
 
     public String getString(String aKey)
     {
-    	Object value = getArgValue(aKey);
+    	Object value = getObject(aKey);
+        return value == null ? null : value.toString();
+    }
+
+    public String getString(int aIndex)
+    {
+        Object value = getObject(aIndex);
         return value == null ? null : value.toString();
     }
 
     public KCJSCallback getCallback()
     {
-        KCJSCallback callback = (KCJSCallback)getArgValue(KCJSDefine.kJS_callbackId);
+        KCJSCallback callback = (KCJSCallback)getObject(KCJSDefine.kJS_callbackId);
         return callback;
     }
 
@@ -100,7 +109,7 @@ public class KCArgList
 
     public boolean getBoolean(int aIndex)
     {
-        String obj = getArgValueString(aIndex);
+        String obj = getString(aIndex);
         return Boolean.parseBoolean(obj);
     }
     public boolean getBoolean(String aKey)
@@ -111,25 +120,22 @@ public class KCArgList
 
     double getDouble(int aIndex)
     {
-        String obj = getArgValueString(aIndex);
+        String obj = getString(aIndex);
         return Double.parseDouble(obj);
     }
     
     public int getInt(int aIndex)
     {
-        String obj = getArgValueString(aIndex);
+        String obj = getString(aIndex);
         return Integer.parseInt(obj);
     }
     public int getInt(String aKey)
     {
-    	String obj = getArgValueString(aKey);
+    	String obj = getString(aKey);
     	return Integer.parseInt(obj);
     }
     
-    String getString(int aIndex)
-    {
-        return getArgValueString(aIndex);
-    }
+
 //    Array getArray(int index);
 //    Map getMap(int index);
 //     KCType getType(int index);
