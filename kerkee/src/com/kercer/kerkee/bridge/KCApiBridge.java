@@ -105,7 +105,7 @@ public class KCApiBridge
 				}
 
 				String result;
-				Object[] argValues = new Object[2];
+				Object[] argValues = new Object[method.getArgsCount()];
 				argValues[0] = webView;
 				if (method.getArgsCount() == 2)
 				{
