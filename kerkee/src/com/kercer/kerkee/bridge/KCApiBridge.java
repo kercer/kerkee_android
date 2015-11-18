@@ -49,7 +49,7 @@ public class KCApiBridge
 	{
 		return mRegister;
 	}
-	
+
 	public static KCClass getClass(String aJSObjectName)
 	{
 		return mRegister.getClass(aJSObjectName);
@@ -115,8 +115,8 @@ public class KCApiBridge
 					else
 						value = parser.getArgsJSON();
 					argValues[1] = value;
-				}				
-				
+				}
+
 				result = (String)method.invoke(receiver, argValues);
 				return result == null ? "" : result;
 
@@ -144,15 +144,15 @@ public class KCApiBridge
 	{
 		KCLog.e(aArgList.toString());
 		aWebView.documentReady(true);
-		String callbackId = aArgList.getArgValueString(KCJSDefine.kJS_callbackId);
+		String callbackId = aArgList.getString(KCJSDefine.kJS_callbackId);
 		KCJSExecutor.callbackJS(aWebView, callbackId);
 	}
 
 	public static void compile(KCWebView aWebView, KCArgList aArgList)
 	{
-		Object returnValue = aArgList.getArgValue(KCJSDefine.kJS_returnValue);
-		String identity = aArgList.getArgValueString(KCJSDefine.kJS_identity);
-		String error = aArgList.getArgValueString(KCJSDefine.kJS_error);
+		Object returnValue = aArgList.getObject(KCJSDefine.kJS_returnValue);
+		String identity = aArgList.getString(KCJSDefine.kJS_identity);
+		String error = aArgList.getString(KCJSDefine.kJS_error);
 
 		KCJSCompileExecutor.didCompile(Integer.valueOf(identity), returnValue, error);
 	}

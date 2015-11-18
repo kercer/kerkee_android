@@ -25,7 +25,7 @@ public class KCArgList
         mArgs.add(aArg);
         return true;
     }
-    
+
     public boolean has(String aKey)
     {
     	return getObject(aKey) != null ? true : false;
@@ -35,28 +35,6 @@ public class KCArgList
     {
         return mArgs.get(aIndex);
     }
-
-    @Deprecated
-    public Object getArgValue(String aKey)
-    {
-        return getObject(aKey);
-    }
-    @Deprecated
-    public Object getArgValue(int aIndex)
-    {
-        return get(aIndex);
-    }
-    @Deprecated
-    public String getArgValueString(String aKey)
-    {
-        return getString(aKey);
-    }
-    @Deprecated
-    public String getArgValueString(int aIndex)
-    {
-        return getString(aIndex);
-    }
-
 
     public Object getObject(String aKey)
     {
@@ -123,7 +101,7 @@ public class KCArgList
         String obj = getString(aIndex);
         return Double.parseDouble(obj);
     }
-    
+
     public int getInt(int aIndex)
     {
         String obj = getString(aIndex);
@@ -134,7 +112,7 @@ public class KCArgList
     	String obj = getString(aKey);
     	return Integer.parseInt(obj);
     }
-    
+
 
 //    Array getArray(int index);
 //    Map getMap(int index);

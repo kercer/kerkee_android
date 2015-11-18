@@ -67,7 +67,7 @@ public class KCApiJSBridgeClient
         if (KCLog.DEBUG)
             KCLog.d(">>>>>> NewApiTest commonApi called: " + aArgList.toString());
 
-        String callbackId = (String)aArgList.getArgValue(KCJSDefine.kJS_callbackId);
+        String callbackId = aArgList.getString(KCJSDefine.kJS_callbackId);
         JSONObject jsonObject = null;
 		try
 		{

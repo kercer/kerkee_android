@@ -1,14 +1,5 @@
 package com.kercer.kerkee.api;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.kercer.kerkee.bridge.KCArgList;
-import com.kercer.kerkee.bridge.KCJSDefine;
-import com.kercer.kerkee.browser.KCJSBridge;
-import com.kercer.kerkee.log.KCLog;
-import com.kercer.kerkee.webview.KCWebView;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,6 +7,15 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+
+import com.kercer.kerkee.bridge.KCArgList;
+import com.kercer.kerkee.bridge.KCJSDefine;
+import com.kercer.kerkee.browser.KCJSBridge;
+import com.kercer.kerkee.log.KCLog;
+import com.kercer.kerkee.webview.KCWebView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class KCApiPlatform
 {
@@ -45,7 +45,7 @@ public class KCApiPlatform
 		if (KCLog.DEBUG)
 			KCLog.d(">>>>>> NewApiTest getDevice called: " + aArgList.toString());
 
-		String callbackId = (String) aArgList.getArgValue(KCJSDefine.kJS_callbackId);
+		String callbackId = aArgList.getString(KCJSDefine.kJS_callbackId);
 		DisplayMetrics dm = new DisplayMetrics();
 		dm = aWebView.getContext().getResources().getDisplayMetrics();
 		int screenWidth = dm.widthPixels;
@@ -74,7 +74,7 @@ public class KCApiPlatform
 		if (KCLog.DEBUG)
 			KCLog.d(">>>>>> NewApiTest getNetworkType called: " + aArgList.toString());
 
-		String callbackId = (String) aArgList.getArgValue(KCJSDefine.kJS_callbackId);
+		String callbackId = aArgList.getString(KCJSDefine.kJS_callbackId);
 
 		ConnectivityManager manager = (ConnectivityManager) aWebView.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = manager.getActiveNetworkInfo();

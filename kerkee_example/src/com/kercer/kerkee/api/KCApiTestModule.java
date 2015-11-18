@@ -9,7 +9,7 @@ public class KCApiTestModule
 {
 	public static void testInfo(final KCWebView aWebView, KCArgList aArgList)
 	{
-		String str = aArgList.getArgValueString("testInfo");
+		String str = aArgList.getString("testInfo");
 		Toast.makeText(aWebView.getContext(), str, Toast.LENGTH_SHORT).show();
 	}
 }

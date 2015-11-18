@@ -1,7 +1,8 @@
 package com.kercer.kerkee.api;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.widget.Toast;
 
 import com.kercer.kerkee.bridge.KCArgList;
 import com.kercer.kerkee.bridge.KCJSDefine;
@@ -9,9 +10,8 @@ import com.kercer.kerkee.browser.KCJSBridge;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.webview.KCWebView;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class KCApiWidget
 {
@@ -28,7 +28,7 @@ public class KCApiWidget
 	{
 		if (KCLog.DEBUG)
 			KCLog.d(">>>>>> KCApiWidget commonApi called: " + aArgList.toString());
-		String callbackId = (String) aArgList.getArgValue(KCJSDefine.kJS_callbackId);
+		String callbackId = aArgList.getString(KCJSDefine.kJS_callbackId);
 		JSONObject jsonObject = null;
 		try
 		{
@@ -50,13 +50,13 @@ public class KCApiWidget
 	public static void showDialog(final KCWebView aWebView, KCArgList aArgList)
 	{
 		String jsonStr = aArgList.toString();
-		final String callbackId = (String) aArgList.getArgValue(KCJSDefine.kJS_callbackId);
+		final String callbackId = aArgList.getString(KCJSDefine.kJS_callbackId);
 		KCLog.d(">>>>>> KCApiWidget showDialog called: " + callbackId + ",jsonStr>>>>>" + jsonStr);
 
-		String title = aArgList.getArgValueString("title");
-		String message = aArgList.getArgValueString("message");
-		String okBtn = aArgList.getArgValueString("okBtn");
-		String cancelBtn = aArgList.getArgValueString("cancelBtn");
+		String title = aArgList.getString("title");
+		String message = aArgList.getString("message");
+		String okBtn = aArgList.getString("okBtn");
+		String cancelBtn = aArgList.getString("cancelBtn");
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(aWebView.getContext());
 		builder.setTitle(title);
@@ -89,17 +89,17 @@ public class KCApiWidget
 	public static void alertDialog(final KCWebView aWebView, KCArgList aArgList)
 	{
 		String jsonStr = aArgList.toString();
-		final String callbackId = (String) aArgList.getArgValue(KCJSDefine.kJS_callbackId);
+		final String callbackId = aArgList.getString(KCJSDefine.kJS_callbackId);
 		KCLog.d(">>>>>> KCApiWidget showDialog called: " + callbackId);
 
 		/*
 		 * if (KCLog.DEBUG) KCLog.d(">>>>>> NewApiTest showDialog called: " + jsonStr);
 		 */
 
-		String title = aArgList.getArgValueString("title");
-		String message = aArgList.getArgValueString("message");
-		String okBtn = aArgList.getArgValueString("okBtn");
-		String cancelBtn = aArgList.getArgValueString("cancelBtn");
+		String title = aArgList.getString("title");
+		String message = aArgList.getString("message");
+		String okBtn = aArgList.getString("okBtn");
+		String cancelBtn = aArgList.getString("cancelBtn");
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(aWebView.getContext());
 		builder.setTitle(title);
