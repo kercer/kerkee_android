@@ -163,8 +163,16 @@ public class KCXMLHttpRequest
                 @Override
                 public void onHttpError(KCNetError error)
                 {
-                    final KCStatusLine sl = error.networkResponse.getStatusLine();
-                    returnError(webView, sl.getStatusCode(), sl.getReasonPhrase());
+                    if (error.networkResponse != null)
+                    {
+                        final KCStatusLine sl = error.networkResponse.getStatusLine();
+                        returnError(webView, sl.getStatusCode(), sl.getReasonPhrase());
+                    }
+                    else
+                    {
+                        returnError(webView, 500, error.getMessage());
+                    }
+
                 }
 
                 @Override
