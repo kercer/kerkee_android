@@ -4,7 +4,6 @@ import com.kercer.kerkee.bridge.KCJSExecutor;
 import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebView;
-import com.kercer.kernet.http.KCHttpListener;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult;
@@ -15,6 +14,7 @@ import com.kercer.kernet.http.base.KCHttpDefine;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCAuthFailureError;
 import com.kercer.kernet.http.error.KCNetError;
+import com.kercer.kernet.http.listener.KCHttpListener;
 import com.kercer.kernet.http.request.KCStringRequest;
 
 import org.json.JSONException;
