@@ -121,8 +121,8 @@ public class KCURI
     /**
      * See section 5.2.3 of RFC 3986 for more details
      *
-     * @param basePath
-     * @param relativePath
+     * @param aBaseURI
+     * @param aReferenceURI
      * @return
      */
     private static String mergePath(KCURI aBaseURI, KCURI aReferenceURI)
@@ -426,7 +426,7 @@ public class KCURI
 
     public String getPath()
     {
-        return (mHost != null && mPath != null && !mPath.startsWith("/")) ? "/" + mPath : mPath;
+        return (mPath != null && !mPath.startsWith("/")) ? "/" + mPath : mPath;
     }
 
     /**

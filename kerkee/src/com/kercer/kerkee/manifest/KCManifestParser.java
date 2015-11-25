@@ -1,12 +1,13 @@
 package com.kercer.kerkee.manifest;
 
+import com.kercer.kerkee.net.uri.KCURI;
+import com.kercer.kerkee.util.KCUtilString;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
-import com.kercer.kerkee.util.KCUtilString;
 
 public class KCManifestParser
 {
@@ -14,7 +15,7 @@ public class KCManifestParser
 	public final static String VERSION = "Version:";
 	public final static String LIST = "List:";
 	public final static String REQUIREDVERSION = "RequiredVersion:";
-	public final static String ZIP = "Zip:";
+	public final static String DEK = "Dek:";
 	public final static String CACHE = "CACHE:";
 	public final static String POUND_SIGN = "#";
 	public final static String COLON = ":";
@@ -75,10 +76,20 @@ public class KCManifestParser
 							value = getCommentValue(REQUIREDVERSION, trimline);
 							mo.setRequiredVersion(value);
 						}
-						if (trimline.contains(POUND_SIGN + ZIP))
+						if (trimline.contains(POUND_SIGN + DEK))
 						{
-							value = getCommentValue(ZIP, trimline);
-							mo.setZipFile(value);
+							value = getCommentValue(DEK, trimline);
+							KCURI uri = KCURI.parse(value);
+							if (uri.getScheme() == null)
+							{
+								String relativePath = uri.getPath();
+								mo.setDekRelativePath(relativePath);
+							}
+							else if(uri.getScheme() != null && uri.getHost() != null)
+							{
+								mo.setDownloadUrl(uri.toString());
+							}
+
 						}
 						cachelineIndex = -1;
 

@@ -10,6 +10,8 @@ import com.kercer.kerkee.api.KCRegistMgr;
 import com.kercer.kerkee.bridge.KCJSObject;
 import com.kercer.kerkee.bridge.KerkeeMethod;
 import com.kercer.kerkee.browser.KCDefaultBrowser;
+import com.kercer.kerkee.manifest.KCFetchManifest;
+import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee_example.R;
 
 import java.lang.reflect.Method;
@@ -26,13 +28,13 @@ public class MainActivity extends Activity
 		{
 			return "test";
 		}
-		
+
 		@KerkeeMethod
 		public String testString()
 		{
 			return null;
 		}
-		
+
 	}
 
     @Override
@@ -54,10 +56,24 @@ public class MainActivity extends Activity
         String s = Modifier.toString(targetMethods[3].getModifiers()) ;
         Class<?>[] a = targetMethods[3].getParameterTypes();
         Type[] b = targetMethods[3].getGenericParameterTypes();
-        
+
         KCTest test = new KCTest();
         test.getMethods();
-        
+
+
+        KCWebPath webPath = browser.getWebView().getWebPath();
+        String manifestPath = webPath.getResRootPath() + "/manifest";
+
+        KCFetchManifest.fetchLocalManifests(manifestPath);
+
+//        KCTaskExecutor.executeTask(new Runnable() {
+//            @Override
+//            public void run() {
+////               KCManifestObject obj = KCFetchManifest.fetchOneServerManifest("http://www.linzihong.com/test/html/manifest");
+//                KCFetchManifest.fetchServerManifests("http://www.linzihong.com/test/html/manifest");
+//                KCLog.d("aa");
+//            }
+//        });
 
         browser.loadTestPage();
 //        browser.loadUrl("http://www.baidu.com");

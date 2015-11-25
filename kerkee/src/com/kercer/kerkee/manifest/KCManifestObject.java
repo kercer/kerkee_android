@@ -1,29 +1,29 @@
 package com.kercer.kerkee.manifest;
 
-import java.util.ArrayList;
-
 import com.kercer.kerkee.util.KCUtilString;
+
+import java.util.ArrayList;
 
 public class KCManifestObject
 {
 
-	private String mVersion;
-	private String[] mSubManifests;
-	private String[] mExtras;
+	private String mVersion; // version
+	private String[] mSubManifests; // sub manifests list
+	private String[] mExtras; //extras files
 	private ArrayList<String> mCacheList;
-	private String mZipFile;
-	private String mRequiredVersion;
+	private String mDekRelativePath;  //dek file name
+	private String mRequiredVersion; //required version
 	private ArrayList<String> mCacheDirs;
 	private String mDownloadUrl;
-	private String mDestDir;
-	private String mDestFile;
-	private int mTotalSize;
+
+	private String mDestDir;  //dek & manifest file Dir
+
 
 	public KCManifestObject()
 	{
 		mRequiredVersion = KCUtilString.EMPTY_STR;
 		mVersion = KCUtilString.EMPTY_STR;
-		mZipFile = KCUtilString.EMPTY_STR;
+		mDekRelativePath = KCUtilString.EMPTY_STR;
 	}
 
 	public String getVersion()
@@ -86,16 +86,16 @@ public class KCManifestObject
 		this.mCacheDirs = aCacheDirs;
 	}
 
-	public String getZipFilePath()
+	public String getDekRelativePath()
 	{
-		if (KCUtilString.isEmpty(mZipFile))
-			mZipFile = "update_" + this.mVersion + ".zip";
-		return mZipFile;
+		if (KCUtilString.isEmpty(mDekRelativePath))
+			mDekRelativePath = "/update_" + this.mVersion + ".dek";
+		return mDekRelativePath;
 	}
 
-	public void setZipFile(String aZipFile)
+	public void setDekRelativePath(String aRelativePath)
 	{
-		this.mZipFile = aZipFile;
+		this.mDekRelativePath = aRelativePath;
 	}
 
 	public void setDownloadUrl(String aDownloadUrl)
@@ -118,24 +118,6 @@ public class KCManifestObject
 		return mDestDir;
 	}
 
-	public void setDestFile(String aDestFile)
-	{
-		this.mDestFile = aDestFile;
-	}
 
-	public String getDestFile()
-	{
-		return mDestFile;
-	}
-
-	public void setTotalSize(int aTotalSize)
-	{
-		this.mTotalSize = aTotalSize;
-	}
-
-	public int getTotalSize()
-	{
-		return mTotalSize;
-	}
 
 }

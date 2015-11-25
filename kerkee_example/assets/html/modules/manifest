@@ -1,0 +1,12 @@
+# Version: 1.0.2
+
+# RequiredVersion:2.0.2
+
+# List: ./test/manifest, ./clientApi/manifest
+
+# Dek: html.dek
+
+CACHE:
+
+NETWORK:
+*

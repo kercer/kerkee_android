@@ -1,0 +1,10 @@
+# Version: 1.0.2
+
+# RequiredVersion:2.0.2
+
+# Dek: ./html.dek
+
+CACHE:
+
+NETWORK:
+*
