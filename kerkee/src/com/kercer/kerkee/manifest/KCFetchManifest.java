@@ -13,10 +13,7 @@ import java.util.Map;
 
 public class KCFetchManifest
 {
-//
-//	private final static String CAHCHE_MANIFEST_FILE_NAME = "cache.manifest";
-//	public final static String CAHCHE_MANIFEST_RELATIVE_PATH = File.separator + CAHCHE_MANIFEST_FILE_NAME;
-
+	
 	public static Map<String, KCManifestObject> fetchServerManifests(String aUrlManifest)
 	{
 		Map mapManifestObjects = new HashMap<String, KCManifestObject>();
