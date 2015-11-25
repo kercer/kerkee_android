@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class KCFetchManifest
 {
-	
+
 	public static Map<String, KCManifestObject> fetchServerManifests(String aUrlManifest)
 	{
 		Map mapManifestObjects = new HashMap<String, KCManifestObject>();
