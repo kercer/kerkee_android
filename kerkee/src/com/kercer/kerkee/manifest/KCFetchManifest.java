@@ -48,6 +48,30 @@ public class KCFetchManifest
 		}
 	}
 
+
+//	public static void fetchOneServerManifest(KCHttpListener aListener, String aUrlManifest)
+//	{
+//		KCRequestRunner requestRunner = KerNet.newRequestRunner(null);
+//		KCHttpRequest<KCManifestObject> request = new KCHttpRequest<KCManifestObject>(KCHttpRequest.Method.GET, aUrlManifest, new KCHttpListener() {
+//			@Override
+//			public void onHttpComplete(KCHttpRequest<?> request, KCHttpResponse response) {
+//				ByteArrayInputStream in = new ByteArrayInputStream(response.getContent());
+//			}
+//
+//			@Override
+//			public void onHttpError(KCNetError error) {
+//
+//			}
+//
+//			@Override
+//			public void onResponseHeaders(KCStatusLine aStatusLine, KCHeaderGroup aHeaderGroup) {
+//
+//			}
+//		}) {
+//		};
+//		requestRunner.startAsyn(request);
+//	}
+
 	public static KCManifestObject fetchOneServerManifest(String aUrlManifest)
 	{
 		HttpURLConnection urlConn = null;

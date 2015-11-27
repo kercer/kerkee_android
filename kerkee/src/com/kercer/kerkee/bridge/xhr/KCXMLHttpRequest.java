@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 /**
@@ -166,7 +167,26 @@ public class KCXMLHttpRequest
                     if (error.networkResponse != null)
                     {
                         final KCStatusLine sl = error.networkResponse.getStatusLine();
-                        returnError(webView, sl.getStatusCode(), sl.getReasonPhrase());
+
+                        String parsed;
+                        try
+                        {
+                            parsed = new String(error.networkResponse.getContent(), mResponseCharset);
+                        }
+                        catch (UnsupportedEncodingException e)
+                        {
+                            parsed = new String(error.networkResponse.getContent());
+                        }
+
+                        try
+                        {
+                            returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), parsed!=null ? parsed : "");
+                        }
+                        catch (JSONException e)
+                        {
+                            returnError(webView, 500, error.getMessage());
+                            e.printStackTrace();
+                        }
                     }
                     else
                     {
@@ -190,7 +210,7 @@ public class KCXMLHttpRequest
                     final KCStatusLine sl = aResponse.getStatusLine();
                     try
                     {
-                        returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), aResult, false);
+                        returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), aResult);
                     }
                     catch (Exception e)
                     {
@@ -242,6 +262,23 @@ public class KCXMLHttpRequest
         {
             KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
         }
+
+        mState = DONE;
+    }
+
+    //if statusCode is 200, reasonPhrase is "OK"
+    private void returnResult(KCWebView webView, int statusCode, String reasonPhrase, String responseText) throws JSONException
+    {
+        if (mAborted)
+            return;
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", mId);
+        jsonObject.put("readyState", DONE);
+        jsonObject.put("status", statusCode);
+        jsonObject.put("statusText", reasonPhrase);
+        jsonObject.put("responseText", responseText);
+        callJSSetProperties(webView, jsonObject.toString());
 
         mState = DONE;
     }
@@ -298,24 +335,6 @@ public class KCXMLHttpRequest
 
     }
 
-
-
-    //if statusCode is 200, reasonPhrase is "OK"
-    private void returnResult(KCWebView webView, int statusCode, String reasonPhrase, String responseText, boolean alreadyInUIThread) throws JSONException
-    {
-        if (mAborted)
-            return;
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", mId);
-        jsonObject.put("readyState", DONE);
-        jsonObject.put("status", statusCode);
-        jsonObject.put("statusText", reasonPhrase);
-        jsonObject.put("responseText", responseText);
-        callJSSetProperties(webView, jsonObject.toString());
-
-        mState = DONE;
-    }
 
     private String readResponseBody(InputStream is) throws IOException
     {
