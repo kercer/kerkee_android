@@ -21,6 +21,10 @@ local.properties
 *.iml
 .idea/
 .gradle
+gradlew*
+gradle
+Release
+Debug
 
 # Node
 node_modules
