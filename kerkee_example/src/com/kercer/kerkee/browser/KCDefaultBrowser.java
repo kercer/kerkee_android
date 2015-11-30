@@ -1,11 +1,6 @@
 package com.kercer.kerkee.browser;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,8 +17,13 @@ import com.kercer.kerkee.webview.KCWebView;
 import com.kercer.kerkee.webview.KCWebViewClient;
 import com.kercer.kerkee_example.R;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -76,7 +76,7 @@ public class KCDefaultBrowser extends KCPage implements View.OnClickListener
         (mBtnBrowserForward = (ImageButton) findViewById(R.id.btnBrowserForward)).setOnClickListener(this);
 
         mJSBridge = new KCJSBridge(mWebView);
-        
+
     }
 
     public void loadUrl(String aUrl)
@@ -250,8 +250,8 @@ public class KCDefaultBrowser extends KCPage implements View.OnClickListener
         {
 //        	HitTestResult hit = view.getHitTestResult();
 //            int hitType = hit.getType();
-//            if (hitType == HitTestResult.SRC_ANCHOR_TYPE) 
-        	
+//            if (hitType == HitTestResult.SRC_ANCHOR_TYPE)
+
             //use this judgement to avoid redirect circle problem when user try to goback to a redirect page
             if (mCurrentUrl != null && url != null && url.equals(mCurrentUrl))
             {

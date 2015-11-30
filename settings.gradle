@@ -1,3 +1,4 @@
 include ':kerkee_example'
 include ':kerkee'
 //include ':..:kernet_android:kernet' //debug
+//include ':..:kercore_android:kercore' //debug

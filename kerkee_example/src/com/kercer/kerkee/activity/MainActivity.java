@@ -6,13 +6,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.kercer.kercore.debug.KCLog;
+import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kerkee.api.KCRegistMgr;
 import com.kercer.kerkee.bridge.KCJSObject;
 import com.kercer.kerkee.bridge.KerkeeMethod;
 import com.kercer.kerkee.browser.KCDefaultBrowser;
-import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.manifest.KCFetchManifest;
-import com.kercer.kerkee.util.KCTaskExecutor;
 import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee_example.R;
 

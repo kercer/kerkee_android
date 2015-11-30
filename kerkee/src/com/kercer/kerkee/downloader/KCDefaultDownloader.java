@@ -7,7 +7,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.kercer.kerkee.util.KCUtilIO;
+import com.kercer.kercore.io.KCUtilIO;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;

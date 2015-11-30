@@ -1,4 +1,4 @@
-# Kerkee
+# Kerkee [ ![Download](https://api.bintray.com/packages/zihong/maven/kerkee/images/download.svg) ](https://bintray.com/zihong/maven/kerkee/_latestVersion)
 
 ### Kerkee框架的诞生背景
 Hybrid App兼具了Native App的所有优势，也兼具了Web App使用HTML5跨平台开发低成本的优势。以及具有使用Native扩展Web接口以弥补web无法调用平台性API等优势。Hybrid App也是未来客户端技术的发展趋势。HTML5的出现，市面上已有很多应用（如淘宝、百度搜索、高德地图）使用了Hybrid App的开发模式，但遇到了一些瓶颈（如性能不如预期，无法操作浏览器内部数据流程，无法自定义请求的需求），用户体验没有预期的好。

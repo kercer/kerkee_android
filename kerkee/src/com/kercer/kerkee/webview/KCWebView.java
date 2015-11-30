@@ -1,11 +1,5 @@
 package com.kercer.kerkee.webview;
 
-import java.util.Map;
-
-import com.kercer.kerkee.bridge.KCApiBridge;
-import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
-import com.kercer.kerkee.log.KCLog;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
@@ -18,8 +12,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.kercer.kercore.debug.KCLog;
+import com.kercer.kerkee.bridge.KCApiBridge;
+import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
+
+import java.util.Map;
+
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -32,10 +32,10 @@ public class KCWebView extends WebView
     private KCUrlMapper mUrlMapper = null;
     protected KCWebPath mWebPath = null;
     private Object mAttach = null;
-    
 
-    
-    
+
+
+
     public Object getmAttach() {
 		return mAttach;
 	}
@@ -106,11 +106,11 @@ public class KCWebView extends WebView
     public void init(WebViewClient webViewClient, WebChromeClient webChromeClient)
     {
         mWebPath = new KCWebPath(getContext());
-        
+
         //creat url map
         mUrlMapper = new KCUrlMapper(mWebPath.getResRootPath(), mWebPath.getCfgPath());
-        
-        
+
+
 //        setBackgroundColor(getContext().getResources().getColor(R.color.darker_gray));
         setWebViewClient(webViewClient);
         setWebChromeClient(webChromeClient);
@@ -120,12 +120,12 @@ public class KCWebView extends WebView
         setOnLongClickListener(M_WEB_VIEW_LONG_CLICK_LISTENER);
 
     }
-    
+
     public void documentReady(boolean aIsReady)
     {
         mIsDocumentReady = aIsReady;
     }
-    
+
     public boolean isDocumentReady()
     {
         return mIsDocumentReady;
@@ -135,7 +135,7 @@ public class KCWebView extends WebView
     {
         return mWebPath;
     }
-   
+
     public void destroy()
     {
         if (mIsDestroyed)
@@ -206,12 +206,12 @@ public class KCWebView extends WebView
             e.printStackTrace();
         }
     }
-    
+
     public String getUrl()
     {
         return mUrl;
     }
-    
+
     public KCScheme getScheme()
     {
         return mWebPath.mBridgeScheme;
@@ -302,7 +302,7 @@ public class KCWebView extends WebView
     {
 
         StringBuilder customizedUA = new StringBuilder(webSettings.getUserAgentString()).append("; ");
-        
+
         webSettings.setUserAgentString(customizedUA.toString());
     }
 

@@ -1,7 +1,7 @@
 package com.kercer.kerkee.bridge.urd;
 
-import com.kercer.kerkee.net.uri.KCURI;
 
+import com.kercer.kernet.uri.KCURI;
 
 /**
  * Created by liweisu on 15/9/6.
@@ -17,7 +17,7 @@ public interface IUriRegister
 
 	boolean unregisterAction(final IUriAction aAction);
 
-	void dispatcher(final  KCURI aUriData);
+	void dispatcher(final KCURI aUriData);
 
 	String scheme();
 }

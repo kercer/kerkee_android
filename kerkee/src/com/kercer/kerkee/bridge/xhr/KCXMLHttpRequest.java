@@ -1,7 +1,7 @@
 package com.kercer.kerkee.bridge.xhr;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.KCJSExecutor;
-import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebView;
 import com.kercer.kernet.http.KCHttpRequest;

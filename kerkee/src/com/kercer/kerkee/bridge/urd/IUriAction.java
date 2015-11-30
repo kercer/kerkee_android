@@ -1,8 +1,8 @@
 package com.kercer.kerkee.bridge.urd;
 
-import java.util.List;
+import com.kercer.kernet.uri.KCNameValuePair;
 
-import com.kercer.kerkee.net.uri.KCNameValuePair;
+import java.util.List;
 
 /**
  * Created by liweisu on 15/9/6.

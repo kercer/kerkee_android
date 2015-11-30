@@ -2,8 +2,8 @@ package com.kercer.kerkee.bridge;
 
 import android.annotation.SuppressLint;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.type.KCCallback;
-import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.webview.KCWebView;
 
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class KCJSCompileExecutor
 		String finalCode =
 					"ApiBridge.compile(" + mIdentity +
 					", \"" + escapedJavascript + "\");";
-		KCLog.v( finalCode);
+		KCLog.v(finalCode);
 
 		KCJSExecutor.callJSOnMainThread(aWebview, finalCode);
 

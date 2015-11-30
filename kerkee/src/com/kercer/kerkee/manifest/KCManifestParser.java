@@ -1,7 +1,7 @@
 package com.kercer.kerkee.manifest;
 
-import com.kercer.kerkee.net.uri.KCURI;
 import com.kercer.kerkee.util.KCUtilString;
+import com.kercer.kernet.uri.KCURI;
 
 import java.io.BufferedReader;
 import java.io.File;

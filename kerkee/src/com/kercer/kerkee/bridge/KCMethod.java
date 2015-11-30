@@ -1,6 +1,6 @@
 package com.kercer.kerkee.bridge;
 
-import com.kercer.kerkee.log.KCLog;
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.webview.KCWebView;
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,7 +44,7 @@ public class KCMethod
     {
         return mMethod;
     }
-    
+
     public String getJSMethodName()
     {
     	return mJSMethodName;
@@ -64,7 +64,7 @@ public class KCMethod
     {
     	return mMethod.equals(aMethod);
     }
-    
+
     public boolean isSameArgList(final Class<?>[] aArgTypes)
     {
         if (aArgTypes == null || aArgTypes.length != getArgsCount()) return false;
@@ -114,13 +114,13 @@ public class KCMethod
             }
             Object[] argValues = new Object[types.length];
 
-            int i = 0;            
+            int i = 0;
             try
             {
                 for (; i < types.length; i++)
                 {
                     Class<?> nativeArgType = types[i];
-                    
+
                     if (nativeArgType == Boolean.class || nativeArgType == boolean.class)
                     {
                         argValues[i] = Boolean.valueOf(aArgList.getBoolean(i));

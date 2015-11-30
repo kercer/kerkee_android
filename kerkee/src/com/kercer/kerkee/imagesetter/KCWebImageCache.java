@@ -1,41 +1,41 @@
 package com.kercer.kerkee.imagesetter;
 
+import android.content.Context;
+import android.os.FileObserver;
+
+import com.kercer.kercore.debug.KCLog;
+import com.kercer.kerkee.util.KCUtilFile;
+import com.kercer.kernet.uri.KCURI;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import android.content.Context;
-import android.os.FileObserver;
-
-import com.kercer.kerkee.log.KCLog;
-import com.kercer.kerkee.net.uri.KCURI;
-import com.kercer.kerkee.util.KCUtilFile;
-
 /**
- * 
+ *
  * @author zihong
  *
  */
 public class KCWebImageCache
 {
     Context mContext;
-    
+
     private final ConcurrentHashMap<String, String> mImageFileMap = new ConcurrentHashMap<String, String>();
     private final static String DUMMY_STRING = "";
     // A reference to the DirWatcher MUST be kept so it will receive events.
     // see: http://stackoverflow.com/a/13521540/668963
     private KCDirWatcher mDirWatcher;
-    
+
     File mWebImageDir;
-    
+
     public KCWebImageCache(Context aContext)
     {
         super();
         mContext = aContext;
     }
-    
+
     public void loadCache(FilenameFilter aFilenameFilter)
     {
 
@@ -67,8 +67,8 @@ public class KCWebImageCache
             }
         }
     }
-    
-    
+
+
     class KCDirWatcher extends FileObserver
     {
         public KCDirWatcher(String dir, int mask) throws IOException
@@ -93,12 +93,12 @@ public class KCWebImageCache
             }
         }
     }
-    
+
     private void checkTerminalPath(final File aPath)
     {
         aPath.mkdirs(); //If the terminal directory already exists, answer false
     }
-    
+
     public File getCacheDir()
     {
         if (mWebImageDir == null)
@@ -114,7 +114,7 @@ public class KCWebImageCache
         checkTerminalPath(mWebImageDir);
         return mWebImageDir;
     }
-    
+
     public void setCacheDir(File aDir)
     {
         if (aDir != null)
@@ -123,7 +123,7 @@ public class KCWebImageCache
             checkTerminalPath(aDir);
         }
     }
-    
+
     public static File getInternalCacheDirectory(Context context)
     {
         File internalCacheDirectory = new File(context.getCacheDir(), "temp-images");
@@ -136,22 +136,22 @@ public class KCWebImageCache
         }
         return internalCacheDirectory;
     }
-    
-    
+
+
     public void add(KCURI aUri)
     {
         mImageFileMap.put(aUri.getPath(), DUMMY_STRING);
     }
-    
+
     public void remove(KCURI aUri)
     {
         mImageFileMap.remove(aUri.getPath());
     }
-    
+
     public boolean containsCache(KCURI aUri)
     {
         return mImageFileMap.containsKey(aUri.getPath());
     }
-    
-    
+
+
 }

@@ -6,11 +6,11 @@ import android.graphics.Bitmap;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
 import com.kercer.kerkee.imagesetter.KCDefaultImageStream;
 import com.kercer.kerkee.imagesetter.KCWebImageDownloader;
-import com.kercer.kerkee.log.KCLog;
 
 import java.io.IOException;
 import java.net.FileNameMap;

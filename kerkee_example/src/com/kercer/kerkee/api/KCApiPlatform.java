@@ -8,10 +8,10 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.KCArgList;
 import com.kercer.kerkee.bridge.KCJSDefine;
 import com.kercer.kerkee.browser.KCJSBridge;
-import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.webview.KCWebView;
 
 import org.json.JSONException;

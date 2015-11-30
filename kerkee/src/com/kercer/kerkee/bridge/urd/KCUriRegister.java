@@ -1,7 +1,7 @@
 package com.kercer.kerkee.bridge.urd;
 
-import com.kercer.kerkee.net.uri.KCURI;
-import com.kercer.kerkee.util.KCTaskExecutor;
+import com.kercer.kercore.task.KCTaskExecutor;
+import com.kercer.kernet.uri.KCURI;
 
 import java.util.ArrayList;
 
@@ -74,11 +74,9 @@ public class KCUriRegister implements IUriRegister
 			{
 				isSupported = true;
 
-				KCTaskExecutor.runTaskOnUiThread(new Runnable()
-				{
+				KCTaskExecutor.runTaskOnUiThread(new Runnable() {
 					@Override
-					public void run()
-					{
+					public void run() {
 						action.invokeAction(aUriData.getQueries());
 					}
 				});

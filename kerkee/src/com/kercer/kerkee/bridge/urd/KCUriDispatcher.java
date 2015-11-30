@@ -2,7 +2,7 @@ package com.kercer.kerkee.bridge.urd;
 
 import android.text.TextUtils;
 
-import com.kercer.kerkee.net.uri.KCURI;
+import com.kercer.kernet.uri.KCURI;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;

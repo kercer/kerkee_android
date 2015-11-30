@@ -1,8 +1,8 @@
 package com.kercer.kerkee.bridge;
 
+import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kerkee.bridge.event.KCEvent;
 import com.kercer.kerkee.bridge.xhr.KCXMLHttpRequestManager;
-import com.kercer.kerkee.util.KCTaskExecutor;
 
 import java.util.HashMap;
 
@@ -51,7 +51,7 @@ public class KCRegister
     	}
     	return clz;
     }
-    
+
 
     public KCClass registClass(KCClass aClass)
     {
@@ -65,22 +65,20 @@ public class KCRegister
         mClassMap.put(aJSObjectName, clz);
 //            String js = String.format("if(%s && global.%s) global.%s=%s", aJSObjectName, aJSObjectName, aJSObjectName, aJSObjectName);
 //            callJS(aWebView, js, true);
-        
+
         loadMethodsAsyn(clz);
-        
+
             return clz;
     }
-    
+
     private void loadMethodsAsyn(final KCClass aClass)
     {
-        KCTaskExecutor.executeTask(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				aClass.loadMethods();
-			}
-		});
+        KCTaskExecutor.executeTask(new Runnable() {
+            @Override
+            public void run() {
+                aClass.loadMethods();
+            }
+        });
     }
 
     public KCClass removeClass(String aJSObjectName)
@@ -93,7 +91,7 @@ public class KCRegister
     {
         return mClassMap.get(aClassName);
     }
-    
+
     public KCJSObject getJSObject(String aJSObjectName)
     {
     	return mJSObjectMap.get(aJSObjectName);

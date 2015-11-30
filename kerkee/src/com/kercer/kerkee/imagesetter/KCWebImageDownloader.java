@@ -5,17 +5,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.kercer.kercore.debug.KCLog;
+import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kerkee.downloader.KCDefaultDownloader;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
-import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.net.KCHttpServer;
-import com.kercer.kerkee.net.uri.KCURI;
 import com.kercer.kerkee.util.KCNativeUtil;
-import com.kercer.kerkee.util.KCTaskExecutor;
 import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee.webview.KCWebView;
 import com.kercer.kernet.download.KCDownloadEngine;
 import com.kercer.kernet.download.KCDownloadListener;
+import com.kercer.kernet.uri.KCURI;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,16 +58,12 @@ public class KCWebImageDownloader
             mWebImageCache.setCacheDir(new File(aWebPath.getWebImageCachePath()));
         }
 
-        KCTaskExecutor.executeTask(new Runnable()
-        {
+        KCTaskExecutor.executeTask(new Runnable() {
             @Override
-            public void run()
-            {
-                FilenameFilter filenameFilter = new FilenameFilter()
-                {
+            public void run() {
+                FilenameFilter filenameFilter = new FilenameFilter() {
                     @Override
-                    public boolean accept(File dir, String name)
-                    {
+                    public boolean accept(File dir, String name) {
                         return true;
                     }
                 };

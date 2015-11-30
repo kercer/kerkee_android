@@ -1,9 +1,9 @@
 package com.kercer.kerkee.bridge;
 
+import com.kercer.kercore.debug.KCLog;
+import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
-import com.kercer.kerkee.log.KCLog;
 import com.kercer.kerkee.net.KCHttpServer;
-import com.kercer.kerkee.util.KCTaskExecutor;
 import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee.webview.KCWebView;
 
@@ -165,11 +165,9 @@ public class KCApiBridge
 	public static void hackDestroyWebView(final KCWebView aWebview)
 	{
 		KCLog.d(">>>>>> hackDestroyWebView called.");
-		KCTaskExecutor.scheduleTaskOnUiThread(2000, new Runnable()
-		{
+		KCTaskExecutor.scheduleTaskOnUiThread(2000, new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				((KCWebView) aWebview).doDestroy();
 			}
 		});

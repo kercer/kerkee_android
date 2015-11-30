@@ -1,14 +1,14 @@
 package com.kercer.kerkee.bridge;
 
-import org.json.JSONObject;
-
-import com.kercer.kerkee.log.KCLog;
-import com.kercer.kerkee.webview.KCWebView;
-
 import android.widget.Toast;
 
+import com.kercer.kercore.debug.KCLog;
+import com.kercer.kerkee.webview.KCWebView;
+
+import org.json.JSONObject;
+
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -19,7 +19,7 @@ public class KCApiBridgeManager
     {
         if (KCLog.DEBUG)
             KCLog.d(">>>>>> testJSBrige called: " + jsonObject.toString());
-        
+
         Toast.makeText(aWebView.getContext(), jsonObject.toString(),
                 Toast.LENGTH_SHORT).show();
     }

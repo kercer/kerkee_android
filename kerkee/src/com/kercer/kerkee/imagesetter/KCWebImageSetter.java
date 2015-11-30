@@ -1,12 +1,12 @@
 package com.kercer.kerkee.imagesetter;
 
+import com.kercer.kercore.debug.KCLog;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
-import com.kercer.kerkee.log.KCLog;
-
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -94,7 +94,7 @@ public class KCWebImageSetter extends Thread
         KCWebImageSetterTask task = aTaskQueue.peek();
         return (task == null) ? false : task.canExecute();
     }
-    
+
     private KCWebImageSetterTask getNextTask(Queue<KCWebImageSetterTask> aTaskQueue)
     {
         // Pop the first element from the pending request queue
