@@ -41,14 +41,15 @@ public class KCJSCompileExecutor
 
 	}
 
-	public static void compileFunction(final KCWebView aWebview, String aJSFunctionName, Object[] aObjects, KCCallback aCallback)
+
+	public static void compileFunction(final KCWebView aWebview, KCCallback aCallback, String aJSFunctionName, Object... aJSArgs)
 	{
 		StringBuilder js = KCUtil.getThreadSafeStringBuilder().append(aJSFunctionName).append('(');
 
-		int lenth = aObjects.length;
+		int lenth = aJSArgs.length;
 		for (int i = 0; i < lenth; ++i)
 		{
-			Object obj = aObjects[i];
+			Object obj = aJSArgs[i];
 			if(obj != null)
 			{
 				if(obj instanceof String)

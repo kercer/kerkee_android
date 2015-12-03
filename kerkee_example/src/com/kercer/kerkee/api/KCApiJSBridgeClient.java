@@ -62,7 +62,7 @@ public class KCApiJSBridgeClient
 
             String js = "testReturnString(1, 2)";
 
-            KCJSCompileExecutor.compileFunction(aWebView, "testReturnString", new Object[]{"22", "aa"}, new KCReturnCallback() {
+            KCJSCompileExecutor.compileFunction(aWebView, new KCReturnCallback() {
                 @Override
                 public void returnCallback(Object aObject, KCJSError aError) {
                     KCLog.i("a");
@@ -71,7 +71,7 @@ public class KCApiJSBridgeClient
                     }
 
                 }
-            });
+            }, "testReturnString", list);
 
 
         } catch (JSONException e) {
