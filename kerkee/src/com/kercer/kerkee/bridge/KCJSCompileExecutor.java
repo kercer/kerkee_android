@@ -7,7 +7,12 @@ import com.kercer.kerkee.bridge.type.KCCallback;
 import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -48,10 +53,19 @@ public class KCJSCompileExecutor
 			{
 				if(obj instanceof String)
 				{
-					String str = (String)obj;
 					js.append("'");
 					js.append(obj.toString());
 					js.append("'");
+				}
+				else if (obj instanceof Collection)
+				{
+					JSONArray jsonarray = new JSONArray((Collection)obj);
+					js.append(jsonarray.toString());
+				}
+				else if (obj instanceof Map)
+				{
+					JSONObject jsonObject = new JSONObject((Map)obj);
+					js.append(jsonObject);
 				}
 				else
 				{
