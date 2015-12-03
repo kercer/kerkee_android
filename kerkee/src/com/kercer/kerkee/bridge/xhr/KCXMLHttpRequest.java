@@ -252,7 +252,7 @@ public class KCXMLHttpRequest
             jsonObject.put("status", statusCode);
             jsonObject.put("statusText", statusText);
 
-            callJSSetProperties(webView, jsonObject.toString());
+            callJSSetProperties(webView, jsonObject);
         }
         catch (JSONException e)
         {
@@ -278,7 +278,7 @@ public class KCXMLHttpRequest
         jsonObject.put("status", statusCode);
         jsonObject.put("statusText", reasonPhrase);
         jsonObject.put("responseText", responseText);
-        callJSSetProperties(webView, jsonObject.toString());
+        callJSSetProperties(webView, jsonObject);
 
         mState = DONE;
     }
@@ -372,7 +372,7 @@ public class KCXMLHttpRequest
         jsonObject.put("statusText", sl.getReasonPhrase());
         jsonObject.put("headers", jsonHeaders);
 
-        callJSSetProperties(webView, jsonObject.toString());
+        callJSSetProperties(webView, jsonObject);
     }
 
     public void setRequestHeader(String headerName, String headerValue)
@@ -438,9 +438,9 @@ public class KCXMLHttpRequest
 //        }
     }
 
-    private void callJSSetProperties(KCWebView webView, String jsonStr)
+    private void callJSSetProperties(KCWebView webView, JSONObject jsonObject)
     {
-        KCJSExecutor.callJSFunctionOnMainThread(webView, "XMLHttpRequest.setProperties", jsonStr);
+        KCJSExecutor.callJSFunctionOnMainThread(webView, "XMLHttpRequest.setProperties", jsonObject);
     }
 
     public synchronized boolean isOpened()

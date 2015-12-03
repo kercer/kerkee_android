@@ -42,26 +42,26 @@ public class KCJSExecutor
     }
 
 
-    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aString)
-    {
-        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append(aFunName).append('(');
-        if (aString != null)
-            sb.append(aString);
-        sb.append(')');
-        callJSOnMainThread(aWebview, sb.toString());
-    }
-
-    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aArgs1, String aArgs2)
-    {
-        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append(aFunName).append('(');
-        if (aArgs1 != null)
-            sb.append(aArgs1);
-        if (aArgs2 != null) {
-        	sb.append(','+aArgs2);
-        }
-        sb.append(')');
-        callJSOnMainThread(aWebview, sb.toString());
-    }
+//    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aString)
+//    {
+//        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append(aFunName).append('(');
+//        if (aString != null)
+//            sb.append(aString);
+//        sb.append(')');
+//        callJSOnMainThread(aWebview, sb.toString());
+//    }
+//
+//    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aArgs1, String aArgs2)
+//    {
+//        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append(aFunName).append('(');
+//        if (aArgs1 != null)
+//            sb.append(aArgs1);
+//        if (aArgs2 != null) {
+//        	sb.append(','+aArgs2);
+//        }
+//        sb.append(')');
+//        callJSOnMainThread(aWebview, sb.toString());
+//    }
 
 
 
