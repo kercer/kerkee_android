@@ -1,12 +1,18 @@
 package com.kercer.kerkee.bridge;
 
 import com.kercer.kercore.debug.KCLog;
+import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -29,6 +35,7 @@ public class KCMethod
     {
         this(null, aMethod);
     }
+
 
     public static String createIdentity(String aClzName, String aMethodName, List<String> aArgsKeys)
     {
@@ -206,5 +213,55 @@ public class KCMethod
         return returnObj;
     }
 
+
+    public static String toJS(String aJSFunctionName, Object... aJSArgs)
+    {
+        StringBuilder js = KCUtil.getThreadSafeStringBuilder().append(aJSFunctionName).append('(');
+
+        if (aJSArgs != null)
+        {
+            int lenth = aJSArgs.length;
+            for (int i = 0; i < lenth; ++i)
+            {
+                Object obj = aJSArgs[i];
+                if(obj != null)
+                {
+                    if(obj instanceof String)
+                    {
+                        js.append("'");
+                        js.append(obj.toString());
+                        js.append("'");
+                    }
+                    else if (obj instanceof Collection)
+                    {
+                        JSONArray jsonarray = new JSONArray((Collection)obj);
+                        js.append(jsonarray.toString());
+                    }
+                    else if (obj instanceof Map)
+                    {
+                        JSONObject jsonObject = new JSONObject((Map)obj);
+                        js.append(jsonObject);
+                    }
+                    else
+                    {
+                        js.append(obj.toString());
+                    }
+                }
+                else
+                {
+                    js.append("null");
+                }
+
+                if (i < lenth-1)
+                {
+                    js.append(',');
+                }
+            }
+        }
+
+        js.append(')');
+
+        return js.toString();
+    }
 
 }

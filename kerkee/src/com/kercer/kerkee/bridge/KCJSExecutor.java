@@ -14,6 +14,13 @@ import org.json.JSONObject;
 /********************************************************/
 public class KCJSExecutor
 {
+
+    public static void callJS(final KCWebView aWebview, final String aJS)
+    {
+        if (aWebview == null)
+            return;
+        aWebview.loadUrlExt("javascript:" + aJS);
+    }
     public static void callJSOnMainThread(final KCWebView aWebview, final String aJS)
     {
         KCTaskExecutor.runTaskOnUiThread(new Runnable() {
@@ -24,18 +31,22 @@ public class KCJSExecutor
         });
     }
 
-    public static void callJS(final KCWebView aWebview, final String aJS)
+
+    public static void callJSFunction(final KCWebView aWebview, String aJSFunctionName, Object... aArgs)
     {
-        if (aWebview == null)
-            return;
-        aWebview.loadUrlExt("javascript:" + aJS);
+        callJS(aWebview, KCMethod.toJS(aJSFunctionName, aArgs));
+    }
+    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aJSFunctionName, Object... aArgs)
+    {
+        callJSOnMainThread(aWebview, KCMethod.toJS(aJSFunctionName, aArgs));
     }
 
-    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aArgs)
+
+    public static void callJSFunctionOnMainThread(final KCWebView aWebview, String aFunName, String aString)
     {
         StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append(aFunName).append('(');
-        if (aArgs != null)
-            sb.append(aArgs);
+        if (aString != null)
+            sb.append(aString);
         sb.append(')');
         callJSOnMainThread(aWebview, sb.toString());
     }
@@ -51,6 +62,9 @@ public class KCJSExecutor
         sb.append(')');
         callJSOnMainThread(aWebview, sb.toString());
     }
+
+
+
 
     public static void callbackJS(KCWebView aWebview, String aCallbackId)
     {
@@ -78,4 +92,6 @@ public class KCJSExecutor
         sb.append(aCallbackId).append(',').append(aJSONArray.toString()).append(')');
         callJSOnMainThread(aWebview, sb.toString());
     }
+
+
 }
