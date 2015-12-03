@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.type.KCCallback;
+import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebView;
 
 import java.util.HashMap;
@@ -33,6 +34,33 @@ public class KCJSCompileExecutor
 
 		KCJSExecutor.callJSOnMainThread(aWebview, finalCode);
 
+	}
+
+	public static void compileFunction(final KCWebView aWebview, String aJSFunctionName, Object[] aObjects, KCCallback aCallback)
+	{
+		StringBuilder js = KCUtil.getThreadSafeStringBuilder().append(aJSFunctionName).append('(');
+
+		int lenth = aObjects.length;
+		for (int i = 0; i < lenth; ++i)
+		{
+			Object obj = aObjects[i];
+			if(obj != null)
+			{
+				if(obj instanceof String)
+				{
+					String str = (String)obj;
+					js.append("'");
+					js.append(obj.toString());
+					js.append("'");
+				}
+				else
+				{
+					js.append(obj.toString());
+				}
+			}
+		}
+		js.append(')');
+		compileJS(aWebview, js.toString(), aCallback);
 	}
 
 

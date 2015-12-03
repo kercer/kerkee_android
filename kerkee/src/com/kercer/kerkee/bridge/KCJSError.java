@@ -22,6 +22,6 @@ public class KCJSError
 
     public String toString()
     {
-        return mMessage;
+        return mMessage == null ? "" : mMessage;
     }
 }
