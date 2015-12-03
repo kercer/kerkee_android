@@ -72,6 +72,11 @@ public class KCJSCompileExecutor
 					js.append(obj.toString());
 				}
 			}
+
+			if (i < lenth-1)
+			{
+				js.append(',');
+			}
 		}
 		js.append(')');
 		compileJS(aWebview, js.toString(), aCallback);
