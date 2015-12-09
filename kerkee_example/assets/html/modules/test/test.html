@@ -58,6 +58,9 @@ Modules Example：testApi.js
 		{// code for IE6, IE5
 			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 		}
+
+		xmlhttp.timeout = 10000;
+
 		xmlhttp.onreadystatechange = function ()
 		{
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
@@ -67,6 +70,7 @@ Modules Example：testApi.js
 			}
 		}
 		xmlhttp.open("GET", "http://www.w3school.com.cn/ajax/demo_get.asp", true);
+
 		xmlhttp.send();
 	}
 </script>

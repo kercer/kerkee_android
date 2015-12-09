@@ -8,12 +8,14 @@ import com.kercer.kernet.KerNet;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult;
+import com.kercer.kernet.http.KCRetryPolicyDefault;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
 import com.kercer.kernet.http.base.KCHttpDefine;
 import com.kercer.kernet.http.base.KCStatusLine;
 import com.kercer.kernet.http.error.KCAuthFailureError;
 import com.kercer.kernet.http.error.KCNetError;
+import com.kercer.kernet.http.error.KCTimeoutError;
 import com.kercer.kernet.http.listener.KCHttpListener;
 import com.kercer.kernet.http.request.KCStringRequest;
 
@@ -87,10 +89,10 @@ public class KCXMLHttpRequest
      * @param userAgent - User-Agent of the browser(currently WebView)
      * @param referer   - referer of the current request
      */
-    public void open(final KCWebView webView, final String method, final String url, final boolean async, final String userAgent, final String referer, final String cookie)
+    public void open(final KCWebView webView, final String method, final String url, final boolean async, final String userAgent, final String referer, final String cookie, final int timeout)
     {
         mAsync = async;
-        createHttpRequest(webView, method, url);
+        createHttpRequest(webView, method, url, timeout);
         if (mHttpRequest != null)
         {
             if (userAgent != null)
@@ -106,7 +108,7 @@ public class KCXMLHttpRequest
      * @param method - currently only supports GET, POST, HEAD
      * @param url
      */
-    private void createHttpRequest(final KCWebView webView, final String method, final String url)
+    private void createHttpRequest(final KCWebView webView, final String method, final String url, final int timeout)
     {
         URI uri = URI.create(KCUtil.replacePlusWithPercent20(url));
         int nMethod = -1;
@@ -144,6 +146,9 @@ public class KCXMLHttpRequest
                 }
             };
 
+            int nTimeOut = timeout > 0 ? timeout : KCRetryPolicyDefault.DEFAULT_TIMEOUT_MS;
+            mHttpRequest.setRetryPolicy(new KCRetryPolicyDefault(nTimeOut, KCRetryPolicyDefault.DEFAULT_MAX_RETRIES, KCRetryPolicyDefault.DEFAULT_BACKOFF_MULT));
+
             mHttpRequest.setListener(new KCHttpListener()
             {
                 @Override
@@ -164,6 +169,12 @@ public class KCXMLHttpRequest
                 @Override
                 public void onHttpError(KCNetError error)
                 {
+                    int code = 500;
+                    if (error instanceof KCTimeoutError)
+                    {
+                        code = 408;
+                    }
+
                     if (error.networkResponse != null)
                     {
                         final KCStatusLine sl = error.networkResponse.getStatusLine();
@@ -184,13 +195,13 @@ public class KCXMLHttpRequest
                         }
                         catch (JSONException e)
                         {
-                            returnError(webView, 500, error.getMessage());
+                            returnError(webView, code, error.getMessage());
                             e.printStackTrace();
                         }
                     }
                     else
                     {
-                        returnError(webView, 500, error.getMessage());
+                        returnError(webView, code, error.getMessage());
                     }
 
                 }

@@ -11,11 +11,8 @@ import com.kercer.kerkee.bridge.type.KCReturnCallback;
 import com.kercer.kerkee.browser.KCJSBridge;
 import com.kercer.kerkee.webview.KCWebView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 
 /**
@@ -27,14 +24,12 @@ public class KCApiJSBridgeClient
 {
     public static void testJSBrige(final KCWebView aWebView, KCArgList aArgList)
     {
-//    	KCJSCompileExecutor.compileJS(aWebView, "document.title", new KCReturnCallback()
-//		{
-//			@Override
-//			public void returnCallback(Object aObject, KCJSError aError)
-//			{
-//				KCLog.i("");
-//			}
-//		});
+    	KCJSCompileExecutor.compileJS(aWebView, "XMLHttpRequest", new KCReturnCallback() {
+            @Override
+            public void returnCallback(Object aObject, KCJSError aError) {
+                KCLog.i("");
+            }
+        });
 
 //        KCJSCompileExecutor.compileJS(aWebView, "", new KCReturnCallback()
 //        {
@@ -45,38 +40,33 @@ public class KCApiJSBridgeClient
 //            }
 //        });
 
-        try {
-            JSONObject obj = new JSONObject("{key=a}");
-
-            String objStr = obj.toString();
-
-            String a = objStr;
-            String b = objStr.replaceAll("\\\"", "\\\\\"");
-
-            ArrayList list = new ArrayList<String>();
-            list.add("12");
-            list.add("aa");
-            String s = list.toString();
-
-            JSONArray array = new JSONArray(list);
-
-            String js = "testReturnString(1, 2)";
-
-            KCJSCompileExecutor.compileFunction(aWebView, new KCReturnCallback() {
-                @Override
-                public void returnCallback(Object aObject, KCJSError aError) {
-                    KCLog.i("a");
-                    if (aError != null) {
-                        KCLog.e(aError.toString());
-                    }
-
-                }
-            }, "testReturnString", list);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            JSONObject obj = new JSONObject("{key=a}");
+//
+//            ArrayList list = new ArrayList<String>();
+//            list.add("12");
+//            list.add("aa");
+//            String s = list.toString();
+//
+//            JSONArray array = new JSONArray(list);
+//
+//            String js = "testReturnString(1, 2)";
+//
+//            KCJSCompileExecutor.compileFunction(aWebView, new KCReturnCallback() {
+//                @Override
+//                public void returnCallback(Object aObject, KCJSError aError) {
+//                    KCLog.i("a");
+//                    if (aError != null) {
+//                        KCLog.e(aError.toString());
+//                    }
+//
+//                }
+//            }, "testReturnString", list);
+//
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
 
 

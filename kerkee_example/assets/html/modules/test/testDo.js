@@ -37,13 +37,18 @@ function ($,template,clientUI,clientInfo,util,widget,testApi) {
             },"test getTestInfo fun");
         });
 
-        window.testReturnString = function (){
-//        alert("Test testString")
+        window.testReturnString = function (json){
+
 //        var test = {};
 //        test.a = "t1";
 //        test.b = "t2";
 //        test.c = "t3";
 //        test.d = "t4";
+//        alert(JSON.stringify(test));
+        alert(typeof(json));
+        alert(json);
+        alert(JSON.stringify(json));
+
 //        return test;
         return "Im testReturnString";
         };
