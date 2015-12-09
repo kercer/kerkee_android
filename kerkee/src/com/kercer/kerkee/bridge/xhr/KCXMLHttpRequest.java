@@ -300,12 +300,6 @@ public class KCXMLHttpRequest
             return;
         }
 
-        KCLog.i(">>>> XHR send, request not null");
-
-        KCLog.i(">>>> XHR send, no cache");
-
-        KCLog.i(">>>> XHR send, not local file");
-
         if (mAborted)
         {
             KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
