@@ -25,8 +25,9 @@ public class KCFetchManifest
 
 	public static void fetchServerManifests(Map<String, KCManifestObject> aOutMapManifestObjects, String aUrlManifest)
 	{
-		KCManifestObject mo = fetchOneServerManifest(aUrlManifest);
+		if (aOutMapManifestObjects == null) return;
 
+		KCManifestObject mo = fetchOneServerManifest(aUrlManifest);
 		if (mo != null)
 		{
 			String urlDir = aUrlManifest.substring(0, aUrlManifest.lastIndexOf(File.separator));
@@ -117,8 +118,9 @@ public class KCFetchManifest
 
 	public static void fetchLocalManifests(Map<String, KCManifestObject> aOutMapManifestObjects, String aLocalManifestPath)
 	{
+		if (aOutMapManifestObjects == null) return;
+		
 		KCManifestObject mo = fetchOneLocalManifest(aLocalManifestPath);
-
 		if (mo != null)
 		{
 			aOutMapManifestObjects.put(aLocalManifestPath, mo);
