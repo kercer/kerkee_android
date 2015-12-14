@@ -55,7 +55,7 @@ public class KCManifestParser
 							value = getCommentValue(VERSION, trimline);
 							mo.setVersion(value);
 						}
-						if (trimline.contains(POUND_SIGN + LIST))
+						else if (trimline.contains(POUND_SIGN + LIST))
 						{
 							value = getCommentValue(LIST, trimline);
 							if (!KCUtilString.isEmpty(value))
@@ -63,7 +63,7 @@ public class KCManifestParser
 								mo.setSubManifests(value.split(COMMA));
 							}
 						}
-						if (trimline.contains(POUND_SIGN + EXTRA))
+						else if (trimline.contains(POUND_SIGN + EXTRA))
 						{
 							value = getCommentValue(POUND_SIGN + EXTRA, trimline);
 							if (!KCUtilString.isEmpty(value))
@@ -71,12 +71,12 @@ public class KCManifestParser
 								mo.setExtras(value.split(COMMA));
 							}
 						}
-						if (trimline.contains(POUND_SIGN + REQUIREDVERSION))
+						else if (trimline.contains(POUND_SIGN + REQUIREDVERSION))
 						{
 							value = getCommentValue(REQUIREDVERSION, trimline);
 							mo.setRequiredVersion(value);
 						}
-						if (trimline.contains(POUND_SIGN + DEK))
+						else if (trimline.contains(POUND_SIGN + DEK))
 						{
 							value = getCommentValue(DEK, trimline);
 							KCURI uri = KCURI.parse(value);

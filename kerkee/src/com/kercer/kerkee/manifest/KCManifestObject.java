@@ -9,14 +9,18 @@ public class KCManifestObject
 
 	private String mVersion; // version
 	private String[] mSubManifests; // sub manifests list
-	private String[] mExtras; //extras files
+	private String[] mExtras; //extras files, don't delete files
 	private ArrayList<String> mCacheList;
-	private String mDekRelativePath;  //dek file name
+	private String mDekRelativePath;  //dek relative path, if dek path is url, it's null
 	private String mRequiredVersion; //required version
-	private ArrayList<String> mCacheDirs;
-	private String mDownloadUrl;
+	private ArrayList<String> mCacheDirs; //cache dirs, contains mCacheList' dir, not contains Extras and suManifests dir
 
-	private String mDestDir;  //dek & manifest file Dir
+	//if mDekRelativePath's scheme is not null, set it in Parser
+	//if from server,set it in KCFetchManifest;
+	//if from local,set it in KCManifestParser
+	private String mDownloadUrl;
+	//dek & manifest file Dir, if from server, the VAR is null
+	private String mDestDir;
 
 
 	public KCManifestObject()
