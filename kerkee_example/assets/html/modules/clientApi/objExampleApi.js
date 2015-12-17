@@ -1,26 +1,26 @@
 /**
  * Demo相关接口
- * @class TestApi
+ * @class objExampleApi
  * @extends Klass
  * @constructor
  * @module modules
  * @example
- *     define('helper/testApi',',function(platform){
+ *     define('helper/objExampleApi',',function(platform){
  *          testApi.getTestInfo();
  *     });
  * @since 1.0.0
  * @public
  */
 
-define(["api/helper/util"], function ( util) {
+define(["api/helper/util"], function (util) {
 
-    var TestApi = (function () {
+    var ObjExampleApi = (function () {
 
         //构建一个TestApi类,继承自基础类
-        util.Klass().sub(TestApi);
+        util.Klass().sub(ObjExampleApi);
 
         //构造函数
-        function TestApi() {
+        function ObjExampleApi() {
             /**
              * 映射客户端类的名称 <strong>(必选)</strong>
              * @property nativeCls
@@ -63,45 +63,67 @@ define(["api/helper/util"], function ( util) {
              * @public
              */
 
-            TestApi.__super__.constructor.apply(this, arguments);
+            ObjExampleApi.__super__.constructor.apply(this, arguments);
         }
 
-        TestApi.include({
+        ObjExampleApi.include({
 
             /**
-             * 获取测试信息
-             * @method getTestInfo
+             * 测试非静态的Native函数
+             * @method objExampleNotStaticFunction
              * @public
              * @param {Function} callBack 回调函数
              * @param {String} testInfo 测试信息
              * @return {Object}
              * @example
-             *      testApi.getTestInfo(function(data){
+             *      objExampleApi.objExampleNotStaticFunction(function(data){
              *          console.log(data);
              * 	    },"test");
              * @since 1.0.0
              */
-            getTestInfo: function (callBack, testInfo) {
+            objExampleNotStaticFunction: function (callBack, testInfo) {
                 this.sendData({
-                    method: "testInfo",
+                    method: "objExampleNotStaticFunction",
                     param: {
-                        "testInfo": "I'm testInfo"
+                        "testInfo": "I'm objExampleNotStaticFunction"
+                    },
+                    callBack: callBack
+                });
+            },
+
+            /**
+             * 测试静态的Native函数
+             * @method objExampleStaticFunction
+             * @public
+             * @param {Function} callBack 回调函数
+             * @param {String} testInfo 测试信息
+             * @return {Object}
+             * @example
+             *      objExampleApi.objExampleStaticFunction(function(data){
+             *          console.log(data);
+             * 	    },"test");
+             * @since 1.0.0
+             */
+            objExampleStaticFunction: function (callBack, testInfo) {
+                this.sendData({
+                    method: "objExampleStaticFunction",
+                    param: {
+                        "testInfo": "I'm objExampleStaticFunction"
                     },
                     callBack: callBack
                 });
             }
 
-
         });
-        return TestApi;
+        return ObjExampleApi;
     })();
 
-    return new TestApi({
-        name: "kerkee testApi",
+    return new ObjExampleApi({
+        name: "kerkee objExampleApi",
         author: "zihong",
         version: "1.0",
         jsbc: jsBridgeClient,
-        nativeCls: "testModule"
+        nativeCls: "objExampleApi"
     });
 
 });
