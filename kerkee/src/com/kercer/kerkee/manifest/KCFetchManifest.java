@@ -1,7 +1,5 @@
 package com.kercer.kerkee.manifest;
 
-import com.kercer.kerkee.util.KCUtilString;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

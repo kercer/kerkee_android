@@ -7,7 +7,7 @@ import com.kercer.kerkee.bridge.KCClass;
 import com.kercer.kerkee.bridge.KCJSDefine;
 import com.kercer.kerkee.bridge.KCJSExecutor;
 import com.kercer.kerkee.bridge.KCJSObject;
-import com.kercer.kerkee.util.KCAssetTool;
+import com.kercer.kercore.io.KCAssetTool;
 import com.kercer.kerkee.webview.KCWebView;
 
 import org.json.JSONArray;

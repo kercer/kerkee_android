@@ -1,6 +1,6 @@
 package com.kercer.kerkee.manifest;
 
-import com.kercer.kerkee.util.KCUtilString;
+import com.kercer.kercore.util.KCUtilText;
 
 import java.util.ArrayList;
 
@@ -25,9 +25,9 @@ public class KCManifestObject
 
 	public KCManifestObject()
 	{
-		mRequiredVersion = KCUtilString.EMPTY_STR;
-		mVersion = KCUtilString.EMPTY_STR;
-		mDekRelativePath = KCUtilString.EMPTY_STR;
+		mRequiredVersion = KCUtilText.EMPTY_STR;
+		mVersion = KCUtilText.EMPTY_STR;
+		mDekRelativePath = KCUtilText.EMPTY_STR;
 	}
 
 	public String getVersion()
@@ -92,7 +92,7 @@ public class KCManifestObject
 
 	public String getDekRelativePath()
 	{
-		if (KCUtilString.isEmpty(mDekRelativePath))
+		if (KCUtilText.isStringEmpty(mDekRelativePath))
 			mDekRelativePath = "/update_" + this.mVersion + ".dek";
 		return mDekRelativePath;
 	}

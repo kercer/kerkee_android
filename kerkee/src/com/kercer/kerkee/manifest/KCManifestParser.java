@@ -1,6 +1,6 @@
 package com.kercer.kerkee.manifest;
 
-import com.kercer.kerkee.util.KCUtilString;
+import com.kercer.kercore.util.KCUtilText;
 import com.kercer.kernet.uri.KCURI;
 
 import java.io.BufferedReader;
@@ -46,7 +46,7 @@ public class KCManifestParser
 				{
 					lineIndex++;
 					trimline = line.replaceAll(" +", "");
-					if (KCUtilString.isEmpty(trimline))
+					if (KCUtilText.isStringEmpty(trimline))
 						continue;
 					if (trimline.startsWith(POUND_SIGN))
 					{
@@ -58,7 +58,7 @@ public class KCManifestParser
 						else if (trimline.contains(POUND_SIGN + LIST))
 						{
 							value = getCommentValue(LIST, trimline);
-							if (!KCUtilString.isEmpty(value))
+							if (!KCUtilText.isStringEmpty(value))
 							{
 								mo.setSubManifests(value.split(COMMA));
 							}
@@ -66,7 +66,7 @@ public class KCManifestParser
 						else if (trimline.contains(POUND_SIGN + EXTRA))
 						{
 							value = getCommentValue(POUND_SIGN + EXTRA, trimline);
-							if (!KCUtilString.isEmpty(value))
+							if (!KCUtilText.isStringEmpty(value))
 							{
 								mo.setExtras(value.split(COMMA));
 							}
