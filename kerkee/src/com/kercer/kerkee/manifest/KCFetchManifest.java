@@ -1,5 +1,7 @@
 package com.kercer.kerkee.manifest;
 
+import com.kercer.kercore.util.KCUtilText;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class KCFetchManifest
 			{
 				for (int i = 0; i < mfUrl.length; i++)
 				{
-					String subUrlManifest = urlDir + File.separator + mfUrl[i].replace("./", KCUtilString.EMPTY_STR);
+					String subUrlManifest = urlDir + File.separator + mfUrl[i].replace("./", KCUtilText.EMPTY_STR);
 					fetchServerManifests(aOutMapManifestObjects, subUrlManifest);
 				}
 			}
@@ -117,7 +119,7 @@ public class KCFetchManifest
 	public static void fetchLocalManifests(Map<String, KCManifestObject> aOutMapManifestObjects, String aLocalManifestPath)
 	{
 		if (aOutMapManifestObjects == null) return;
-		
+
 		KCManifestObject mo = fetchOneLocalManifest(aLocalManifestPath);
 		if (mo != null)
 		{
@@ -127,7 +129,7 @@ public class KCFetchManifest
 			{
 				for (int i = 0; i < mfUrl.length; i++)
 				{
-					String subPath = mo.getDestDir() + File.separator + mfUrl[i].replace("./", KCUtilString.EMPTY_STR);
+					String subPath = mo.getDestDir() + File.separator + mfUrl[i].replace("./", KCUtilText.EMPTY_STR);
 					fetchLocalManifests(aOutMapManifestObjects, subPath);
 				}
 			}
