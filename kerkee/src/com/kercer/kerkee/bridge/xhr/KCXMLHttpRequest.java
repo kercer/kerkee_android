@@ -59,8 +59,6 @@ public class KCXMLHttpRequest
 
     private String mBody;
 
-    KCWebView mWebview;
-
     public KCXMLHttpRequest(int id, String urlHash)
     {
         this.mId = id;
@@ -112,7 +110,6 @@ public class KCXMLHttpRequest
      */
     private void createHttpRequest(final KCWebView webView, final String method, final String url, final int timeout)
     {
-        mWebview = webView;
         URI uri = URI.create(KCUtil.replacePlusWithPercent20(url));
         int nMethod = -1;
         if (GET.equalsIgnoreCase(method))
@@ -152,6 +149,7 @@ public class KCXMLHttpRequest
             int nTimeOut = timeout > 0 ? timeout : KCRetryPolicyDefault.DEFAULT_TIMEOUT_MS;
             mHttpRequest.setRetryPolicy(new KCRetryPolicyDefault(nTimeOut, KCRetryPolicyDefault.DEFAULT_MAX_RETRIES, KCRetryPolicyDefault.DEFAULT_BACKOFF_MULT));
 
+            mHttpRequest.setTag(webView);
             mHttpRequest.setListener(new KCHttpListener()
             {
                 @Override
@@ -160,8 +158,8 @@ public class KCXMLHttpRequest
                     try
                     {
                         // send the received response headers to the JS layer
-                        setCookieToWebView(mWebview, aHeaderGroup);
-                        handleHeaders(mWebview, aHeaderGroup, aStatusLine);
+                        setCookieToWebView(webView, aHeaderGroup);
+                        handleHeaders(webView, aHeaderGroup, aStatusLine);
                     }
                     catch (Exception e)
                     {
@@ -194,17 +192,17 @@ public class KCXMLHttpRequest
 
                         try
                         {
-                            returnResult(mWebview, sl.getStatusCode(), sl.getReasonPhrase(), parsed!=null ? parsed : "");
+                            returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), parsed!=null ? parsed : "");
                         }
                         catch (JSONException e)
                         {
-                            returnError(mWebview, code, error.getMessage());
+                            returnError(webView, code, error.getMessage());
                             e.printStackTrace();
                         }
                     }
                     else
                     {
-                        returnError(mWebview, code, error.getMessage());
+                        returnError(webView, code, error.getMessage());
                     }
 
                 }
@@ -224,7 +222,7 @@ public class KCXMLHttpRequest
                     final KCStatusLine sl = aResponse.getStatusLine();
                     try
                     {
-                        returnResult(mWebview, sl.getStatusCode(), sl.getReasonPhrase(), aResult);
+                        returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), aResult);
                     }
                     catch (Exception e)
                     {
@@ -232,13 +230,13 @@ public class KCXMLHttpRequest
 
                         if (!mHttpRequest.isCanceled())
                         {
-                            returnError(mWebview, 500, e.getMessage());
+                            returnError(webView, 500, e.getMessage());
                         }
 
                     }
                     finally
                     {
-                        KCXMLHttpRequestManager.freeXMLHttpRequestObject(mWebview, mId);
+                        KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
                     }
 
                 }
@@ -250,7 +248,7 @@ public class KCXMLHttpRequest
         }
         else
         {
-            returnError(mWebview, 405, "Method Not Allowed");
+            returnError(webView, 405, "Method Not Allowed");
         }
 
 
@@ -448,7 +446,7 @@ public class KCXMLHttpRequest
 
     private void callJSSetProperties(KCWebView webView, JSONObject jsonObject)
     {
-        KCJSExecutor.callJSFunctionOnMainThread(mWebview, "XMLHttpRequest.setProperties", jsonObject);
+        KCJSExecutor.callJSFunctionOnMainThread(webView, "XMLHttpRequest.setProperties", jsonObject);
     }
 
     public synchronized boolean isOpened()
