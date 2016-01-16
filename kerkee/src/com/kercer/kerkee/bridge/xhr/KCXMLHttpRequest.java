@@ -59,6 +59,8 @@ public class KCXMLHttpRequest
 
     private String mBody;
 
+    KCWebView mWebview;
+
     public KCXMLHttpRequest(int id, String urlHash)
     {
         this.mId = id;
@@ -110,6 +112,7 @@ public class KCXMLHttpRequest
      */
     private void createHttpRequest(final KCWebView webView, final String method, final String url, final int timeout)
     {
+        mWebview = webView;
         URI uri = URI.create(KCUtil.replacePlusWithPercent20(url));
         int nMethod = -1;
         if (GET.equalsIgnoreCase(method))
@@ -157,8 +160,8 @@ public class KCXMLHttpRequest
                     try
                     {
                         // send the received response headers to the JS layer
-                        setCookieToWebView(webView, aHeaderGroup);
-                        handleHeaders(webView, aHeaderGroup, aStatusLine);
+                        setCookieToWebView(mWebview, aHeaderGroup);
+                        handleHeaders(mWebview, aHeaderGroup, aStatusLine);
                     }
                     catch (Exception e)
                     {
@@ -191,17 +194,17 @@ public class KCXMLHttpRequest
 
                         try
                         {
-                            returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), parsed!=null ? parsed : "");
+                            returnResult(mWebview, sl.getStatusCode(), sl.getReasonPhrase(), parsed!=null ? parsed : "");
                         }
                         catch (JSONException e)
                         {
-                            returnError(webView, code, error.getMessage());
+                            returnError(mWebview, code, error.getMessage());
                             e.printStackTrace();
                         }
                     }
                     else
                     {
-                        returnError(webView, code, error.getMessage());
+                        returnError(mWebview, code, error.getMessage());
                     }
 
                 }
@@ -221,7 +224,7 @@ public class KCXMLHttpRequest
                     final KCStatusLine sl = aResponse.getStatusLine();
                     try
                     {
-                        returnResult(webView, sl.getStatusCode(), sl.getReasonPhrase(), aResult);
+                        returnResult(mWebview, sl.getStatusCode(), sl.getReasonPhrase(), aResult);
                     }
                     catch (Exception e)
                     {
@@ -229,13 +232,13 @@ public class KCXMLHttpRequest
 
                         if (!mHttpRequest.isCanceled())
                         {
-                            returnError(webView, 500, e.getMessage());
+                            returnError(mWebview, 500, e.getMessage());
                         }
 
                     }
                     finally
                     {
-                        KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
+                        KCXMLHttpRequestManager.freeXMLHttpRequestObject(mWebview, mId);
                     }
 
                 }
@@ -247,7 +250,7 @@ public class KCXMLHttpRequest
         }
         else
         {
-            returnError(webView, 405, "Method Not Allowed");
+            returnError(mWebview, 405, "Method Not Allowed");
         }
 
 
@@ -445,7 +448,7 @@ public class KCXMLHttpRequest
 
     private void callJSSetProperties(KCWebView webView, JSONObject jsonObject)
     {
-        KCJSExecutor.callJSFunctionOnMainThread(webView, "XMLHttpRequest.setProperties", jsonObject);
+        KCJSExecutor.callJSFunctionOnMainThread(mWebview, "XMLHttpRequest.setProperties", jsonObject);
     }
 
     public synchronized boolean isOpened()
