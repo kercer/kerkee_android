@@ -58,7 +58,7 @@ public class KCWebView extends WebView
             try
             {
                 KeyEvent shiftPressEvent = new KeyEvent(0, 0, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0);
-                shiftPressEvent.dispatch(view);
+                shiftPressEvent.dispatch(view, null, null);
                 return true;
             }
             catch (Exception e)
