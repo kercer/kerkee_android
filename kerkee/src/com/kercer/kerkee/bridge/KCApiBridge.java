@@ -171,7 +171,7 @@ public class KCApiBridge
 		KCTaskExecutor.scheduleTaskOnUiThread(timeout, new Runnable() {
 			@Override
 			public void run() {
-				((KCWebView) aWebview).doDestroy();
+				aWebview.doDestroy();
 			}
 		});
 	}
