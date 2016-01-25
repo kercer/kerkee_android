@@ -1,5 +1,7 @@
 package com.kercer.kerkee.bridge;
 
+import android.view.ViewConfiguration;
+
 import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
@@ -165,7 +167,8 @@ public class KCApiBridge
 	public static void hackDestroyWebView(final KCWebView aWebview)
 	{
 		KCLog.d(">>>>>> hackDestroyWebView called.");
-		KCTaskExecutor.scheduleTaskOnUiThread(2000, new Runnable() {
+		long timeout = ViewConfiguration.getZoomControlsTimeout();
+		KCTaskExecutor.scheduleTaskOnUiThread(timeout, new Runnable() {
 			@Override
 			public void run() {
 				((KCWebView) aWebview).doDestroy();

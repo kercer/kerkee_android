@@ -34,8 +34,6 @@ public class KCWebView extends WebView
     private Object mAttach = null;
 
 
-
-
     public Object getmAttach() {
 		return mAttach;
 	}
@@ -105,6 +103,8 @@ public class KCWebView extends WebView
 
     public void init(WebViewClient webViewClient, WebChromeClient webChromeClient)
     {
+
+
         mWebPath = new KCWebPath(getContext());
 
         //creat url map
@@ -150,17 +150,28 @@ public class KCWebView extends WebView
         }
         else
         {
-            super.stopLoading();
-            super.destroy();
+            doDestroy();
         }
     }
 
+
     public void doDestroy()
     {
-        super.stopLoading();
-        super.destroy();
-        if (KCLog.DEBUG)
-            KCLog.d(">>>>> KCWebView.doDestroy() called");
+        try
+        {
+            super.stopLoading();
+            super.removeAllViews();
+            super.clearCache(true);
+            super.destroyDrawingCache();
+            super.destroy();
+            if (KCLog.DEBUG)
+                KCLog.d(">>>>> KCWebView.doDestroy() called");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void loadUrlExt(String url, Map<String, String> additionalHttpHeaders)
