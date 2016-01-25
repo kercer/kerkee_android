@@ -239,7 +239,17 @@ public class KCWebView extends WebView
         try
         {
             super.onScrollChanged(l, t, oldl, oldt);
-            float contentHeight = getContentHeight() * getScale();
+//            float scale = getResources().getDisplayMetrics().density;
+
+            //getScale () was deprecated in API level 17
+            float scale = getScale();
+            float contentHeight = getContentHeight() * scale;
+
+//            KCJSCompileExecutor.compileJS(this, new KCReturnCallback() {
+//                @Override
+//                public void returnCallback(Object aObject, KCJSError aError) {
+//                }
+//            },"window.devicePixelRatio" );
 
             if (mCurContentHeight != contentHeight)
             {
