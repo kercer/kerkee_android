@@ -332,33 +332,41 @@ public class KCWebView extends WebView
      * **/
     public static void setupWebViewAttributes(KCWebView aWebView)
     {
-        WebSettings webSettings = aWebView.getSettings();
-        setCustomizedUA(webSettings);
+        try
+        {
+            WebSettings webSettings = aWebView.getSettings();
+            setCustomizedUA(webSettings);
 
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setBuiltInZoomControls(false);
-        webSettings.setSupportZoom(true);
-        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webSettings.setAppCachePath(aWebView.getWebPath().getRootPath() + "/webcache");
-        webSettings.setAppCacheEnabled(true);
-    //        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webSettings.setLoadsImagesAutomatically(true);
-        webSettings.setLightTouchEnabled(false);
-        webSettings.setDomStorageEnabled(true); // supports local storage
-        webSettings.setDatabaseEnabled(true); // supports local storage
-        webSettings.setDatabasePath(aWebView.getWebPath().getRootPath() + "/localstorage");
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
+            webSettings.setBuiltInZoomControls(false);
+            webSettings.setSupportZoom(true);
+            webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+            webSettings.setAppCachePath(aWebView.getWebPath().getRootPath() + "/webcache");
+            webSettings.setAppCacheEnabled(true);
+            //        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+            webSettings.setLoadsImagesAutomatically(true);
+            webSettings.setLightTouchEnabled(false);
+            webSettings.setDomStorageEnabled(true); // supports local storage
+            webSettings.setDatabaseEnabled(true); // supports local storage
+            webSettings.setDatabasePath(aWebView.getWebPath().getRootPath() + "/localstorage");
 
-        // we are using ApplicationContext when creaing KCWebView, without disabling the "Save Password" dialog
-        // there will be an exception that would cause crash: "Unable to add window -- token null is not for an application"
-        webSettings.setSavePassword(false);
+            // we are using ApplicationContext when creaing KCWebView, without disabling the "Save Password" dialog
+            // there will be an exception that would cause crash: "Unable to add window -- token null is not for an application"
+            webSettings.setSavePassword(false);
 
-        aWebView.setHorizontalScrollBarEnabled(false);
-        //        mWebView.setVerticalScrollBarEnabled(false);
-        aWebView.setScrollbarFadingEnabled(true);
-        aWebView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+            aWebView.setHorizontalScrollBarEnabled(false);
+            //        mWebView.setVerticalScrollBarEnabled(false);
+            aWebView.setScrollbarFadingEnabled(true);
+            aWebView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 }
