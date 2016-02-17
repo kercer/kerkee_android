@@ -133,15 +133,6 @@ public class KCApiBridge
 		return "";
 	}
 
-	public static void callbackJSOnHitPageBottom(KCWebView aWebview, int aY)
-	{
-		String y = String.valueOf(aY);
-//		String js = "if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom(" + y +")";
-		StringBuilder js = KCUtil.getThreadSafeStringBuilder().append("if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom(").append(y).append(")");
-
-		KCJSExecutor.callJS(aWebview, js.toString());
-	}
-
 	public static void JSLog(KCWebView aWebview, KCArgList aArgList)
 	{
 		KCLog.e(aArgList.getString("msg"));
@@ -185,11 +176,38 @@ public class KCApiBridge
 	{
 		try
 		{
-			((KCWebView) aWebview).setHitPageBottomThreshold(aJSONObject.getInt("threshold"));
+			aWebview.setHitPageBottomThreshold(aJSONObject.getInt("threshold"));
 		}
 		catch (JSONException e)
 		{
 		}
+	}
+	public static void callbackJSOnHitPageBottom(KCWebView aWebview, int aY)
+	{
+		String y = String.valueOf(aY);
+//		String js = "if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom(" + y +")";
+		StringBuilder js = KCUtil.getThreadSafeStringBuilder();
+		js.append("if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom(").append(y).append(")");
+
+		KCJSExecutor.callJS(aWebview, js.toString());
+	}
+
+	public static void setPageScroll(KCWebView aWebview, KCArgList aArgList)
+	{
+		boolean isScrollOn = aArgList.getBoolean("isScrollOn");
+		aWebview.setIsPageScrollOn(isScrollOn);
+	}
+
+	public static void callbackJSOnPageScroll(KCWebView aWebview, int aX, int aY, int aWith, int aHight)
+	{
+		StringBuilder js = KCUtil.getThreadSafeStringBuilder();
+		js.append("if(jsBridgeClient && jsBridgeClient.onPageScroll) jsBridgeClient.onPageScroll(");
+		js.append(String.valueOf(aX)).append(",");
+		js.append(String.valueOf(aY)).append(",");
+		js.append(String.valueOf(aWith)).append(",");
+		js.append(String.valueOf(aHight)).append(")");
+
+		KCJSExecutor.callJS(aWebview, js.toString());
 	}
 
 }

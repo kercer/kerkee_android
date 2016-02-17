@@ -231,6 +231,7 @@ public class KCWebView extends WebView
     // use this to avoid a bug
     private boolean mIgnoreScroll;
     private int mThreshold;
+    private boolean mIsPageScrollOn;
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt)
@@ -250,8 +251,17 @@ public class KCWebView extends WebView
 //                }
 //            },"window.devicePixelRatio" );
 
-            float bottomHeight = getScrollY() + getHeight();
+            int scrollX = getScrollX();
+            int scrollY = getScrollY();
+            int width = getWidth();
+            int height = getHeight();
 
+            if (mIsPageScrollOn)
+            {
+                KCApiBridge.callbackJSOnPageScroll(this, scrollX, scrollY, width, height);
+            }
+
+            float bottomHeight = scrollY + height;
             if (bottomHeight >= contentHeight - mThreshold )
             {
                 if (!mIgnoreScroll)
@@ -289,6 +299,11 @@ public class KCWebView extends WebView
     public void setHitPageBottomThreshold(int threshold)
     {
         mThreshold = threshold;
+    }
+
+    public void setIsPageScrollOn(boolean aIsPageScrollOn)
+    {
+        mIsPageScrollOn = aIsPageScrollOn;
     }
 
     public boolean isDestroyed()

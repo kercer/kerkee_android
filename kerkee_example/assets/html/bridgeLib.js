@@ -161,7 +161,12 @@
 		});
 	}
 
+
 	var jsBridgeClient = {};
+
+	/*****************************************
+   	 * 事件监听
+     *****************************************/
 	jsBridgeClient.Event = {};
 	// jsBridgeClient.Event.LOADED = "loaded";
 	// jsBridgeClient.Event.LOAD_ERROR = "load_error";
@@ -174,6 +179,26 @@
 		}, callback);
 	}
 
+	/* 滚动到页面底部时的回调函数 以及 设置的阀值 */
+	// 先用一个对象保存回调，后期统一优化
+	//callback:返回page在webview左上顶点Y值
+	jsBridgeClient.registerHitPageBottomListener = function(callback, threshold)
+	{
+		ApiBridge.callNative("ApiBridge", "setHitPageBottomThreshold",
+		{
+			"threshold" : threshold
+		});
+		jsBridgeClient.onHitPageBottom = callback;
+	};
+
+	jsBridgeClient.registerScrollListener = function(callback)
+	{
+		ApiBridge.callNative("ApiBridge", "setPageScroll",
+    	{
+   			"isScrollOn" : true
+   		});
+   		jsBridgeClient.onPageScroll = callback;
+	};
 
 	/*****************************************
 	 * 接口
@@ -228,16 +253,6 @@
 		}
 	};
 
-	/* 滚动到页面底部时的回调函数 以及 设置的阀值 */
-	// 先用一个对象保存回调，后期统一优化
-	jsBridgeClient.registerHitPageBottomListener = function(callback, threshold)
-	{
-		ApiBridge.callNative("ApiBridge", "setHitPageBottomThreshold",
-		{
-			"threshold" : threshold
-		});
-		jsBridgeClient.onHitPageBottom = callback;
-	};
 
 	/*****************************************
 	 * XMLHttpRequest实现
