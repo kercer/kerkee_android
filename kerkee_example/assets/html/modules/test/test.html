@@ -53,6 +53,26 @@ Module Example：objExampleApi.js
 <br>
 
 <hr />
+
+<script type="text/javascript">
+
+	function scroll(x,y,w,h)
+		{
+//		alert(y);
+		document.getElementById("myScroll").innerHTML = "<p style='color:red;'>x:"+x+" ,y:"+y+" ,width:"+w+" ,height:"+h+"</p>";
+		}
+
+function loadScroll ()
+	{
+//	jsBridgeClient.registerHitPageBottomListener(scroll,20000)
+	jsBridgeClient.registerScrollListener(scroll)
+	}
+</script>
+
+<button type="button" onclick="loadScroll()">监听滚动事件</button>
+<div id="myScroll"></div>
+
+
 <script type="text/javascript">
 	function loadXMLDocGet ()
 	{
