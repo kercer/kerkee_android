@@ -251,20 +251,18 @@ public class KCWebView extends WebView
 //                }
 //            },"window.devicePixelRatio" );
 
-            if (mCurContentHeight != contentHeight)
+
+            if ( getScrollY() + getHeight() >= contentHeight - mThreshold )
             {
-                if (contentHeight <= getScrollY() + getHeight() + mThreshold)
+                if (!mIgnoreScroll)
                 {
-                    if (!mIgnoreScroll)
-                    {
-                        KCApiBridge.callbackJSOnHitPageBottom(this);
-                        mCurContentHeight = contentHeight;
-                    }
-                    else
-                    {
-                        mIgnoreScroll = false;
-                    }
+                    KCApiBridge.callbackJSOnHitPageBottom(this, getScrollY());
+                    mIgnoreScroll = true;
                 }
+            }
+            else
+            {
+                mIgnoreScroll = false;
             }
         }
         catch (Exception e)

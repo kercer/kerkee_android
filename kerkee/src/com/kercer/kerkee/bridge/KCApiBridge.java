@@ -6,6 +6,7 @@ import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
 import com.kercer.kerkee.net.KCHttpServer;
+import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee.webview.KCWebView;
 
@@ -132,9 +133,13 @@ public class KCApiBridge
 		return "";
 	}
 
-	public static void callbackJSOnHitPageBottom(KCWebView aWebview)
+	public static void callbackJSOnHitPageBottom(KCWebView aWebview, int aY)
 	{
-		KCJSExecutor.callJS(aWebview, "if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom()");
+		String y = String.valueOf(aY);
+//		String js = "if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom(" + y +")";
+		StringBuilder js = KCUtil.getThreadSafeStringBuilder().append("if(jsBridgeClient && jsBridgeClient.onHitPageBottom) jsBridgeClient.onHitPageBottom(").append(y).append(")");
+
+		KCJSExecutor.callJS(aWebview, js.toString());
 	}
 
 	public static void JSLog(KCWebView aWebview, KCArgList aArgList)
