@@ -230,7 +230,6 @@ public class KCWebView extends WebView
 
     // use this to avoid a bug
     private boolean mIgnoreScroll;
-    private float mCurContentHeight;
     private int mThreshold;
 
     @Override
@@ -251,8 +250,9 @@ public class KCWebView extends WebView
 //                }
 //            },"window.devicePixelRatio" );
 
+            float bottomHeight = getScrollY() + getHeight();
 
-            if ( getScrollY() + getHeight() >= contentHeight - mThreshold )
+            if (bottomHeight >= contentHeight - mThreshold )
             {
                 if (!mIgnoreScroll)
                 {
@@ -274,7 +274,6 @@ public class KCWebView extends WebView
     @Override
     public void reload()
     {
-        mCurContentHeight = 0;
         // use this to avoid a bug(reload() causes contentHeight to be equal to (getScrollY() + getHeight())))
         mIgnoreScroll = true;
         try
@@ -289,7 +288,6 @@ public class KCWebView extends WebView
 
     public void setHitPageBottomThreshold(int threshold)
     {
-        mCurContentHeight = 0;
         mThreshold = threshold;
     }
 
