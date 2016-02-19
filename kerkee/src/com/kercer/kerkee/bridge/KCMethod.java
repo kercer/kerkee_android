@@ -262,10 +262,10 @@ public class KCMethod
 
     public static String toJS(String aJSFunctionName, Object... aJSArgs)
     {
+        String argsList = toJsArgsList(aJSArgs);
         StringBuilder js = KCUtil.getThreadSafeStringBuilder().append(aJSFunctionName).append('(');
-        js.append(toJsArgsList(aJSArgs));
+        js.append(argsList);
         js.append(')');
-
         return js.toString();
     }
 
