@@ -262,7 +262,7 @@ public class KCWebView extends WebView
             }
 
             float bottomHeight = scrollY + height;
-            if (bottomHeight >= contentHeight - mThreshold )
+            if (height < contentHeight && bottomHeight >= contentHeight - mThreshold )
             {
                 if (!mIgnoreScroll)
                 {
