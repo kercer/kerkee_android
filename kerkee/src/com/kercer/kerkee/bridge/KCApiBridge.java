@@ -23,6 +23,7 @@ public class KCApiBridge
 
 	private final static KCRegister mRegister = new KCRegister();
 	private static String mJS;
+	private static boolean mIsOpenJSLog = true;
 
 	public static void initJSBridgeEnvironment(KCWebView aWebview, KCScheme aScheme)
 	{
@@ -133,6 +134,19 @@ public class KCApiBridge
 		return "";
 	}
 
+	public static void setIsOpenJSLog(KCWebView aWebview, boolean aIsOpenJSLog)
+	{
+		mIsOpenJSLog = aIsOpenJSLog;
+		if (aIsOpenJSLog)
+		{
+			KCJSExecutor.callJSFunction(aWebview, "jsBridgeClient.openJSLog", null);
+		}
+		else
+		{
+			KCJSExecutor.callJSFunction(aWebview, "jsBridgeClient.closeJSLog", null);
+		}
+	}
+
 	public static void JSLog(KCWebView aWebview, KCArgList aArgList)
 	{
 		KCLog.e(aArgList.getString("msg"));
@@ -143,7 +157,17 @@ public class KCApiBridge
 		KCLog.e(aArgList.toString());
 		aWebView.documentReady(true);
 		String callbackId = aArgList.getString(KCJSDefine.kJS_callbackId);
-		KCJSExecutor.callbackJS(aWebView, callbackId);
+
+		try
+		{
+			JSONObject jsonConfig = new JSONObject();
+			jsonConfig.put("isOpenJSLog", mIsOpenJSLog);
+			KCJSExecutor.callbackJS(aWebView, callbackId, jsonConfig);
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static void compile(KCWebView aWebView, KCArgList aArgList)

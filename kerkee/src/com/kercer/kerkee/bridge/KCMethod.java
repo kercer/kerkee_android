@@ -214,14 +214,13 @@ public class KCMethod
     }
 
 
-    public static String toJS(String aJSFunctionName, Object... aJSArgs)
+    public static String toJsArgsList(Object... aJSArgs)
     {
-        StringBuilder js = KCUtil.getThreadSafeStringBuilder().append(aJSFunctionName).append('(');
-
+        StringBuilder js = KCUtil.getThreadSafeStringBuilder();
         if (aJSArgs != null)
         {
-            int lenth = aJSArgs.length;
-            for (int i = 0; i < lenth; ++i)
+            int length = aJSArgs.length;
+            for (int i = 0; i < length; ++i)
             {
                 Object obj = aJSArgs[i];
                 if(obj != null)
@@ -252,13 +251,19 @@ public class KCMethod
                     js.append("null");
                 }
 
-                if (i < lenth-1)
+                if (i < length-1)
                 {
                     js.append(',');
                 }
             }
         }
+        return js.toString();
+    }
 
+    public static String toJS(String aJSFunctionName, Object... aJSArgs)
+    {
+        StringBuilder js = KCUtil.getThreadSafeStringBuilder().append(aJSFunctionName).append('(');
+        js.append(toJsArgsList(aJSArgs));
         js.append(')');
 
         return js.toString();

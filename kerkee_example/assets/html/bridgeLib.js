@@ -161,6 +161,16 @@
 		});
 	}
 
+	var	_Configs =
+    {
+        isOpenJSLog:false,
+        sysLog:{},
+        isOpenNativeXHR:true,
+        sysXHR:{}
+    };
+    _Configs.sysLog = global.console.log;
+    _Configs.sysXHR = global.XMLHttpRequest;
+
 
 	var jsBridgeClient = {};
 
@@ -210,6 +220,18 @@
 			"info" : aString
 		});
 	};
+
+	jsBridgeClient.openJSLog = function()
+	{
+		_Configs.isOpenJSLog = true;
+		global.console.log = ApiBridge.log;
+	}
+	jsBridgeClient.closeJSLog = function()
+	{
+		_Configs.isOpenJSLog = false;
+        global.console.log = _Configs.sysLog;
+	}
+
 
 	jsBridgeClient.commonApi = function(aString, callback)
 	{
@@ -448,8 +470,9 @@
 	global.ApiBridge = ApiBridge;
 	global.jsBridgeClient = jsBridgeClient;
 	// global.open = windowOpen;
-	global.console.log = ApiBridge.log;
+//	global.console.log = ApiBridge.log;
 	global.XMLHttpRequest = _XMLHttpRequest;
+
 
 	jsBridgeClient.register = function(_window)
 	{
@@ -460,8 +483,28 @@
 		_window.open = window.open;
 	};
 
-	ApiBridge.onBridgeInitComplete(function()
+
+	ApiBridge.onBridgeInitComplete(function(aConfigs)
 	{
+		if (aConfigs.hasOwnProperty('isOpenJSLog'))
+		{
+			_Configs.isOpenJSLog = aConfigs.isOpenJSLog;
+		}
+		if (aConfigs.hasOwnProperty('isOpenNativeXHR'))
+		{
+			_Configs.isOpenNativeXHR = aConfigs.isOpenNativeXHR;
+		}
+
+//		alert(JSON.stringify(aConfigs));
+		if (_Configs.isOpenJSLog)
+		{
+			global.console.log = ApiBridge.log;
+		}
+//		else
+//		{
+//			global.console.log = null;
+//			global.console.log = _Configs.sysLog;
+//		}
 
 		ApiBridge.onNativeInitComplete(ApiBridge.onDeviceReady);
 
