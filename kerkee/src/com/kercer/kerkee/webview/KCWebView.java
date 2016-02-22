@@ -242,8 +242,9 @@ public class KCWebView extends WebView
 //            float scale = getResources().getDisplayMetrics().density;
 
             //getScale () was deprecated in API level 17
-            float scale = getScale();
-            float contentHeight = getContentHeight() * scale;
+//            float scale = getScale();
+//            float contentHeight = getContentHeight() * scale;
+            float contentHeight = getContentHeight();
 
 //            KCJSCompileExecutor.compileJS(this, new KCReturnCallback() {
 //                @Override
