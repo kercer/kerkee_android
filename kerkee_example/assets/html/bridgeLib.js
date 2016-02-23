@@ -486,13 +486,16 @@
 
 	ApiBridge.onBridgeInitComplete(function(aConfigs)
 	{
-		if (aConfigs.hasOwnProperty('isOpenJSLog'))
+		if (aConfigs)
 		{
-			_Configs.isOpenJSLog = aConfigs.isOpenJSLog;
-		}
-		if (aConfigs.hasOwnProperty('isOpenNativeXHR'))
-		{
-			_Configs.isOpenNativeXHR = aConfigs.isOpenNativeXHR;
+			if (aConfigs.hasOwnProperty('isOpenJSLog'))
+        	{
+        		_Configs.isOpenJSLog = aConfigs.isOpenJSLog;
+        	}
+        	if (aConfigs.hasOwnProperty('isOpenNativeXHR'))
+       		{
+       			_Configs.isOpenNativeXHR = aConfigs.isOpenNativeXHR;
+       		}
 		}
 
 //		alert(JSON.stringify(aConfigs));
