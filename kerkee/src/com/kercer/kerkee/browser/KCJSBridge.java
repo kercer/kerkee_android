@@ -126,6 +126,21 @@ public class KCJSBridge
 
     /********************************************************/
     /*
+     * config
+     */
+    /********************************************************/
+    public static void openGlobalJSLog(boolean aIsOpenJSLog)
+    {
+        KCApiBridge.openGlobalJSLog(aIsOpenJSLog);
+    }
+
+    public static void setIsOpenJSLog(KCWebView aWebview, boolean aIsOpenJSLog)
+    {
+        KCApiBridge.setIsOpenJSLog(aWebview, aIsOpenJSLog);
+    }
+
+    /********************************************************/
+    /*
      *
      */
     /********************************************************/

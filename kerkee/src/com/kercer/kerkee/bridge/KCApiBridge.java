@@ -134,6 +134,10 @@ public class KCApiBridge
 		return "";
 	}
 
+	public static void openGlobalJSLog(boolean aIsOpenJSLog)
+	{
+		mIsOpenJSLog = aIsOpenJSLog;
+	}
 	public static void setIsOpenJSLog(KCWebView aWebview, boolean aIsOpenJSLog)
 	{
 		mIsOpenJSLog = aIsOpenJSLog;
