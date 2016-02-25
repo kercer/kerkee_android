@@ -34,11 +34,13 @@ public class KCWebView extends WebView
     private Object mAttach = null;
 
 
-    public Object getmAttach() {
+    public Object getmAttach()
+    {
 		return mAttach;
 	}
 
-	public void setmAttach(Object aAttach) {
+	public void setmAttach(Object aAttach)
+    {
 		this.mAttach = aAttach;
 	}
 
