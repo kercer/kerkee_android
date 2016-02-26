@@ -256,8 +256,8 @@ public class KCWebView extends WebView
 
             int scrollX = (int) (getScrollX()/scale);
             int scrollY = (int) (getScrollY()/scale);
-            int width = getWidth();
-            int height = getHeight();
+            int width = (int) (getWidth()/scale);
+            int height = (int) (getHeight()/scale);
 
             if (mIsPageScrollOn)
             {
