@@ -241,7 +241,7 @@ public class KCWebView extends WebView
         try
         {
             super.onScrollChanged(l, t, oldl, oldt);
-//            float scale = getResources().getDisplayMetrics().density;
+            float scale = getResources().getDisplayMetrics().density;
 
             //getScale () was deprecated in API level 17
 //            float scale = getScale();
@@ -254,8 +254,8 @@ public class KCWebView extends WebView
 //                }
 //            },"window.devicePixelRatio" );
 
-            int scrollX = getScrollX();
-            int scrollY = getScrollY();
+            int scrollX = (int) (getScrollX()/scale);
+            int scrollY = (int) (getScrollY()/scale);
             int width = getWidth();
             int height = getHeight();
 
@@ -269,7 +269,7 @@ public class KCWebView extends WebView
             {
                 if (!mIgnoreScroll)
                 {
-                    KCApiBridge.callbackJSOnHitPageBottom(this, getScrollY());
+                    KCApiBridge.callbackJSOnHitPageBottom(this, scrollY);
                     mIgnoreScroll = true;
                 }
             }
