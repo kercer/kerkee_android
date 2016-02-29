@@ -23,7 +23,7 @@ public class KCApiBridge
 
 	private final static KCRegister mRegister = new KCRegister();
 	private static String mJS;
-	private static boolean mIsOpenJSLog = true;
+	private static boolean mIsOpenJSLog = false;
 
 	public static void initJSBridgeEnvironment(KCWebView aWebview, KCScheme aScheme)
 	{
