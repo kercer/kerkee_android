@@ -6,25 +6,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.kercer.kercore.debug.KCLog;
-import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kerkee.api.KCRegistMgr;
 import com.kercer.kerkee.bridge.KCJSObject;
 import com.kercer.kerkee.bridge.KerkeeMethod;
 import com.kercer.kerkee.browser.KCDefaultBrowser;
-import com.kercer.kerkee.manifest.KCFetchManifest;
-import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee_example.R;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 
 public class MainActivity extends Activity
 {
 	public class KCTest extends KCJSObject
 	{
-
 		@Override
 		public String getJSObjectName()
 		{
@@ -45,6 +36,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
 
+        //create browser that use KCWebview
         KCDefaultBrowser browser = new KCDefaultBrowser(this);
         View view = browser.getView();
         setContentView(view);
@@ -52,30 +44,8 @@ public class MainActivity extends Activity
         //regist classes to JSBridge，the relationship between binding js objects and native classes
         //and you can use default browser'b registJSBridgeClient function
         KCRegistMgr.registClass();
-//        browser.registJSBridgeClient(KCApiJSBridgeClient.class);
-
-        Method[] targetMethods = getClass().getDeclaredMethods();
-        String s = Modifier.toString(targetMethods[3].getModifiers()) ;
-        Class<?>[] a = targetMethods[3].getParameterTypes();
-        Type[] b = targetMethods[3].getGenericParameterTypes();
-
-        KCTest test = new KCTest();
-        test.getMethods();
-
-
-        KCWebPath webPath = browser.getWebView().getWebPath();
-        String manifestPath = webPath.getResRootPath() + "/manifest";
-
-//        KCFetchManifest.fetchLocalManifests(manifestPath);
-
-        KCTaskExecutor.executeTask(new Runnable() {
-            @Override
-            public void run() {
-//               KCManifestObject obj = KCFetchManifest.fetchOneServerManifest("http://www.linzihong.com/test/html/manifest");
-                KCFetchManifest.fetchServerManifests("http://www.linzihong.com/test/html/manifest");
-                KCLog.d("aa");
-            }
-        });
+        //you can registObject here;
+//        KCJSBridge.registObject(new KCTest());
 
         browser.loadTestPage();
 //        browser.loadUrl("http://www.baidu.com");

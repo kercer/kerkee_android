@@ -8,7 +8,7 @@ public class KCRegistMgr
     {
     	KCJSBridge.registClass(KCJSObjDefine.kJSObj_platform, KCApiPlatform.class);
     	KCJSBridge.registClass(KCJSObjDefine.kJSObj_widget, KCApiWidget.class);
-//    	KCJSBridge.registClass(KCJSDefine.kJS_jsBridgeClient, KCApiJSBridgeClient.class);  //if you use this fun,you can remove key first
+//    	KCJSBridge.registClass(KCJSDefine.kJS_jsBridgeClient, KCApiJSBridgeClient.class);
         KCJSBridge.registJSBridgeClient(KCApiJSBridgeClient.class);
     	KCJSBridge.registClass(KCJSObjDefine.kJSObj_testModule, KCApiTestModule.class);
 
@@ -17,6 +17,6 @@ public class KCRegistMgr
 
     public static void registClass()
     {
-
+        // call this func, java can call static block
     }
 }
