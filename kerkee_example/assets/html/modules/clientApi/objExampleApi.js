@@ -85,7 +85,7 @@ define(["api/helper/util"], function (util) {
                 this.sendData({
                     method: "objExampleNotStaticFunction",
                     param: {
-                        "testInfo": "I'm objExampleNotStaticFunction"
+                        "testInfo": testInfo
                     },
                     callBack: callBack
                 });
@@ -108,7 +108,7 @@ define(["api/helper/util"], function (util) {
                 this.sendData({
                     method: "objExampleStaticFunction",
                     param: {
-                        "testInfo": "I'm objExampleStaticFunction"
+                        "testInfo": testInfo
                     },
                     callBack: callBack
                 });

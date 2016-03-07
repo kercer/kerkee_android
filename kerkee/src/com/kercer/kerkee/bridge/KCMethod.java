@@ -214,6 +214,14 @@ public class KCMethod
     }
 
 
+    /**
+     * args list to args string
+     * @param aJSArgs
+     *      if aJSArgs is null, the argslist array is null, return empty string;
+     *      if aJsArgs first arg not null, the argslist array is not null, the array element which
+     *      is null to null string.
+     * @return
+     */
     public static String toJsArgsList(Object... aJSArgs)
     {
         StringBuilder js = KCUtil.getThreadSafeStringBuilder();

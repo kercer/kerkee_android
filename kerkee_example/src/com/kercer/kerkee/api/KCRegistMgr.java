@@ -11,6 +11,8 @@ public class KCRegistMgr
 //    	KCJSBridge.registClass(KCJSDefine.kJS_jsBridgeClient, KCApiJSBridgeClient.class);  //if you use this fun,you can remove key first
         KCJSBridge.registJSBridgeClient(KCApiJSBridgeClient.class);
     	KCJSBridge.registClass(KCJSObjDefine.kJSObj_testModule, KCApiTestModule.class);
+
+        KCJSBridge.registObject(new KCApiJSObjExample());
     }
 
     public static void registClass()
