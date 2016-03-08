@@ -1,3 +1,7 @@
+---
+name: 简介
+---
+
 # Kerkee [ ![Download](https://api.bintray.com/packages/zihong/maven/kerkee/images/download.svg) ](https://bintray.com/zihong/maven/kerkee/_latestVersion)
 
 ### Kerkee框架的诞生背景
@@ -50,7 +54,7 @@ Kerkee的Hybrid架构思想已使用在两款亿级用户量及多款千万级�
 <br/> Kerkee框架采用一套特殊机制，解决了跨域问题，也就是说开发者可以操作互联网上任何一个Web页面的数据。
 >1. **使客户端架构更清晰**
 <br/> Kerkee框架会使得客户端的架构更为清晰。整体结构，自上而下分层如下图所示：
-<br/> [![client](http://image17-c.poco.cn/mypoco/myphoto/20150926/13/17833415120150926132311066_165.jpg)](http://image17-c.poco.cn/mypoco/myphoto/20150926/13/17833415120150926132311066_165.jpg)
+<br/> [![client](http://src.linzihong.com/clientframe.jpg)](http://src.linzihong.com/clientframe.jpg)
 
 >1. **使用简便**
 <br/> 对于开发者来说，使用简便。
