@@ -12,7 +12,7 @@ import com.kercer.kerkee.bridge.KerkeeMethod;
 import com.kercer.kerkee.browser.KCDefaultBrowser;
 import com.kercer.kerkee_example.R;
 
-public class MainActivity extends Activity
+public class KCMainActivity extends Activity
 {
 	public class KCTest extends KCJSObject
 	{
