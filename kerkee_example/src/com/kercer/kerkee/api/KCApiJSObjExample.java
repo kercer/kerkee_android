@@ -18,6 +18,7 @@ public class KCApiJSObjExample extends KCJSObject
         return KCJSObjDefine.kJS_JSObjExampleModule;
     }
 
+    //成员方法
     public void objExampleNotStaticFunction(final KCWebView aWebView, KCArgList aArgList)
     {
         String strTestInfo = aArgList.getString("testInfo");
@@ -33,6 +34,7 @@ public class KCApiJSObjExample extends KCJSObject
         Toast.makeText(aWebView.getContext(), strArgList, Toast.LENGTH_SHORT).show();
     }
 
+    //静态方法
     public static void objExampleStaticFunction(final KCWebView aWebView, KCArgList aArgList)
     {
         String strTestInfo = aArgList.getString("testInfo");
