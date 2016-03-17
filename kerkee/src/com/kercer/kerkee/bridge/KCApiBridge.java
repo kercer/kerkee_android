@@ -143,11 +143,11 @@ public class KCApiBridge
 		mIsOpenJSLog = aIsOpenJSLog;
 		if (aIsOpenJSLog)
 		{
-			KCJSExecutor.callJSFunction(aWebview, "jsBridgeClient.openJSLog", null);
+			KCJSExecutor.callJSFunction(aWebview, "jsBridgeClient.openJSLog");
 		}
 		else
 		{
-			KCJSExecutor.callJSFunction(aWebview, "jsBridgeClient.closeJSLog", null);
+			KCJSExecutor.callJSFunction(aWebview, "jsBridgeClient.closeJSLog");
 		}
 	}
 
