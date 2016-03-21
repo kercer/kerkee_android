@@ -1,5 +1,13 @@
 package com.kercer.kerkee.util;
 
+import android.content.Context;
+import android.net.Uri;
+import android.provider.MediaStore.Audio;
+import android.provider.MediaStore.Video;
+import android.text.format.DateFormat;
+import android.text.format.Formatter;
+import android.webkit.MimeTypeMap;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,25 +21,15 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import android.content.Context;
-import android.net.Uri;
-import android.provider.MediaStore.Audio;
-import android.provider.MediaStore.Video;
-import android.text.format.DateFormat;
-import android.text.format.Formatter;
-import android.webkit.MimeTypeMap;
-
 /**
- * 
  * @author zihong
- *
  */
 public class KCUtilFile
 {
 
     /**
      * Whether the URI is a local one.
-     * 
+     *
      * @param uri
      * @return
      */
@@ -47,17 +45,16 @@ public class KCUtilFile
     public static String getFileMimeType(File file)
     {
         String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(getExtension(file));
-        if (type == null)
-            return "*/*";
+        if (type == null) return "*/*";
         return type;
     }
 
     /**
      * Gets the extension of a file name, like "png" or "jpg".
-     * 
+     *
      * @param uri
      * @return Extension excluding the dot("."); "" if there is no extension;
-     *         null if uri was null.
+     * null if uri was null.
      */
     public static String getExtension(String uri)
     {
@@ -85,7 +82,7 @@ public class KCUtilFile
 
     /**
      * Returns true if uri is a media uri.
-     * 
+     *
      * @param uri
      * @return
      */
@@ -103,6 +100,7 @@ public class KCUtilFile
 
     /**
      * Convert File into Uri.
+     *
      * @param file
      * @return uri
      */
@@ -117,6 +115,7 @@ public class KCUtilFile
 
     /**
      * Convert Uri into File.
+     *
      * @param uri
      * @return file
      */
@@ -135,6 +134,7 @@ public class KCUtilFile
 
     /**
      * Returns the path only (without file name).
+     *
      * @param file
      * @return
      */
@@ -164,9 +164,10 @@ public class KCUtilFile
         return null;
     }
 
+
     /**
      * Constructs a file from a path and file name.
-     * 
+     *
      * @param curdir
      * @param file
      * @return
@@ -192,16 +193,39 @@ public class KCUtilFile
         return Formatter.formatFileSize(context, sizeInBytes);
     }
 
+    /**
+     * formatSize, G M K B
+     */
+    public static String formatSize(long size)
+    {
+        long kb = 1024;
+        long mb = kb * 1024;
+        long gb = mb * 1024;
+
+        if (size >= gb)
+        {
+            return String.format("%.1f GB", (float) size / gb);
+        }
+        else if (size >= mb)
+        {
+            float f = (float) size / mb;
+            return String.format(f > 100 ? "%.0f MB" : "%.1f MB", f);
+        }
+        else if (size >= kb)
+        {
+            float f = (float) size / kb;
+            return String.format(f > 100 ? "%.0f KB" : "%.1f KB", f);
+        }
+        else return String.format("%d B", size);
+    }
+
     public static long folderSize(File directory)
     {
         long length = 0;
         File[] files = directory.listFiles();
-        if (files != null)
-            for (File file : files)
-                if (file.isFile())
-                    length += file.length();
-                else
-                    length += folderSize(file);
+        if (files != null) for (File file : files)
+            if (file.isFile()) length += file.length();
+            else length += folderSize(file);
         return length;
     }
 
@@ -210,36 +234,39 @@ public class KCUtilFile
         return DateFormat.getDateFormat(context).format(new Date(dateTime));
     }
 
-    public static void copyFile(File src, File dst) throws IOException 
+    public static void copyFile(File src, File dst) throws IOException
     {
-        if (src.isDirectory())
-            throw new IOException("Source is a directory");
+        if (src.isDirectory()) throw new IOException("Source is a directory");
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
 
         // Transfer bytes from in to out
         byte[] buf = new byte[1024];
         int len;
-        while ((len = in.read(buf)) > 0) {
+        while ((len = in.read(buf)) > 0)
+        {
             out.write(buf, 0, len);
         }
         in.close();
         out.close();
     }
-    
 
-	public static void deleteRecyle(File file) {
-		if(file.isDirectory()){
-			for (File childFile : file.listFiles()) {
-				deleteRecyle(childFile);
-			}
-		}
-		file.delete();
-	}
-	
+
+    public static void deleteRecyle(File file)
+    {
+        if (file.isDirectory())
+        {
+            for (File childFile : file.listFiles())
+            {
+                deleteRecyle(childFile);
+            }
+        }
+        file.delete();
+    }
+
     public static int deleteFiles(Collection<File> files)
     {
-        int n=0;
+        int n = 0;
         for (File file : files)
         {
             if (file.isDirectory())
@@ -250,38 +277,42 @@ public class KCUtilFile
         }
         return n;
     }
-    
-    
+
+
+    public static void rename(File aOldFile, File aNewFile)
+    {
+        if (aOldFile.exists()) aOldFile.renameTo(aNewFile);
+    }
+
     public static void rename(String oldPath, String newPath)
     {
         File oldFile = new File(oldPath);
         File newFile = new File(newPath);
-        if (oldFile.exists())
-            oldFile.renameTo(newFile);
-//        if (!KCNativeUtil.renameExt(oldPath, newPath)) {
-//            File oldFile = new File(oldPath);
-//            try {
-//                InputStream is = new FileInputStream(oldFile);
-//                OutputStream os = new FileOutputStream(oldPath);
-//                byte[] buffer = getThreadSafeByteBuffer();
-//
-//                int lenRead;
-//                while ((lenRead = is.read(buffer)) != -1) {
-//                    os.write(buffer, 0, lenRead);
-//                }
-//
-//                is.close();
-//                os.close();
-//
-//                if (oldFile.exists())
-//                    oldFile.delete();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            } finally {
-//            }
-//        }
+        if (oldFile.exists()) oldFile.renameTo(newFile);
+        //        if (!KCNativeUtil.renameExt(oldPath, newPath)) {
+        //            File oldFile = new File(oldPath);
+        //            try {
+        //                InputStream is = new FileInputStream(oldFile);
+        //                OutputStream os = new FileOutputStream(oldPath);
+        //                byte[] buffer = getThreadSafeByteBuffer();
+        //
+        //                int lenRead;
+        //                while ((lenRead = is.read(buffer)) != -1) {
+        //                    os.write(buffer, 0, lenRead);
+        //                }
+        //
+        //                is.close();
+        //                os.close();
+        //
+        //                if (oldFile.exists())
+        //                    oldFile.delete();
+        //            } catch (Exception e) {
+        //                e.printStackTrace();
+        //            } finally {
+        //            }
+        //        }
     }
-    
+
     public static List<String> getFiles(String aDirPath, Boolean aIsGetRelativePath, boolean aIsContainSubDir, FilenameFilter aFilenameFilter)
     {
         List<String> aOutList = new ArrayList<String>();
@@ -289,13 +320,14 @@ public class KCUtilFile
         getFiles(dirPath, aIsGetRelativePath, dirPath, aIsContainSubDir, aFilenameFilter, aOutList);
         return aOutList;
     }
+
     private static void getFiles(File aRootDir, Boolean aIsGetRelativePath, File aDirPath, boolean aIsContainSubDir, FilenameFilter aFilenameFilter, Collection<String> aOutList)
     {
         if (aOutList == null)
         {
             aOutList = new ArrayList<String>();
         }
-        
+
         File[] files = aDirPath.listFiles(aFilenameFilter);
 
         for (int i = 0; i < files.length; i++)
@@ -309,12 +341,11 @@ public class KCUtilFile
                     strPath = strPath.substring(aRootDir.getPath().length());
                 }
                 aOutList.add(strPath);
-                if (!aIsContainSubDir)
-                    break;
+                if (!aIsContainSubDir) break;
             }
             else if (f.isDirectory() && f.getPath().indexOf("/.") == -1)
                 getFiles(aRootDir, aIsGetRelativePath, f, aIsContainSubDir, aFilenameFilter, aOutList);
         }
     }
-    
+
 }

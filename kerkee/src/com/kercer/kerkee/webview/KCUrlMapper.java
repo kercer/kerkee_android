@@ -1,5 +1,8 @@
 package com.kercer.kerkee.webview;
 
+import com.kercer.kercore.io.KCUtilIO;
+import com.kercer.kerkee.util.KCNativeUtil;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -10,11 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.kercer.kerkee.util.KCNativeUtil;
-import com.kercer.kerkee.util.KCUtil;
-
-import android.content.Context;
 
 /**
  * 
@@ -89,7 +87,7 @@ public class KCUrlMapper
         }
         finally
         {
-            KCUtil.closeCloseable(br);
+            KCUtilIO.closeSilently(br);
         }
     }
 
