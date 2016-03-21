@@ -15,13 +15,10 @@ import com.kercer.kerkee.webview.KCWebView;
  * which can result in an accidental re-encoding of e.g. ISO-8859-1-based %-escapes into Unicode characters.
  * That means, if e.g. a pre-encoded URL containg encoded binary data or ISO-8859-1 is sent as argument to a JavaScript,
  * this might then be sent re-encoded as UTF-8 to the server, breaking things.
- * <p/>
  * The work-around is to use the new evaluateJavascript method of Android 4.4
- * <p/>
  * Nevertheless, this is an incompatible, and so it seems, undocumented change of a public API which
  * can introduce subtle bugs into existing applications. The change should be properly documented
  * in the JavaDoc of the method.
- * <p/>
  * see:https://code.google.com/p/android/issues/detail?id=69969
  */
 
