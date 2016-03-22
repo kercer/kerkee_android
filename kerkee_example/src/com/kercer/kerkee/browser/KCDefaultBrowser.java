@@ -89,9 +89,6 @@ public class KCDefaultBrowser extends KCPage implements View.OnClickListener
     public void loadTestPage()
     {
         String url ="file://" + mWebView.getWebPath().getResRootPath() +"/modules/test/test.html";
-        // onSetImage must with this scheme
-//        String url = "http://127.0.0.1:" + KCHttpServer.getPort() + "/jsbridge/test.html";
-//    	String url = "http://www.baidu.com/";
         loadUrl(url);
     }
 
