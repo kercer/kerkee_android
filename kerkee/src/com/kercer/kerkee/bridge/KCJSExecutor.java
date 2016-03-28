@@ -44,14 +44,7 @@ public class KCJSExecutor
         urlAdded(url) got a parameter
         http://redir.xxxxx.com/click.php?id=12345&originalUrlhttp%3A%2F%2Fm.ctrip.com%2Fhtml5%2F%3Fallianceid%3D1000%26sid%3D454555%26sourceid%3D1111
          */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
-            aWebView.evaluateJavascript(aJS, null);
-        }
-        else
-        {
-            aWebView.loadUrlExt("javascript:" + aJS);
-        }
+        KCJSExecutor.callJSOnMainThread(aWebView, aJS);
     }
 
     public static void callJSOnMainThread(final KCWebView aWebView, final String aJS)
