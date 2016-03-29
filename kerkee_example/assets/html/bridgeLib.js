@@ -201,9 +201,8 @@
 		}, callback);
 	}
 
-	/* 滚动到页面底部时的回调函数 以及 设置的阀值 */
-	// 先用一个对象保存回调，后期统一优化
-	//callback:返回page在webview左上顶点Y值
+	/* Scroll to the bottom of the page when the callback function and the threshold setting */
+	//callback:Return to the page in webview upper vertex Y value
 	jsBridgeClient.registerHitPageBottomListener = function(callback, threshold)
 	{
 		ApiBridge.callNative("ApiBridge", "setHitPageBottomThreshold",
@@ -437,43 +436,6 @@
 		}
 	}
 
-
-	/*****************************************
-	 * 操作Docment
-	 *****************************************/
-	jsBridgeClient.deleteFirstElement = function(className)
-	{
-		var all = document.all ? document.all : document
-				.getElementsByTagName('*');
-		var elements = new Array();
-		for (var e = 0; e < all.length; e++)
-		{
-			if (all[e].className == className)
-			{
-				elements[elements.length] = all[e];
-				all[e].parentNode.removeChild(all[e]);
-				break;
-			}
-		}
-	}
-
-	function getElementsByClassName(className)
-	{
-		var all = document.all ? document.all : document
-				.getElementsByTagName('*');
-		var elements = new Array();
-		for (var e = 0; e < all.length; e++)
-		{
-			if (all[e].className == className)
-			{
-				elements[elements.length] = all[e];
-				// break;
-			}
-		}
-		return elements;
-	}
-
-
 	/*
 	 * var windowOpen = function (url) { ApiBridge.callNative("JavascriptAPIInterceptor", "windowOpen", { "url" : url }); };
 	 */
@@ -482,9 +444,7 @@
 	global.ApiBridge = ApiBridge;
 	global.jsBridgeClient = jsBridgeClient;
 	// global.open = windowOpen;
-//	global.console.log = ApiBridge.log;
 	global.XMLHttpRequest = _XMLHttpRequest;
-
 
 	jsBridgeClient.register = function(_window)
 	{
