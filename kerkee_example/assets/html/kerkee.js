@@ -26,7 +26,7 @@
         language:(navigator.browserLanguage || navigator.language).toLowerCase()
     }
 
-	var global = this;
+	var global = this || window;
 	var ApiBridge ={
 		msgQueue : [],
 		callbackCache : [],
