@@ -1,19 +1,33 @@
 ;(function(window){
 	if (window.WebViewJSBridge)
 		return;
-
 	window.WebViewJSBridge = {};
 
 	console.log("--- jsBridgeClient init begin---");
-
-	// 暂时这个来判断平台
-	var ua = navigator.userAgent;
-	var isIOS = ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1
-			|| ua.indexOf("iPod") != -1;
+	var browser={
+        versions:function(){
+            var u = navigator.userAgent, app = navigator.appVersion;
+            return {
+                trident: u.indexOf('Trident') > -1, //IE
+                presto: u.indexOf('Presto') > -1, //opera
+                webKit: u.indexOf('AppleWebKit') > -1, //apple&google kernel
+                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,//firfox
+                mobile: !!u.match(/AppleWebKit.*Mobile.*/), //is Mobile
+                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //is ios
+                android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1, //android
+                iPhone: u.indexOf('iPhone') > -1 , //iPhone or QQHD
+                iPad: u.indexOf('iPad') > -1, //iPad
+                iPod: u.indexOf('iPod') > -1, //iPod
+                webApp: u.indexOf('Safari') == -1, //is webapp,no header and footer
+                weixin: u.indexOf('MicroMessenger') > -1, //is wechat
+                qq: u.match(/\sQQ/i) == " qq" //is qq
+            };
+        }(),
+        language:(navigator.browserLanguage || navigator.language).toLowerCase()
+    }
 
 	var global = this;
-	var ApiBridge =
-	{
+	var ApiBridge ={
 		msgQueue : [],
 		callbackCache : [],
 		callbackId : 0,
@@ -27,6 +41,23 @@
 		ApiBridge.bridgeIframe = document.createElement("iframe");
 		ApiBridge.bridgeIframe.style.display = 'none';
 		document.documentElement.appendChild(ApiBridge.bridgeIframe);
+	};
+
+	ApiBridge.prepareProcessingMessages = function()
+	{
+		ApiBridge.processingMsg = true;
+	};
+
+	ApiBridge.fetchMessages = function()
+	{
+		if (ApiBridge.msgQueue.length > 0)
+		{
+			var messages = JSON.stringify(ApiBridge.msgQueue);
+			ApiBridge.msgQueue.length = 0;
+			return messages;
+		}
+		ApiBridge.processingMsg = false;
+		return null;
 	};
 
 	ApiBridge.callNative = function(clz, method, args, callback)
@@ -54,21 +85,18 @@
 			}
 		}
 
-		if (isIOS)
+		if (browser.versions.ios)
 		{
-			// ios方式处理
 			if (ApiBridge.bridgeIframe == undefined)
 			{
 				ApiBridge.create();
 			}
-
 			// var msgJson = {"clz": clz, "method": method, "args": args};
 			ApiBridge.msgQueue.push(msgJson);
-
 			if (!ApiBridge.processingMsg)
 				ApiBridge.bridgeIframe.src = "kcnative://go";
 		}
-		else
+		else if (browser.versions.android)
 		{
 			// android
 			return prompt(JSON.stringify(msgJson));
@@ -76,23 +104,7 @@
 
 	};
 
-	ApiBridge.prepareProcessingMessages = function()
-	{
-		ApiBridge.processingMsg = true;
-	};
 
-	ApiBridge.fetchMessages = function()
-	{
-		if (ApiBridge.msgQueue.length > 0)
-		{
-			var messages = JSON.stringify(ApiBridge.msgQueue);
-			ApiBridge.msgQueue.length = 0;
-			return messages;
-		}
-
-		ApiBridge.processingMsg = false;
-		return null;
-	};
 
 	ApiBridge.log = function(msg)
 	{

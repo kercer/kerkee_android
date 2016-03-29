@@ -1,19 +1,33 @@
 ;(function(window){
 	if (window.WebViewJSBridge)
 		return;
-
 	window.WebViewJSBridge = {};
 
 	console.log("--- jsBridgeClient init begin---");
-
-	// 暂时这个来判断平台
-	var ua = navigator.userAgent;
-	var isIOS = ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1
-			|| ua.indexOf("iPod") != -1;
+	var browser={
+        versions:function(){
+            var u = navigator.userAgent, app = navigator.appVersion;
+            return {
+                trident: u.indexOf('Trident') > -1, //IE
+                presto: u.indexOf('Presto') > -1, //opera
+                webKit: u.indexOf('AppleWebKit') > -1, //apple&google kernel
+                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,//firfox
+                mobile: !!u.match(/AppleWebKit.*Mobile.*/), //is Mobile
+                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //is ios
+                android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1, //android
+                iPhone: u.indexOf('iPhone') > -1 , //iPhone or QQHD
+                iPad: u.indexOf('iPad') > -1, //iPad
+                iPod: u.indexOf('iPod') > -1, //iPod
+                webApp: u.indexOf('Safari') == -1, //is webapp,no header and footer
+                weixin: u.indexOf('MicroMessenger') > -1, //is wechat
+                qq: u.match(/\sQQ/i) == " qq" //is qq
+            };
+        }(),
+        language:(navigator.browserLanguage || navigator.language).toLowerCase()
+    }
 
 	var global = this;
-	var ApiBridge =
-	{
+	var ApiBridge ={
 		msgQueue : [],
 		callbackCache : [],
 		callbackId : 0,
@@ -27,6 +41,23 @@
 		ApiBridge.bridgeIframe = document.createElement("iframe");
 		ApiBridge.bridgeIframe.style.display = 'none';
 		document.documentElement.appendChild(ApiBridge.bridgeIframe);
+	};
+
+	ApiBridge.prepareProcessingMessages = function()
+	{
+		ApiBridge.processingMsg = true;
+	};
+
+	ApiBridge.fetchMessages = function()
+	{
+		if (ApiBridge.msgQueue.length > 0)
+		{
+			var messages = JSON.stringify(ApiBridge.msgQueue);
+			ApiBridge.msgQueue.length = 0;
+			return messages;
+		}
+		ApiBridge.processingMsg = false;
+		return null;
 	};
 
 	ApiBridge.callNative = function(clz, method, args, callback)
@@ -54,21 +85,18 @@
 			}
 		}
 
-		if (isIOS)
+		if (browser.versions.ios)
 		{
-			// ios方式处理
 			if (ApiBridge.bridgeIframe == undefined)
 			{
 				ApiBridge.create();
 			}
-
 			// var msgJson = {"clz": clz, "method": method, "args": args};
 			ApiBridge.msgQueue.push(msgJson);
-
 			if (!ApiBridge.processingMsg)
 				ApiBridge.bridgeIframe.src = "kcnative://go";
 		}
-		else
+		else if (browser.versions.android)
 		{
 			// android
 			return prompt(JSON.stringify(msgJson));
@@ -76,23 +104,7 @@
 
 	};
 
-	ApiBridge.prepareProcessingMessages = function()
-	{
-		ApiBridge.processingMsg = true;
-	};
 
-	ApiBridge.fetchMessages = function()
-	{
-		if (ApiBridge.msgQueue.length > 0)
-		{
-			var messages = JSON.stringify(ApiBridge.msgQueue);
-			ApiBridge.msgQueue.length = 0;
-			return messages;
-		}
-
-		ApiBridge.processingMsg = false;
-		return null;
-	};
 
 	ApiBridge.log = function(msg)
 	{
@@ -161,7 +173,22 @@
 		});
 	}
 
+	var	_Configs =
+    {
+        isOpenJSLog:false,
+        sysLog:{},
+        isOpenNativeXHR:true,
+        sysXHR:{}
+    };
+    _Configs.sysLog = global.console.log;
+    _Configs.sysXHR = global.XMLHttpRequest;
+
+
 	var jsBridgeClient = {};
+
+	/*****************************************
+   	 * 事件监听
+     *****************************************/
 	jsBridgeClient.Event = {};
 	// jsBridgeClient.Event.LOADED = "loaded";
 	// jsBridgeClient.Event.LOAD_ERROR = "load_error";
@@ -174,10 +201,30 @@
 		}, callback);
 	}
 
-	/***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
-	 * 接口
-	 **************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+	/* 滚动到页面底部时的回调函数 以及 设置的阀值 */
+	// 先用一个对象保存回调，后期统一优化
+	//callback:返回page在webview左上顶点Y值
+	jsBridgeClient.registerHitPageBottomListener = function(callback, threshold)
+	{
+		ApiBridge.callNative("ApiBridge", "setHitPageBottomThreshold",
+		{
+			"threshold" : threshold
+		});
+		jsBridgeClient.onHitPageBottom = callback;
+	};
 
+	jsBridgeClient.registerScrollListener = function(callback)
+	{
+		ApiBridge.callNative("ApiBridge", "setPageScroll",
+    	{
+   			"isScrollOn" : true
+   		});
+   		jsBridgeClient.onPageScroll = callback;
+	};
+
+	/*****************************************
+	 * 接口
+	 *****************************************/
 	jsBridgeClient.testJSBrige = function(aString)
 	{
 		ApiBridge.callNative("jsBridgeClient", "testJSBrige",
@@ -185,6 +232,18 @@
 			"info" : aString
 		});
 	};
+
+	jsBridgeClient.openJSLog = function()
+	{
+		_Configs.isOpenJSLog = true;
+		global.console.log = ApiBridge.log;
+	}
+	jsBridgeClient.closeJSLog = function()
+	{
+		_Configs.isOpenJSLog = false;
+        global.console.log = _Configs.sysLog;
+	}
+
 
 	jsBridgeClient.commonApi = function(aString, callback)
 	{
@@ -228,20 +287,10 @@
 		}
 	};
 
-	/* 滚动到页面底部时的回调函数 以及 设置的阀值 */
-	// 先用一个对象保存回调，后期统一优化
-	jsBridgeClient.registerHitPageBottomListener = function(callback, threshold)
-	{
-		ApiBridge.callNative("ApiBridge", "setHitPageBottomThreshold",
-		{
-			"threshold" : threshold
-		});
-		jsBridgeClient.onHitPageBottom = callback;
-	};
 
-	/***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+	/*****************************************
 	 * XMLHttpRequest实现
-	 **************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+	 *****************************************/
 
 	var _XMLHttpRequest = function()
 	{
@@ -309,10 +358,11 @@
 			"host" : window.location.hostname,
 			"port" : window.location.port,
 			"href" : window.location.href,
-			"referer" : document.referrer != "" ? document.referrer : null,
+			"referer" : document.referrer != "" ? document.referrer : undefined,
 			"useragent" : navigator.userAgent,
-			"cookie" : document.cookie != "" ? document.cookie : null,
-			"async" : async
+			"cookie" : document.cookie != "" ? document.cookie : undefined,
+			"async" : async,
+			"timeout" : this.timeout
 		});
 	}
 
@@ -387,10 +437,10 @@
 		}
 	}
 
-	/***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
-	 * 操作Docment
-	 **************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
+	/*****************************************
+	 * 操作Docment
+	 *****************************************/
 	jsBridgeClient.deleteFirstElement = function(className)
 	{
 		var all = document.all ? document.all : document
@@ -423,9 +473,6 @@
 		return elements;
 	}
 
-	/***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
-	 * 
-	 **************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 	/*
 	 * var windowOpen = function (url) { ApiBridge.callNative("JavascriptAPIInterceptor", "windowOpen", { "url" : url }); };
@@ -435,8 +482,9 @@
 	global.ApiBridge = ApiBridge;
 	global.jsBridgeClient = jsBridgeClient;
 	// global.open = windowOpen;
-	global.console.log = ApiBridge.log;
+//	global.console.log = ApiBridge.log;
 	global.XMLHttpRequest = _XMLHttpRequest;
+
 
 	jsBridgeClient.register = function(_window)
 	{
@@ -447,8 +495,31 @@
 		_window.open = window.open;
 	};
 
-	ApiBridge.onBridgeInitComplete(function()
+
+	ApiBridge.onBridgeInitComplete(function(aConfigs)
 	{
+		if (aConfigs)
+		{
+			if (aConfigs.hasOwnProperty('isOpenJSLog'))
+        	{
+        		_Configs.isOpenJSLog = aConfigs.isOpenJSLog;
+        	}
+        	if (aConfigs.hasOwnProperty('isOpenNativeXHR'))
+       		{
+       			_Configs.isOpenNativeXHR = aConfigs.isOpenNativeXHR;
+       		}
+		}
+
+//		alert(JSON.stringify(aConfigs));
+		if (_Configs.isOpenJSLog)
+		{
+			global.console.log = ApiBridge.log;
+		}
+//		else
+//		{
+//			global.console.log = null;
+//			global.console.log = _Configs.sysLog;
+//		}
 
 		ApiBridge.onNativeInitComplete(ApiBridge.onDeviceReady);
 
