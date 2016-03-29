@@ -10,9 +10,9 @@
  *     });
  * @since 1.0.0
  * @public
- * @required　bridgeLib
+ * @kerkee
  */
-define(["bridgeLib"],function(bridgeLib){
+define(["kerkee"],function(kerkee){
     var Utils = {
 
         Klass:function(){

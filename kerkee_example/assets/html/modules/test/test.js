@@ -7,7 +7,7 @@ requirejs.config({
 
     paths: {
         api:"../vendor/api",
-        bridgeLib: "../bridgeLib",
+        kerkee: "../kerkee",
         zepto:"../vendor/lib/zepto.min",
         template: '../vendor/lib/template',
         domReady: '../vendor/plugin/domReady'
@@ -16,8 +16,8 @@ requirejs.config({
     waitSeconds: 10,
 
     shim: {
-        "bridgeLib": {
-            exports: "bridgeLib"
+        "kerkee": {
+            exports: "kerkee"
         },
 
         'zepto':{
