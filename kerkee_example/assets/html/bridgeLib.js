@@ -3,7 +3,7 @@
 		return;
 	window.WebViewJSBridge = {};
 
-	console.log("--- jsBridgeClient init begin---");
+	console.log("--- kerkee init begin---");
 	var browser={
         versions:function(){
             var u = navigator.userAgent, app = navigator.appVersion;
@@ -137,7 +137,7 @@
 	ApiBridge.onNativeInitComplete = function(callback)
 	{
 		ApiBridge.isReady = true;
-		console.log("--- jsBridgeClient onNativeInitComplete end ---");
+		console.log("--- kerkee onNativeInitComplete end ---");
 
 		if (callback)
 		{
@@ -184,16 +184,16 @@
     _Configs.sysXHR = global.XMLHttpRequest;
 
 
-	var jsBridgeClient = {};
+	var kerkee = {};
 
 	/*****************************************
    	 * 事件监听
      *****************************************/
-	jsBridgeClient.Event = {};
-	// jsBridgeClient.Event.LOADED = "loaded";
-	// jsBridgeClient.Event.LOAD_ERROR = "load_error";
-	// jsBridgeClient.Event.LOAD_PROGRESS = "load_progress";
-	jsBridgeClient.addEventListener = function(event, callback)
+	kerkee.Event = {};
+	// kerkee.Event.LOADED = "loaded";
+	// kerkee.Event.LOAD_ERROR = "load_error";
+	// kerkee.Event.LOAD_PROGRESS = "load_progress";
+	kerkee.addEventListener = function(event, callback)
 	{
 		ApiBridge.callNative("event", "addEventListener",
 		{
@@ -203,28 +203,28 @@
 
 	/* Scroll to the bottom of the page when the callback function and the threshold setting */
 	//callback:Return to the page in webview upper vertex Y value
-	jsBridgeClient.registerHitPageBottomListener = function(callback, threshold)
+	kerkee.registerHitPageBottomListener = function(callback, threshold)
 	{
 		ApiBridge.callNative("ApiBridge", "setHitPageBottomThreshold",
 		{
 			"threshold" : threshold
 		});
-		jsBridgeClient.onHitPageBottom = callback;
+		kerkee.onHitPageBottom = callback;
 	};
 
-	jsBridgeClient.registerScrollListener = function(callback)
+	kerkee.registerScrollListener = function(callback)
 	{
 		ApiBridge.callNative("ApiBridge", "setPageScroll",
     	{
    			"isScrollOn" : true
    		});
-   		jsBridgeClient.onPageScroll = callback;
+   		kerkee.onPageScroll = callback;
 	};
 
 	/*****************************************
 	 * 接口
 	 *****************************************/
-	jsBridgeClient.testJSBrige = function(aString)
+	kerkee.testJSBrige = function(aString)
 	{
 		ApiBridge.callNative("jsBridgeClient", "testJSBrige",
 		{
@@ -232,19 +232,19 @@
 		});
 	};
 
-	jsBridgeClient.openJSLog = function()
+	kerkee.openJSLog = function()
 	{
 		_Configs.isOpenJSLog = true;
 		global.console.log = ApiBridge.log;
 	}
-	jsBridgeClient.closeJSLog = function()
+	kerkee.closeJSLog = function()
 	{
 		_Configs.isOpenJSLog = false;
         global.console.log = _Configs.sysLog;
 	}
 
 
-	jsBridgeClient.commonApi = function(aString, callback)
+	kerkee.commonApi = function(aString, callback)
 	{
 		ApiBridge.callNative("jsBridgeClient", "commonApi",
 		{
@@ -252,7 +252,7 @@
 		}, callback);
 	}
 
-	jsBridgeClient.onDeviceReady = function(handler)
+	kerkee.onDeviceReady = function(handler)
 	{
 		ApiBridge.onDeviceReady = handler;
 
@@ -264,7 +264,7 @@
 		}
 	};
 
-	jsBridgeClient.invoke = function(clz, method, args, callback)
+	kerkee.invoke = function(clz, method, args, callback)
 	{
 		if (callback)
 		{
@@ -276,9 +276,9 @@
 		}
 	};
 
-	jsBridgeClient.onSetImage = function(srcSuffix, desUri)
+	kerkee.onSetImage = function(srcSuffix, desUri)
 	{
-		// console.log("--- jsBridgeClient onSetImage ---");
+		// console.log("--- kerkee onSetImage ---");
 		var obj = document.querySelectorAll('img[src$="' + srcSuffix + '"]');
 		for (var i = 0; i < obj.length; ++i)
 		{
@@ -439,17 +439,16 @@
 	/*
 	 * var windowOpen = function (url) { ApiBridge.callNative("JavascriptAPIInterceptor", "windowOpen", { "url" : url }); };
 	 */
-
-	// 注册对象
 	global.ApiBridge = ApiBridge;
-	global.jsBridgeClient = jsBridgeClient;
+	global.kerkee = kerkee;
 	// global.open = windowOpen;
 	global.XMLHttpRequest = _XMLHttpRequest;
+	global.jsBridgeClient = kerkee;
 
-	jsBridgeClient.register = function(_window)
+	kerkee.register = function(_window)
 	{
 		_window.ApiBridge = window.ApiBridge;
-		_window.jsBridgeClient = window.jsBridgeClient;
+		_window.kerkee = window.kerkee;
 		_window.console.log = window.console.log;
 		_window.XMLHttpRequest = window.XMLHttpRequest;
 		_window.open = window.open;
@@ -483,7 +482,7 @@
 
 		ApiBridge.onNativeInitComplete(ApiBridge.onDeviceReady);
 
-		// jsBridgeClient.onDeviceReady(function(){
+		// kerkee.onDeviceReady(function(){
 		// alert('onDeviceReady');
 		// });
 
