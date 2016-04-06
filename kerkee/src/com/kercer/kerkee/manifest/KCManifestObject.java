@@ -1,6 +1,7 @@
 package com.kercer.kerkee.manifest;
 
 import com.kercer.kercore.util.KCUtilText;
+import com.kercer.kernet.uri.KCURI;
 
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ public class KCManifestObject
 	private String[] mSubManifests; // sub manifests list
 	private String[] mExtras; //extras files, don't delete files
 	private ArrayList<String> mCacheList;
-	private String mDekRelativePath;  //dek relative path, if dek path is url, it's null
+	private String mDekRelativePath;  //dek relative to manifest path, if dek path is url, it's null
 	private String mRequiredVersion; //required version
 	private ArrayList<String> mCacheDirs; //cache dirs, contains mCacheList' dir, not contains Extras and suManifests dir
 
@@ -19,8 +20,11 @@ public class KCManifestObject
 	//if from server,set it in KCFetchManifest;
 	//if from local,set it in KCManifestParser
 	private String mDownloadUrl;
-	//dek & manifest file Dir, if from server, the VAR is null
+	//dek & manifest file Dir, if parser from server, the VAR is null
 	private String mDestDir;
+
+	public KCURI mBaseUri;  //root uri
+	public String mRelativePath;
 
 
 	public KCManifestObject()
