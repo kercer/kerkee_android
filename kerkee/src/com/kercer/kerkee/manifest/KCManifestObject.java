@@ -24,7 +24,7 @@ public class KCManifestObject
 	private String mDestDir;
 
 	public KCURI mBaseUri;  //root uri
-	public String mRelativePath;
+	public String mRelativePath; //relative to base uri
 
 
 	public KCManifestObject()
