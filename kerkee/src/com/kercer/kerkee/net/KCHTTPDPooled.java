@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -42,7 +43,7 @@ public class KCHTTPDPooled
 	/*
 	 * Where worker threads stand idle
 	 */
-	private static Vector<KCHTTPSession> threads = new Vector<KCHTTPSession>();
+	private static ArrayList<KCHTTPSession> threads = new ArrayList<KCHTTPSession>();
 
 	/**
 	 * max # worker threads
@@ -95,7 +96,7 @@ public class KCHTTPDPooled
 			{
 				KCHTTPDPooled.KCHTTPSession w = new KCHTTPSession();
 				(new Thread(w, "worker-#" + i)).start();
-				threads.addElement(w);
+				threads.add(w);
 			}
 			myThread = new Thread(new Runnable()
 			{
@@ -116,8 +117,8 @@ public class KCHTTPDPooled
 								}
 								else
 								{
-									w = (KCHTTPSession) threads.elementAt(0);
-									threads.removeElementAt(0);
+									w = (KCHTTPSession) threads.get(0);
+									threads.remove(0);
 									w.setSocket(myServerSocket.accept());
 								}
 							}
@@ -329,7 +330,7 @@ public class KCHTTPDPooled
 				 * go back in wait queue if there's fewer than numHandler connections.
 				 */
 				mySocket = null;
-				Vector<KCHTTPSession> pool = KCHTTPDPooled.threads;
+				ArrayList<KCHTTPSession> pool = KCHTTPDPooled.threads;
 				synchronized (pool)
 				{
 					if (pool.size() >= KCHTTPDPooled.workers)
@@ -339,7 +340,7 @@ public class KCHTTPDPooled
 					}
 					else
 					{
-						pool.addElement(this);
+						pool.add(this);
 					}
 				}
 			}
