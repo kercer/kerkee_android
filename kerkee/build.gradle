@@ -158,7 +158,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile "com.kercer:kernet:1.2.3"
+    compile "com.kercer:kernet:1.2.4"
 
 //    compile project(':..:kercore_android:kercore') //debug
 //    compile project(':..:kernet_android:kernet') //debug
