@@ -23,5 +23,10 @@ public class KCJSNull implements KCJSType
         return null;
     }
 
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
+    }
 
 }

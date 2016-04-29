@@ -500,7 +500,7 @@ public class KCHTTPDPooled
 				{
 					sendError(HTTP_INTERNALERROR, "SERVER INTERNAL ERROR: IOException: " + ioe.getMessage());
 				}
-				catch (Throwable t)
+				catch (Exception t)
 				{
 				}
 			}
@@ -851,7 +851,7 @@ public class KCHTTPDPooled
 				{
 					mySocket.close();
 				}
-				catch (Throwable t)
+				catch (Exception t)
 				{
 				}
 			}
