@@ -38,7 +38,7 @@ public class KCXMLHttpRequest
     private final static int UNSET = 0;
     private final static int OPENED = 1;
     private final static int HEADERS_RECEIVED = 2;
-    private final static int LOADING = 3;
+//    private final static int LOADING = 3;
     private final static int DONE = 4;
 
     private final static String GET = "GET";
