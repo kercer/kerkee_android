@@ -120,11 +120,11 @@ public class KCWebViewClient extends WebViewClient
 			}
 			catch (MalformedURLException e)
 			{
-				e.printStackTrace();
+				KCLog.e(e);
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				KCLog.e(e);
 			}
 		}
 

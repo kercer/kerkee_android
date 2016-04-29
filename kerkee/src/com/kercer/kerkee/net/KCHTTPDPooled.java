@@ -1,5 +1,7 @@
 package com.kercer.kerkee.net;
 
+import com.kercer.kercore.debug.KCLog;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -215,7 +217,7 @@ public class KCHTTPDPooled
 			}
 			catch (java.io.UnsupportedEncodingException uee)
 			{
-				uee.printStackTrace();
+				KCLog.e(uee);
 			}
 		}
 
@@ -321,7 +323,7 @@ public class KCHTTPDPooled
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					KCLog.e(e);
 				}
 				/*
 				 * go back in wait queue if there's fewer than numHandler connections.

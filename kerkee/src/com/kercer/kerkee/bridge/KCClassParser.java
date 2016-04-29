@@ -1,5 +1,6 @@
 package com.kercer.kerkee.bridge;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.type.KCJSCallback;
 import com.kercer.kerkee.bridge.type.KCJSNull;
 
@@ -87,7 +88,7 @@ public class KCClassParser
         }
         catch (JSONException e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
     }
 

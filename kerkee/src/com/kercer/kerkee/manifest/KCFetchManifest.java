@@ -1,5 +1,6 @@
 package com.kercer.kerkee.manifest;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.util.KCUtilText;
 import com.kercer.kernet.uri.KCURI;
 
@@ -36,7 +37,7 @@ public class KCFetchManifest
 		}
 		catch (URISyntaxException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 
 	}
@@ -108,7 +109,7 @@ public class KCFetchManifest
 		}
 		catch (URISyntaxException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 		return null;
 	}
@@ -129,7 +130,7 @@ public class KCFetchManifest
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 		finally
 		{
@@ -142,7 +143,7 @@ public class KCFetchManifest
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				KCLog.e(e);
 			}
 		}
 		return null;
@@ -169,7 +170,7 @@ public class KCFetchManifest
 		}
 		catch (URISyntaxException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 
 	}
@@ -209,7 +210,7 @@ public class KCFetchManifest
 		}
 		catch (URISyntaxException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 		return null;
 	}
@@ -235,7 +236,7 @@ public class KCFetchManifest
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				KCLog.e(e);
 			}
 		}
 		return null;

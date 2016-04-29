@@ -128,7 +128,7 @@ public class KCApiBridge
 			catch (Exception e)
 			{
 				KCLog.e("ERROR JS call " + parser.getJSClzName() + "::" + parser.getJSMethodName());
-				e.printStackTrace();
+				KCLog.e(e);
 			}
 		}
 		return "";
@@ -170,7 +170,7 @@ public class KCApiBridge
 		}
 		catch (JSONException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 	}
 

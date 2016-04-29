@@ -63,7 +63,7 @@ public class KCApiPlatform
 		}
 		catch (JSONException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 		KCJSBridge.callbackJS(aWebView, callbackId, jsonObject);
 	}
@@ -108,7 +108,7 @@ public class KCApiPlatform
 		}
 		catch (JSONException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 		KCJSBridge.callbackJS(aWebView, callbackId, jsonObject);
 

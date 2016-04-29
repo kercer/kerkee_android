@@ -65,7 +65,7 @@ public class KCWebView extends WebView
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                KCLog.e(e);
             }
             return false;
         }
@@ -171,7 +171,7 @@ public class KCWebView extends WebView
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
 
     }
@@ -194,7 +194,7 @@ public class KCWebView extends WebView
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
     }
 
@@ -216,7 +216,7 @@ public class KCWebView extends WebView
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
     }
 
@@ -280,7 +280,7 @@ public class KCWebView extends WebView
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
     }
 
@@ -295,7 +295,7 @@ public class KCWebView extends WebView
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
     }
 
@@ -323,7 +323,7 @@ public class KCWebView extends WebView
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
         return false;
     }
@@ -378,7 +378,7 @@ public class KCWebView extends WebView
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
 
     }

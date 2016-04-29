@@ -164,7 +164,7 @@ public class KCWebImageDownloader
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
 
         return webImage;
@@ -196,7 +196,7 @@ public class KCWebImageDownloader
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
     }
 
@@ -265,7 +265,7 @@ public class KCWebImageDownloader
             catch (URISyntaxException e)
             {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                KCLog.e(e);
             }
 
 //            KCLog.i("download image succeeded: " + mUri.toString() + ", " + mDestFilePath);

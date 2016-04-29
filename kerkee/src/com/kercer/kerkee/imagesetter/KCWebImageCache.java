@@ -51,7 +51,7 @@ public class KCWebImageCache
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
 
         if (webImageDir != null)
@@ -63,7 +63,7 @@ public class KCWebImageCache
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                KCLog.e(e);
             }
         }
     }

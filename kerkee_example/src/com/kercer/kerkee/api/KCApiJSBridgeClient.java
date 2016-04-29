@@ -91,7 +91,7 @@ public class KCApiJSBridgeClient
 		}
 		catch (JSONException e)
 		{
-			e.printStackTrace();
+            KCLog.e(e);
 		}
         KCJSBridge.callbackJS(aWebView, callbackId, jsonObject);
     }

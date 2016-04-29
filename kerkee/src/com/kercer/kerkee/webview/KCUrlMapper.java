@@ -1,5 +1,6 @@
 package com.kercer.kerkee.webview;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.io.KCUtilIO;
 import com.kercer.kerkee.util.KCNativeUtil;
 
@@ -15,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 
+ *
  * @author zihong
  *
  */
@@ -83,7 +84,7 @@ public class KCUrlMapper
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
         finally
         {

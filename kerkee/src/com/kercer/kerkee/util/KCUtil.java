@@ -1,5 +1,7 @@
 package com.kercer.kerkee.util;
 
+import com.kercer.kercore.debug.KCLog;
+
 import java.util.regex.Pattern;
 
 /**
@@ -46,7 +48,7 @@ public class KCUtil
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
         return null;
     }

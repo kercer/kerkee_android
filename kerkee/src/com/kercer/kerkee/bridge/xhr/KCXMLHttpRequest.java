@@ -163,7 +163,7 @@ public class KCXMLHttpRequest
                     }
                     catch (Exception e)
                     {
-                        e.printStackTrace();
+                        KCLog.e(e);
                     }
                 }
 
@@ -197,7 +197,7 @@ public class KCXMLHttpRequest
                         catch (JSONException e)
                         {
                             returnError(webView, code, error.getMessage());
-                            e.printStackTrace();
+                            KCLog.e(e);
                         }
                     }
                     else
@@ -226,7 +226,7 @@ public class KCXMLHttpRequest
                     }
                     catch (Exception e)
                     {
-                        e.printStackTrace();
+                        KCLog.e(e);
 
                         if (!mHttpRequest.isCanceled())
                         {
@@ -268,7 +268,7 @@ public class KCXMLHttpRequest
         }
         catch (JSONException e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
         finally
         {

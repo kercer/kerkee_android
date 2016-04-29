@@ -14,31 +14,36 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- *
  * @author zihong
- *
  */
-public class KCXMLHttpRequestManager {
+public class KCXMLHttpRequestManager
+{
     private final static HashMap<String, KCXMLHttpRequest> mRequestMap = new HashMap<String, KCXMLHttpRequest>();
 
-    public static String keyFromWebViewAndId(KCWebView webview, int id) {
+    public static String keyFromWebViewAndId(KCWebView webview, int id)
+    {
         return String.valueOf(webview.hashCode()) + id;
     }
 
-    private static KCXMLHttpRequest createXMLHttpRequest(KCWebView webview, int id, String urlHash) {
+    private static KCXMLHttpRequest createXMLHttpRequest(KCWebView webview, int id, String urlHash)
+    {
         KCXMLHttpRequest xhr = new KCXMLHttpRequest(id, urlHash);
-        synchronized (mRequestMap) {
+        synchronized (mRequestMap)
+        {
             mRequestMap.put(keyFromWebViewAndId(webview, id), xhr);
         }
         return xhr;
     }
 
-    public static void create(KCWebView webView, KCArgList args) {
+    public static void create(KCWebView webView, KCArgList args)
+    {
 
     }
 
-    public static void open(KCWebView webView, KCArgList args) {
-        try {
+    public static void open(KCWebView webView, KCArgList args)
+    {
+        try
+        {
 
             KCLog.i("XHR open");
 
@@ -48,8 +53,7 @@ public class KCXMLHttpRequestManager {
             String urlHash = KCUtil.getMD5String(url);
 
             KCXMLHttpRequest xhr = mRequestMap.get(keyFromWebViewAndId(webView, id));
-            if (xhr != null)
-                xhr.abort();
+            if (xhr != null) xhr.abort();
 
             xhr = createXMLHttpRequest(webView, id, urlHash);
             String ua = webView.getSettings().getUserAgentString();
@@ -64,102 +68,137 @@ public class KCXMLHttpRequestManager {
 
             KCURI uriUrl = KCURI.parse(url);
             boolean isAbsolute = uriUrl.isAbsolute();
-            if (!isAbsolute) {
+            if (!isAbsolute)
+            {
                 List<String> list = uriUrl.getPathSegments();
                 int nSegmentCount = list.size();
 
-                if (nSegmentCount == 1 && !url.startsWith("/")) {
+                if (nSegmentCount == 1 && !url.startsWith("/"))
+                {
                     KCURI uriHref = KCURI.parse(href);
                     uriHref.removeLastPathSegment();
                     url = uriHref.site() + uriHref.getPath() + "/" + url;
-                } else if (nSegmentCount > 0) {
+                }
+                else if (nSegmentCount > 0)
+                {
                     String tmpPath = url.startsWith("/") ? url : ("/" + url);
                     String tmpPort = (port.length() > 0 ? ":" : "") + port;
                     url = scheme + "//" + host + tmpPort + tmpPath;
-                } else {
+                }
+                else
+                {
                     url = href;
                 }
 
             }
 
             xhr.open(webView, method, url, async, ua, referer, cookie, timeout);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (URISyntaxException e)
+        {
+            KCLog.e(e);
+        }
+        catch (Exception e)
+        {
+            KCLog.e(e);
         }
 
     }
 
     // there's currently no error checking
-    public static void send(KCWebView webView, KCArgList args) {
+    public static void send(KCWebView webView, KCArgList args)
+    {
         KCXMLHttpRequest xhr;
-        try {
+        try
+        {
             xhr = mRequestMap.get(keyFromWebViewAndId(webView, args.getInt("id")));
             KCLog.i("XHRDisp send: " + xhr);
-            if (xhr != null) {
+            if (xhr != null)
+            {
                 // more than 1 property(the 'id' property)
-                if (args.has("data")) {
+                if (args.has("data"))
+                {
                     xhr.send(webView, args.getString("data"));
-                } else {
+                }
+                else
+                {
                     xhr.send(webView);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            KCLog.e(e);
         }
 
     }
 
     // there's currently no error checking
-    public static void abort(KCWebView webView, KCArgList args) {
+    public static void abort(KCWebView webView, KCArgList args)
+    {
         KCXMLHttpRequest xhr;
-        try {
+        try
+        {
             xhr = mRequestMap.get(keyFromWebViewAndId(webView, args.getInt("id")));
             KCLog.i("XHRDisp abort: " + xhr);
-            if (xhr != null) {
+            if (xhr != null)
+            {
                 xhr.abort();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            KCLog.e(e);
         }
 
     }
 
-    public static void setRequestHeader(KCWebView webView, KCArgList args) {
-        try {
+    public static void setRequestHeader(KCWebView webView, KCArgList args)
+    {
+        try
+        {
             String headerName = args.getString("headerName");
             String headerValue = args.getString("headerValue");
             KCXMLHttpRequest xhr = mRequestMap.get(keyFromWebViewAndId(webView, args.getInt("id")));
-            if (xhr != null) {
+            if (xhr != null)
+            {
                 xhr.setRequestHeader(headerName, headerValue);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            KCLog.e(e);
         }
 
     }
 
-    public static void overrideMimeType(KCWebView webView, KCArgList args) {
+    public static void overrideMimeType(KCWebView webView, KCArgList args)
+    {
 
         KCXMLHttpRequest xhr;
-        try {
+        try
+        {
             xhr = mRequestMap.get(keyFromWebViewAndId(webView, args.getInt("id")));
             String mimetype = args.getString("mimetype");
-            if (xhr != null) {
+            if (xhr != null)
+            {
                 xhr.overrideMimeType(mimetype);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            KCLog.e(e);
         }
 
     }
 
-    public static void freeXMLHttpRequestObject(KCWebView webView, int id) {
+    public static void freeXMLHttpRequestObject(KCWebView webView, int id)
+    {
         mRequestMap.remove(keyFromWebViewAndId(webView, id));
     }
 
-    private static String getArgString(KCArgList aArgList, String name, String defaultValue) {
+    private static String getArgString(KCArgList aArgList, String name, String defaultValue)
+    {
         try
         {
             String value = aArgList.getString(name);
@@ -167,7 +206,7 @@ public class KCXMLHttpRequestManager {
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+//            KCLog.e(e);
         }
         return defaultValue;
     }
@@ -178,9 +217,10 @@ public class KCXMLHttpRequestManager {
         {
             int value = aArgList.getInt(name);
             return !KCJSNull.isNull(value) ? value : defaultValue;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            e.printStackTrace();
+//            KCLog.e(e);
         }
         return defaultValue;
     }
@@ -193,7 +233,7 @@ public class KCXMLHttpRequestManager {
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+//            KCLog.e(e);
         }
         return defaultValue;
     }

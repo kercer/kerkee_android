@@ -1,5 +1,6 @@
 package com.kercer.kerkee.manifest;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kercore.util.KCUtilText;
 import com.kercer.kernet.uri.KCURI;
 
@@ -139,7 +140,7 @@ public class KCManifestParser
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				KCLog.e(e);
 			}
 		}
 		return null;

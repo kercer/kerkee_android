@@ -2,6 +2,7 @@ package com.kercer.kerkee.bridge.urd;
 
 import android.text.TextUtils;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kernet.uri.KCURI;
 
 import java.net.URISyntaxException;
@@ -31,7 +32,7 @@ public final class KCUriDispatcher
 		}
 		catch (URISyntaxException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 		if (uri != null)
 		{
@@ -52,7 +53,7 @@ public final class KCUriDispatcher
 		}
 		catch (URISyntaxException e)
 		{
-			e.printStackTrace();
+			KCLog.e(e);
 		}
 		if(uri!=null)
 		{

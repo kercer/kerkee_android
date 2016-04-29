@@ -2,6 +2,7 @@ package com.kercer.kerkee.browser;
 
 import android.view.ViewGroup;
 
+import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.bridge.KCClass;
 import com.kercer.kerkee.bridge.KCJSDefine;
@@ -64,7 +65,7 @@ public class KCJSBridge
     {
         return KCApiBridge.getRegister().registClass(aJSObjectName, aClass);
     }
-    
+
     public static KCClass registObject(final KCJSObject aObject)
     {
     	return KCApiBridge.getRegister().registObject(aObject);
@@ -73,21 +74,21 @@ public class KCJSBridge
     {
     	return KCApiBridge.getRegister().removeObject(aObject);
     }
-    
+
 
     public static void removeClass(String aJSObjectName)
     {
         KCApiBridge.getRegister().removeClass(aJSObjectName);
     }
-    
 
-    
-    
+
+
+
     /********************************************************/
     /*
      * js call
      */
-    /********************************************************/    
+    /********************************************************/
     public static void callJSOnMainThread(final KCWebView aWebview, final String aJS)
     {
     	KCJSExecutor.callJSOnMainThread(aWebview, aJS);
@@ -163,7 +164,7 @@ public class KCJSBridge
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            KCLog.e(e);
         }
     }
 
