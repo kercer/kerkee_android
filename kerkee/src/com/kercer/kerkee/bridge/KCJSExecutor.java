@@ -3,6 +3,7 @@ package com.kercer.kerkee.bridge;
 import android.os.Build;
 
 import com.kercer.kercore.task.KCTaskExecutor;
+import com.kercer.kercore.util.KCUtilText;
 import com.kercer.kerkee.util.KCUtil;
 import com.kercer.kerkee.webview.KCWebView;
 
@@ -56,6 +57,7 @@ public class KCJSExecutor
 
     public static void callJSOnMainThread(final KCWebView aWebView, final String aJS)
     {
+        if (aWebView == null || KCUtilText.isEmpty(aJS)) return;
         KCTaskExecutor.runTaskOnUiThread(new Runnable()
         {
             @Override
