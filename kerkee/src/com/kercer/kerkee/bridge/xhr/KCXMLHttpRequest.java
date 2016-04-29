@@ -96,11 +96,17 @@ public class KCXMLHttpRequest
         if (mHttpRequest != null)
         {
             if (userAgent != null)
+            {
                 mHttpRequest.addHeader(KCHeader.header("User-Agent", userAgent));
+            }
             if (referer != null)
+            {
                 mHttpRequest.addHeader(KCHeader.header("Referer", referer));
+            }
             if (cookie != null)
+            {
                 mHttpRequest.addHeader(KCHeader.header("Cookie", cookie));
+            }
         }
     }
 
