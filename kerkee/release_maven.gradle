@@ -1,0 +1,64 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+def repoUrl = 'http://scm.linzihong.com/nexus/content/repositories/releases/'
+def siteUrl = 'https://www.kerkee.com'                        // #CONFIG# // project homepage
+def gitUrl = 'https://github.com/kercer/kerkee_android.git'                     // #CONFIG# // project git
+def libName = 'kerkee'
+
+group = "com.kercer"
+//version = "1.3.0" //set in pom.project
+
+signing {
+    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        repository(url: repoUrl) {
+            user = properties.getProperty("maven.user")
+            pw = properties.getProperty("maven.password")
+            authentication(userName: user,
+                    password: pw)
+        }
+
+        pom.project {
+            name libName
+            packaging 'aar'
+            description libName
+            url repoUrl //仓库地址
+//            groupId 'com.kercer'
+            artifactId libName //LibA
+            version android.defaultConfig.versionName
+
+            // Set your license
+            licenses {
+                license {
+                    name 'GNU GENERAL PUBLIC LICENSE, Version 3'
+                    url 'http://www.gnu.org/licenses/'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'zihong'                                           // #CONFIG# // your user id (you can write your nickname)
+                    name 'zihong'                                       // #CONFIG# // your user name
+                    email 'zihong87@gmail.com'                               // #CONFIG# // your email
+                }
+            }
+
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+                url siteUrl
+            }
+
+        }
+    }
+}

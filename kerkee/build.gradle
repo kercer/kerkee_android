@@ -1,6 +1,6 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 def kerkeeNdkLibsDir = new File("$buildDir/kerkee-ndk/all")
 def thirdPartyNdkDir = new File("$buildDir/third-party-ndk")
@@ -104,7 +104,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 19
         versionCode 1
-        versionName "1.0"
+        versionName "1.3.10"
     }
 
     buildTypes {
@@ -167,3 +167,4 @@ dependencies {
 
 
 //apply from: 'release.gradle'
+//apply from: 'release_maven.gradle'
