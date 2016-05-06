@@ -256,9 +256,13 @@ public class KCUtilFile
     {
         if (file.isDirectory())
         {
-            for (File childFile : file.listFiles())
+            File[] fileList = file.listFiles();
+            if (fileList != null)
             {
-                deleteRecyle(childFile);
+                for (File childFile : fileList)
+                {
+                    deleteRecyle(childFile);
+                }
             }
         }
         file.delete();
@@ -271,7 +275,11 @@ public class KCUtilFile
         {
             if (file.isDirectory())
             {
-                n += deleteFiles(Arrays.asList(file.listFiles()));
+                File[] fileList = file.listFiles();
+                if (fileList != null)
+                {
+                    n += deleteFiles(Arrays.asList(fileList));
+                }
             }
             if (file.delete()) n++;
         }
