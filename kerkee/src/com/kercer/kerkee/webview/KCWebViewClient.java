@@ -1,8 +1,13 @@
 package com.kercer.kerkee.webview;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.util.Log;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -10,160 +15,165 @@ import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
 import com.kercer.kerkee.imagesetter.KCDefaultImageStream;
+import com.kercer.kerkee.imagesetter.KCWebImage;
 import com.kercer.kerkee.imagesetter.KCWebImageDownloader;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
 /**
- *
  * @author zihong
- *
  */
 @SuppressLint("DefaultLocale")
-public class KCWebViewClient extends WebViewClient
-{
-	private static KCWebViewClient mInstance;
+public class KCWebViewClient extends WebViewClient {
+    private static KCWebViewClient mInstance;
 
-	private KCWebImageDownloader mImageDownloader;
+    private KCWebImageDownloader mImageDownloader;
 
-	private static KCDefaultImageStream mDefaultImageStream;
-
-
-	protected KCWebViewClient()
-	{
-		super();
-	}
-
-	public static KCWebViewClient getInstance()
-	{
-		if (mInstance == null)
-			mInstance = new KCWebViewClient();
-		return mInstance;
-	}
-
-	@Override
-	public boolean shouldOverrideUrlLoading(WebView aWebView, String aUrl)
-	{
-		((KCWebView) aWebView).loadUrlExt(aUrl);
-		return true;
-	}
-
-	@Override
-	public void onPageStarted(WebView aWebView, String aUrl, Bitmap aFavicon)
-	{
-		super.onPageStarted(aWebView, aUrl, aFavicon);
-		KCWebView webView = (KCWebView) aWebView;
-		webView.documentReady(false);
-		webView.mUrl = aUrl;
-		webView.mWebPath.mBridgeScheme = KCScheme.ofUri(aUrl);
-	}
-
-	@Override
-	public void onPageFinished(WebView aWebView, String aUrl)
-	{
-		KCWebView webView = (KCWebView) aWebView;
-		// webView.mUrl = aUrl;
-		KCApiBridge.initJSBridgeEnvironment(webView, KCScheme.ofUri(aUrl));
-		super.onPageFinished(aWebView, aUrl);
-	}
-
-	@Override
-	public void onLoadResource(final WebView aWebView, final String aUrl)
-	{
-		super.onLoadResource(aWebView, aUrl);
-	}
-
-	// shouldInterceptRequest() CallbackProxy.java <- shouldInterceptRequest() BrowserFrame.java <- shouldInterceptRequest() WebCoreFrameBridge.cpp
-//	@Override
-//	public WebResourceResponse shouldInterceptRequest(final WebView aWebView, final String aUrl)
-//	{
-//		// //临时解决有时图片不能通过JS setImage设置成功的问题
-//		// return super.shouldInterceptRequest(aWebView, aUrl);
-//
-//		KCWebView webView = (KCWebView) aWebView;
-//
-//		String strMimeType = getFileMimeType(aUrl);
-//		if (strMimeType == null)
-//			return null;
-//		String lowerCaseUrl = strMimeType.toLowerCase();
-//		if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg"))
-//		{
-//			if (mImageDownloader == null)
-//				mImageDownloader = new KCWebImageDownloader(webView.getContext(), webView.getWebPath());
-//
-//			KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl, webView);
-//
-//			InputStream stream = webImage.getInputStream();
-//			if (stream == null)
-//			{
-//				stream = getSavedStream(webView.getContext()).getInputStream();
-//			}
-//			WebResourceResponse res = new WebResourceResponse(strMimeType, "utf-8", stream);
-//			return res;
-//		}
-//		return super.shouldInterceptRequest(aWebView, aUrl);
-//	}
-
-	public String getMimeType(String aUrl)
-	{
-		String strMimeType = getFileMimeType(aUrl);
-		if (strMimeType == null)
-		{
-			try
-			{
-				strMimeType = getURLMimeType(aUrl);
-				KCLog.i(strMimeType);
-			}
-			catch (MalformedURLException e)
-			{
-				KCLog.e(e);
-			}
-			catch (IOException e)
-			{
-				KCLog.e(e);
-			}
-		}
-
-		return strMimeType;
-	}
-
-	/**
-	 * Warning: this method is very slow mine type define in [jre_home]\lib\content-types.properties
-	 *
-	 * @param aUrl
-	 * @return
-	 * @throws java.io.IOException
-	 * @throws MalformedURLException
-	 */
-	public String getURLMimeType(String aUrl) throws java.io.IOException, MalformedURLException
-	{
-		String type = null;
-		URL u = new URL(aUrl);
-		URLConnection uc = null;
-		uc = u.openConnection();
-		type = uc.getContentType();
-		return type;
-	}
-
-	public String getFileMimeType(String aUrl)
-	{
-		FileNameMap fileNameMap = URLConnection.getFileNameMap();
-		String type = fileNameMap.getContentTypeFor(aUrl);
-		return type;
-	}
+    private static KCDefaultImageStream mDefaultImageStream;
 
 
-	public KCDefaultImageStream getSavedStream(Context aContext)
-	{
-		if (mDefaultImageStream == null)
-		{
-			mDefaultImageStream = new KCDefaultImageStream(aContext);
-		}
-		return mDefaultImageStream;
-	}
+    protected KCWebViewClient() {
+        super();
+    }
+
+    public static KCWebViewClient getInstance() {
+        if (mInstance == null)
+            mInstance = new KCWebViewClient();
+        return mInstance;
+    }
+
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView aWebView, String aUrl) {
+        ((KCWebView) aWebView).loadUrlExt(aUrl);
+        return true;
+    }
+
+    @Override
+    public void onPageStarted(WebView aWebView, String aUrl, Bitmap aFavicon) {
+        super.onPageStarted(aWebView, aUrl, aFavicon);
+        KCWebView webView = (KCWebView) aWebView;
+        webView.documentReady(false);
+        webView.mUrl = aUrl;
+        webView.mWebPath.mBridgeScheme = KCScheme.ofUri(aUrl);
+    }
+
+    @Override
+    public void onPageFinished(WebView aWebView, String aUrl) {
+        KCWebView webView = (KCWebView) aWebView;
+        KCApiBridge.initJSBridgeEnvironment(webView, KCScheme.ofUri(aUrl));
+        super.onPageFinished(aWebView, aUrl);
+    }
+
+    @Override
+    public void onLoadResource(final WebView aWebView, final String aUrl) {
+        super.onLoadResource(aWebView, aUrl);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView aWebView, WebResourceRequest request) {
+
+        String strMimeType = getFileMimeType(request.getUrl().toString());
+        if (strMimeType == null)
+            return null;
+        String lowerCaseUrl = strMimeType.toLowerCase();
+        if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg")) {
+            return handleImageRequest(aWebView,request,strMimeType);
+        }
+        return super.shouldInterceptRequest(aWebView, request);
+    }
+
+    @Override
+    public WebResourceResponse shouldInterceptRequest(final WebView aWebView, final String aUrl) {
+        String strMimeType = getFileMimeType(aUrl);
+        if (strMimeType == null)
+            return null;
+        String lowerCaseUrl = strMimeType.toLowerCase();
+        if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg")) {
+            return handleImageRequest(aWebView, aUrl, strMimeType);
+        }
+        return super.shouldInterceptRequest(aWebView, aUrl);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private WebResourceResponse handleImageRequest(final WebView aWebView, final WebResourceRequest request, String strMimeType) {
+        KCWebView webView = (KCWebView) aWebView;
+        if (mImageDownloader == null)
+            mImageDownloader = new KCWebImageDownloader(webView.getContext(), webView.getWebPath());
+
+        KCWebImage webImage = mImageDownloader.downloadImageFile(request.getUrl().toString());
+        InputStream stream = webImage.getInputStream();
+        if (stream == null) {
+            Log.e("image", "current stream is null,download image from net");
+            return null;
+        }
+        return new WebResourceResponse(strMimeType, "utf-8", stream);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private WebResourceResponse handleImageRequest(final WebView aWebView, final String aUrl, String strMimeType) {
+        KCWebView webView = (KCWebView) aWebView;
+        if (mImageDownloader == null)
+            mImageDownloader = new KCWebImageDownloader(aWebView.getContext(), webView.getWebPath());
+        KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl);
+        InputStream stream = webImage.getInputStream();
+        if (stream == null) {
+            Log.e("image", "current stream is null,download image from net");
+            return null;
+        }
+        return new WebResourceResponse(strMimeType, "utf-8", stream);
+    }
+
+    public String getMimeType(String aUrl) {
+        String strMimeType = getFileMimeType(aUrl);
+        if (strMimeType == null) {
+            try {
+                strMimeType = getURLMimeType(aUrl);
+                KCLog.i(strMimeType);
+            } catch (MalformedURLException e) {
+                KCLog.e(e);
+            } catch (IOException e) {
+                KCLog.e(e);
+            }
+        }
+
+        return strMimeType;
+    }
+
+    /**
+     * Warning: this method is very slow mine type define in [jre_home]\lib\content-types.properties
+     *
+     * @param aUrl
+     * @return
+     * @throws java.io.IOException
+     * @throws MalformedURLException
+     */
+    public String getURLMimeType(String aUrl) throws java.io.IOException, MalformedURLException {
+        String type;
+        URL u = new URL(aUrl);
+        URLConnection uc;
+        uc = u.openConnection();
+        type = uc.getContentType();
+        return type;
+    }
+
+    public String getFileMimeType(String aUrl) {
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String type = fileNameMap.getContentTypeFor(aUrl);
+        return type;
+    }
+
+
+    public KCDefaultImageStream getSavedStream(Context aContext) {
+        if (mDefaultImageStream == null) {
+            mDefaultImageStream = new KCDefaultImageStream(aContext);
+        }
+        return mDefaultImageStream;
+    }
 
 }
