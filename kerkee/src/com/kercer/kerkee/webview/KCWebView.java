@@ -105,13 +105,9 @@ public class KCWebView extends WebView
 
     public void init(WebViewClient webViewClient, WebChromeClient webChromeClient)
     {
-
-
         mWebPath = new KCWebPath(getContext());
-
         //creat url map
         mUrlMapper = new KCUrlMapper(mWebPath.getResRootPath(), mWebPath.getCfgPath());
-
 
 //        setBackgroundColor(getContext().getResources().getColor(R.color.darker_gray));
         setWebViewClient(webViewClient);
@@ -163,6 +159,7 @@ public class KCWebView extends WebView
         {
             super.stopLoading();
             super.removeAllViews();
+            super.clearHistory();
             super.clearCache(true);
             super.destroyDrawingCache();
             super.destroy();
@@ -188,8 +185,6 @@ public class KCWebView extends WebView
 
         try
         {
-//            if (KCLog.DEBUG)
-//                KCLog.i(">>>> loadUrl1: " + url + ", " + additionalHttpHeaders);
             super.loadUrl(url, additionalHttpHeaders);
         }
         catch (Exception e)
@@ -210,8 +205,6 @@ public class KCWebView extends WebView
 
         try
         {
-//            if (KCLog.DEBUG)
-//                KCLog.i(">>>> loadUrl2: " + url);
             super.loadUrl(url);
         }
         catch (Exception e)

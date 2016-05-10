@@ -20,7 +20,7 @@ public class KCXMLHttpRequestManager
 {
     private final static HashMap<String, KCXMLHttpRequest> mRequestMap = new HashMap<String, KCXMLHttpRequest>();
 
-    public static String keyFromWebViewAndId(KCWebView webview, int id)
+    private static String keyFromWebViewAndId(KCWebView webview, int id)
     {
         return String.valueOf(webview.hashCode()) + id;
     }

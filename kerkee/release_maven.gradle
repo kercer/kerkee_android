@@ -32,7 +32,7 @@ uploadArchives {
             name libName
             packaging 'aar'
             description libName
-            url repoUrl //仓库地址
+            url repoUrl
 //            groupId 'com.kercer'
             artifactId libName //LibA
             version android.defaultConfig.versionName
