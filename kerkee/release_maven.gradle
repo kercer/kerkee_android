@@ -62,3 +62,44 @@ uploadArchives {
         }
     }
 }
+
+
+task androidJavadocs(type: Javadoc) {
+    options {
+        linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+
+    }
+    failOnError false
+    source = source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(project.android.getBootClasspath().join(File.pathSeparator))
+    classpath += files(project.getConfigurations().getByName('compile').asList())
+    //        include '**/*.java'
+    //        exclude '**/BuildConfig.java'
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+//        include '**/*.java'
+}
+
+android.libraryVariants.all { variant ->
+    def name = variant.name.capitalize()
+    task "jar${name}"(type: Jar, dependsOn: variant.javaCompile) {
+        from variant.javaCompile.destinationDir
+    }
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
+
+//def isSnapshotBuild() {
+//    return version.contains("SNAPSHOT")
+//}
