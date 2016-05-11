@@ -2,7 +2,9 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'com.android.library'
 
-def kerkeeNdkLibsDir = new File("$buildDir/kerkee-ndk/all")
+version = '1.3.11'
+
+def buildNdkLibsDir = new File("$buildDir/build-ndk/all")
 def thirdPartyNdkDir = new File("$buildDir/third-party-ndk")
 
 
@@ -65,33 +67,33 @@ def getNdkBuildFullPath() {
     return ndkBuildFullPath
 }
 
-task buildKerkeeNdkLib(dependsOn: [prepareThird], type: Exec) {
+task buildNdkLibs(dependsOn: [prepareThird], type: Exec) {
     inputs.file('jni')
-//    outputs.dir("$kerkeeNdkLibsDir")
-    outputs.file("$kerkeeNdkLibsDir")
+//    outputs.dir("$buildNdkLibsDir")
+    outputs.file("$buildNdkLibsDir")
     commandLine getNdkBuildFullPath(),
 //            'NDK_PROJECT_PATH=null',
             "NDK_APPLICATION_MK=$projectDir/jni/Application.mk",
             'NDK_OUT=' + temporaryDir,
-            "NDK_LIBS_OUT=$kerkeeNdkLibsDir",
+            "NDK_LIBS_OUT=$buildNdkLibsDir",
             "THIRD_PARTY_NDK_DIR=$thirdPartyNdkDir",
             '-C', file('jni').absolutePath,
             '--jobs', Runtime.runtime.availableProcessors()
 
 }
 
-task cleanKerkeeNdkLib(type: Exec) {
+task cleanNdkLibs(type: Exec) {
     commandLine getNdkBuildFullPath(),
             '-C', file('jni').absolutePath,
             'clean'
 }
 
-task cleanSo(dependsOn: buildKerkeeNdkLib, type: Delete){
+task cleanSo(dependsOn: buildNdkLibs, type: Delete){
     delete 'libs'
 }
 
-task packageKerkeeNdkLibs(dependsOn: cleanSo, type: Copy) {
-    from "$kerkeeNdkLibsDir"
+task packageNdkLibs(dependsOn: cleanSo, type: Copy) {
+    from "$buildNdkLibsDir"
 //    exclude '**/libjsc.so'
     into 'libs'
 }
@@ -104,7 +106,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 19
         versionCode 1
-        versionName "1.3.10"
+        versionName version
     }
 
     buildTypes {
@@ -143,12 +145,13 @@ android {
         release.setRoot('build-types/release')
     }
 
+    buildTypes.debug.jniDebuggable false
 
     tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn packageKerkeeNdkLibs
+        compileTask -> compileTask.dependsOn packageNdkLibs
     }
 
-    clean.dependsOn cleanKerkeeNdkLib
+    clean.dependsOn cleanNdkLibs
 
     lintOptions {
         abortOnError false

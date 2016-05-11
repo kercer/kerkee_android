@@ -44,9 +44,7 @@ public class KCXMLHttpRequestManager
     {
         try
         {
-
             KCLog.i("XHR open");
-
             int id = args.getInt("id");
             String url = args.getString("url");
             String method = getArgString(args, "method", "GET").toUpperCase(Locale.getDefault());
