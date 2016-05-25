@@ -44,15 +44,6 @@ public class KCXMLHttpRequest
     private final static String GET = "GET";
     private final static String POST = "POST";
     private final static String HEAD = "HEAD";
-    private int mMethod;
-
-    public interface KCXHRMethod
-    {
-        int DEPRECATED_GET_OR_POST = KCHttpRequest.Method.DEPRECATED_GET_OR_POST;
-        int GET = KCHttpRequest.Method.GET;
-        int POST = KCHttpRequest.Method.POST;
-        int HEAD = KCHttpRequest.Method.HEAD;
-    }
 
     private KCStringRequest mHttpRequest;
 
@@ -139,8 +130,6 @@ public class KCXMLHttpRequest
         {
             nMethod = KCHttpRequest.Method.HEAD;
         }
-
-        mMethod = nMethod;
 
         if (nMethod >= 0)
         {
@@ -345,7 +334,7 @@ public class KCXMLHttpRequest
     public void send(final KCWebView webView, final String data)
     {
 
-        if (mHttpRequest == null || mMethod != KCHttpRequest.Method.POST)
+        if (mHttpRequest == null)
         {
             KCXMLHttpRequestManager.freeXMLHttpRequestObject(webView, mId);
             return;
@@ -479,13 +468,4 @@ public class KCXMLHttpRequest
         }
     }
 
-    public boolean isPost()
-    {
-        return mHttpRequest != null && mHttpRequest.getMethod() == KCHttpRequest.Method.POST;
-    }
-
-    public int getMethod()
-    {
-        return mMethod;
-    }
 }

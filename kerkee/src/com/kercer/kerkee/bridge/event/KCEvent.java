@@ -19,11 +19,6 @@ public class KCEvent
 	 *
 	 ******************************************************/
 
-	/**
-	 * get all events
-	 *
-	 * @return
-	 */
 	public static Map<String, Integer> events()
 	{
 		return mEvents;

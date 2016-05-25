@@ -114,7 +114,7 @@ public class KCXMLHttpRequestManager
             if (xhr != null)
             {
                 // more than 1 property(the 'id' property)
-                if (xhr.getMethod() == KCXMLHttpRequest.KCXHRMethod.POST && args.has("data"))
+                if (args.has("data"))
                 {
                     xhr.send(webView, args.getString("data"));
                 }
