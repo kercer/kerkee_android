@@ -47,8 +47,8 @@ public class KCMainActivity extends Activity
         //you can registObject here;
 //        KCJSBridge.registObject(new KCTest());
 
-        browser.loadTestPage();
-//        browser.loadUrl("http://www.baidu.com");
+//        browser.loadTestPage();
+        browser.loadUrl("http://www.baidu.com");
 
     }
 

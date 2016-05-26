@@ -20,12 +20,18 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * @author zihong
  */
 public class KCWebImageDownloader {
+    private static ExecutorService executorService = Executors.newFixedThreadPool(4);
     //the key is url string
     private final ConcurrentHashMap<String, String> mDownloadingImageMap = new ConcurrentHashMap<String, String>();
     Context mContext;
@@ -59,43 +65,56 @@ public class KCWebImageDownloader {
     }
 
     public KCWebImage downloadImageFile(final String aUrl) {
-        final KCWebImage webImage = new KCWebImage();
-        InputStream inputStream;
-        try {
-            //load from cache
-            KCURI localUri = KCURI.parse(aUrl);
-            String cacheUri = getCacheUri(localUri);
-            KCURI kcuri = KCURI.parse(cacheUri);
-            boolean hasCache = mWebImageCache.containsCache(localUri);
-            if (KCScheme.ofUri(aUrl).equals(KCScheme.FILE)) {
-                Log.i("KCWebImageDownloader", "read file:" + aUrl);
-                inputStream = mLoader.getStream(aUrl, null);
-                webImage.setInputStream(inputStream);
-            } else if (hasCache) {
-                Log.i("KCWebImageDownloader", "read cache:" + cacheUri);
-                if (cacheUri != null) {
-                    inputStream = mLoader.getStream("file://" + cacheUri, null);
-                    webImage.setInputStream(inputStream);
+        Future<KCWebImage> webImageFuture = executorService.submit(new Callable<KCWebImage>() {
+            @Override
+            public KCWebImage call() throws Exception {
+                final KCWebImage webImage = new KCWebImage();
+                InputStream inputStream;
+                try {
+                    //load from cache
+                    KCURI localUri = KCURI.parse(aUrl);
+                    final String cacheUri = getCacheUri(localUri);
+                    KCURI kcuri = KCURI.parse(cacheUri);
+                    boolean hasCache = mWebImageCache.containsCache(localUri);
+                    if (KCScheme.ofUri(aUrl).equals(KCScheme.FILE)) {
+                        Log.i("KCWebImageDownloader", "read file:" + aUrl);
+                        inputStream = mLoader.getStream(aUrl, null);
+                        webImage.setInputStream(inputStream);
+                    } else if (hasCache) {
+                        Log.i("KCWebImageDownloader", "read cache:" + cacheUri);
+                        if (cacheUri != null) {
+                            inputStream = mLoader.getStream("file://" + cacheUri, null);
+                            webImage.setInputStream(inputStream);
+                        }
+                    } else {
+                        //download image from net
+                        if (!mDownloadingImageMap.containsKey(aUrl)) {
+                            Log.i("KCWebImageDownloader", "read net:" + aUrl);
+                            mDownloadingImageMap.put(aUrl, "");
+                            inputStream = mLoader.getStream(aUrl, null);
+                            mDownloadingImageMap.remove(aUrl);
+                            writeBitmapToFile(cacheUri, inputStream);
+                            inputStream.close();
+                            //read from file
+                            webImage.setInputStream(new FileInputStream(new File(cacheUri)));
+                            mWebImageCache.add(localUri);
+                        }
+                    }
+                } catch (Exception e) {
+                    KCLog.e(e);
                 }
-            } else {
-                //download image from net
-                if (!mDownloadingImageMap.containsKey(aUrl)) {
-                    Log.i("KCWebImageDownloader", "read net:" + aUrl);
-                    mDownloadingImageMap.put(aUrl, "");
-                    inputStream = mLoader.getStream(aUrl, null);
-                    mDownloadingImageMap.remove(aUrl);
-                    writeBitmapToFile(cacheUri, inputStream);
-                    inputStream.close();
-                    //read from file
-                    webImage.setInputStream(new FileInputStream(new File(cacheUri)));
-                    mWebImageCache.add(kcuri);
-                }
+                return webImage;
             }
-        } catch (Exception e) {
+        });
+        KCWebImage kcWebImage = null;
+        try {
+            kcWebImage = webImageFuture.get();
+        } catch (InterruptedException e) {
+            KCLog.e(e);
+        } catch (ExecutionException e) {
             KCLog.e(e);
         }
-
-        return webImage;
+        return kcWebImage;
     }
 
     private void writeBitmapToFile(String targetPath, InputStream inputStream) throws IOException {
@@ -122,6 +141,7 @@ public class KCWebImageDownloader {
         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
         OutputStream fileOut = new BufferedOutputStream(fileOutputStream);
         bitmap.compress(format, 100, fileOut);
+        bitmap.recycle();
         fileOut.flush();
         fileOut.close();
         fileOutputStream.close();
