@@ -29,7 +29,8 @@ import java.net.URLConnection;
  * @author zihong
  */
 @SuppressLint("DefaultLocale")
-public class KCWebViewClient extends WebViewClient {
+public class KCWebViewClient extends WebViewClient
+{
     private static KCWebViewClient mInstance;
 
     private KCWebImageDownloader mImageDownloader;
@@ -37,24 +38,27 @@ public class KCWebViewClient extends WebViewClient {
     private static KCDefaultImageStream mDefaultImageStream;
 
 
-    protected KCWebViewClient() {
+    protected KCWebViewClient()
+    {
         super();
     }
 
-    public static KCWebViewClient getInstance() {
-        if (mInstance == null)
-            mInstance = new KCWebViewClient();
+    public static KCWebViewClient getInstance()
+    {
+        if (mInstance == null) mInstance = new KCWebViewClient();
         return mInstance;
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView aWebView, String aUrl) {
+    public boolean shouldOverrideUrlLoading(WebView aWebView, String aUrl)
+    {
         ((KCWebView) aWebView).loadUrlExt(aUrl);
         return true;
     }
 
     @Override
-    public void onPageStarted(WebView aWebView, String aUrl, Bitmap aFavicon) {
+    public void onPageStarted(WebView aWebView, String aUrl, Bitmap aFavicon)
+    {
         super.onPageStarted(aWebView, aUrl, aFavicon);
         KCWebView webView = (KCWebView) aWebView;
         webView.documentReady(false);
@@ -63,52 +67,63 @@ public class KCWebViewClient extends WebViewClient {
     }
 
     @Override
-    public void onPageFinished(WebView aWebView, String aUrl) {
+    public void onPageFinished(WebView aWebView, String aUrl)
+    {
         KCWebView webView = (KCWebView) aWebView;
         KCApiBridge.initJSBridgeEnvironment(webView, KCScheme.ofUri(aUrl));
         super.onPageFinished(aWebView, aUrl);
     }
 
     @Override
-    public void onLoadResource(final WebView aWebView, final String aUrl) {
+    public void onLoadResource(final WebView aWebView, final String aUrl)
+    {
         super.onLoadResource(aWebView, aUrl);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public WebResourceResponse shouldInterceptRequest(WebView aWebView, WebResourceRequest request) {
+    public WebResourceResponse shouldInterceptRequest(WebView aWebView, WebResourceRequest request)
+    {
 
         String strMimeType = getFileMimeType(request.getUrl().toString());
-        if (strMimeType == null)
-            return null;
-        String lowerCaseUrl = strMimeType.toLowerCase();
-        if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg")) {
-            return handleImageRequest(aWebView,request,strMimeType);
+        if (strMimeType != null)
+        {
+            String lowerCaseUrl = strMimeType.toLowerCase();
+            if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg"))
+            {
+                return handleImageRequest(aWebView, request, strMimeType);
+            }
         }
+
         return super.shouldInterceptRequest(aWebView, request);
     }
 
     @Override
-    public WebResourceResponse shouldInterceptRequest(final WebView aWebView, final String aUrl) {
+    public WebResourceResponse shouldInterceptRequest(final WebView aWebView, final String aUrl)
+    {
         String strMimeType = getFileMimeType(aUrl);
-        if (strMimeType == null)
-            return null;
-        String lowerCaseUrl = strMimeType.toLowerCase();
-        if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg")) {
-            return handleImageRequest(aWebView, aUrl, strMimeType);
+        if (strMimeType != null)
+        {
+            String lowerCaseUrl = strMimeType.toLowerCase();
+            if (lowerCaseUrl.contains("png") || lowerCaseUrl.contains("jpg") || lowerCaseUrl.contains("jpeg"))
+            {
+                return handleImageRequest(aWebView, aUrl, strMimeType);
+            }
         }
         return super.shouldInterceptRequest(aWebView, aUrl);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private WebResourceResponse handleImageRequest(final WebView aWebView, final WebResourceRequest request, String strMimeType) {
+    private WebResourceResponse handleImageRequest(final WebView aWebView, final WebResourceRequest request, String strMimeType)
+    {
         KCWebView webView = (KCWebView) aWebView;
         if (mImageDownloader == null)
             mImageDownloader = new KCWebImageDownloader(webView.getContext(), webView.getWebPath());
 
         KCWebImage webImage = mImageDownloader.downloadImageFile(request.getUrl().toString());
         InputStream stream = webImage.getInputStream();
-        if (stream == null) {
+        if (stream == null)
+        {
             Log.e("image", "current stream is null,download image from net");
             return null;
         }
@@ -116,28 +131,37 @@ public class KCWebViewClient extends WebViewClient {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private WebResourceResponse handleImageRequest(final WebView aWebView, final String aUrl, String strMimeType) {
+    private WebResourceResponse handleImageRequest(final WebView aWebView, final String aUrl, String strMimeType)
+    {
         KCWebView webView = (KCWebView) aWebView;
         if (mImageDownloader == null)
             mImageDownloader = new KCWebImageDownloader(aWebView.getContext(), webView.getWebPath());
         KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl);
         InputStream stream = webImage.getInputStream();
-        if (stream == null) {
+        if (stream == null)
+        {
             Log.e("image", "current stream is null,download image from net");
             return null;
         }
         return new WebResourceResponse(strMimeType, "utf-8", stream);
     }
 
-    public String getMimeType(String aUrl) {
+    public String getMimeType(String aUrl)
+    {
         String strMimeType = getFileMimeType(aUrl);
-        if (strMimeType == null) {
-            try {
+        if (strMimeType == null)
+        {
+            try
+            {
                 strMimeType = getURLMimeType(aUrl);
                 KCLog.i(strMimeType);
-            } catch (MalformedURLException e) {
+            }
+            catch (MalformedURLException e)
+            {
                 KCLog.e(e);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 KCLog.e(e);
             }
         }
@@ -153,7 +177,8 @@ public class KCWebViewClient extends WebViewClient {
      * @throws java.io.IOException
      * @throws MalformedURLException
      */
-    public String getURLMimeType(String aUrl) throws java.io.IOException, MalformedURLException {
+    public String getURLMimeType(String aUrl) throws java.io.IOException, MalformedURLException
+    {
         String type;
         URL u = new URL(aUrl);
         URLConnection uc;
@@ -162,15 +187,26 @@ public class KCWebViewClient extends WebViewClient {
         return type;
     }
 
-    public String getFileMimeType(String aUrl) {
-        FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String type = fileNameMap.getContentTypeFor(aUrl);
-        return type;
+    public String getFileMimeType(String aUrl)
+    {
+        try
+        {
+            FileNameMap fileNameMap = URLConnection.getFileNameMap();
+            String type = fileNameMap.getContentTypeFor(aUrl);
+            return type;
+        }
+        catch (Exception e)
+        {
+            KCLog.e(e);
+        }
+        return null;
     }
 
 
-    public KCDefaultImageStream getSavedStream(Context aContext) {
-        if (mDefaultImageStream == null) {
+    public KCDefaultImageStream getSavedStream(Context aContext)
+    {
+        if (mDefaultImageStream == null)
+        {
             mDefaultImageStream = new KCDefaultImageStream(aContext);
         }
         return mDefaultImageStream;
