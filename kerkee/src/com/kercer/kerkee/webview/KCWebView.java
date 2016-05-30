@@ -168,7 +168,8 @@ public class KCWebView extends WebView
         }
         catch (Exception e)
         {
-            KCLog.e(e);
+            if (KCLog.DEBUG)
+                KCLog.e(e);
         }
 
     }
