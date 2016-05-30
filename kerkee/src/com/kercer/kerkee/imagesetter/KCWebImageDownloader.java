@@ -30,7 +30,8 @@ import java.util.concurrent.Future;
 /**
  * @author zihong
  */
-public class KCWebImageDownloader {
+public class KCWebImageDownloader
+{
     private static ExecutorService executorService = Executors.newFixedThreadPool(4);
     //the key is url string
     private final ConcurrentHashMap<String, String> mDownloadingImageMap = new ConcurrentHashMap<String, String>();
@@ -38,25 +39,30 @@ public class KCWebImageDownloader {
     KCDefaultDownloader mLoader;
     KCWebImageCache mWebImageCache;
 
-    public KCWebImageDownloader(final Context aContext, KCWebPath aWebPath) {
+    public KCWebImageDownloader(final Context aContext, KCWebPath aWebPath)
+    {
         mContext = aContext;
         mLoader = new KCDefaultDownloader(aContext);
         mWebImageCache = new KCWebImageCache(aContext);
         KCScheme scheme = aWebPath.getBridgeScheme();
         //scheme possible null
-        if (scheme != null && scheme.equals(KCScheme.HTTP)) {
+        if (scheme != null && scheme.equals(KCScheme.HTTP))
+        {
             mWebImageCache.setCacheDir(new File(aWebPath.getWebImageCachePath()));
         }
-        FilenameFilter filenameFilter = new FilenameFilter() {
+        FilenameFilter filenameFilter = new FilenameFilter()
+        {
             @Override
-            public boolean accept(File dir, String name) {
+            public boolean accept(File dir, String name)
+            {
                 return true;
             }
         };
         mWebImageCache.loadCache(filenameFilter);
     }
 
-    private String getCacheUri(KCURI aUri) {
+    private String getCacheUri(KCURI aUri)
+    {
         final String pathURI = aUri.getPath();
         String cacheUri;
         final String filePath = mWebImageCache.getCacheDir().getAbsolutePath() + pathURI;
@@ -64,31 +70,42 @@ public class KCWebImageDownloader {
         return cacheUri;
     }
 
-    public KCWebImage downloadImageFile(final String aUrl) {
-        Future<KCWebImage> webImageFuture = executorService.submit(new Callable<KCWebImage>() {
+    public KCWebImage downloadImageFile(final String aUrl)
+    {
+        Future<KCWebImage> webImageFuture = executorService.submit(new Callable<KCWebImage>()
+        {
             @Override
-            public KCWebImage call() throws Exception {
+            public KCWebImage call() throws Exception
+            {
                 final KCWebImage webImage = new KCWebImage();
                 InputStream inputStream;
-                try {
+                try
+                {
                     //load from cache
                     KCURI localUri = KCURI.parse(aUrl);
                     final String cacheUri = getCacheUri(localUri);
                     KCURI kcuri = KCURI.parse(cacheUri);
                     boolean hasCache = mWebImageCache.containsCache(localUri);
-                    if (KCScheme.ofUri(aUrl).equals(KCScheme.FILE)) {
+                    if (KCScheme.ofUri(aUrl).equals(KCScheme.FILE))
+                    {
                         Log.i("KCWebImageDownloader", "read file:" + aUrl);
                         inputStream = mLoader.getStream(aUrl, null);
                         webImage.setInputStream(inputStream);
-                    } else if (hasCache) {
+                    }
+                    else if (hasCache)
+                    {
                         Log.i("KCWebImageDownloader", "read cache:" + cacheUri);
-                        if (cacheUri != null) {
+                        if (cacheUri != null)
+                        {
                             inputStream = mLoader.getStream("file://" + cacheUri, null);
                             webImage.setInputStream(inputStream);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         //download image from net
-                        if (!mDownloadingImageMap.containsKey(aUrl)) {
+                        if (!mDownloadingImageMap.containsKey(aUrl))
+                        {
                             Log.i("KCWebImageDownloader", "read net:" + aUrl);
                             mDownloadingImageMap.put(aUrl, "");
                             inputStream = mLoader.getStream(aUrl, null);
@@ -100,50 +117,81 @@ public class KCWebImageDownloader {
                             mWebImageCache.add(localUri);
                         }
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     KCLog.e(e);
                 }
                 return webImage;
             }
         });
         KCWebImage kcWebImage = null;
-        try {
+        try
+        {
             kcWebImage = webImageFuture.get();
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e)
+        {
             KCLog.e(e);
-        } catch (ExecutionException e) {
+        }
+        catch (ExecutionException e)
+        {
             KCLog.e(e);
         }
         return kcWebImage;
     }
 
-    private void writeBitmapToFile(String targetPath, InputStream inputStream) throws IOException {
+    private void writeBitmapToFile(String targetPath, InputStream inputStream) throws IOException
+    {
         File file = new File(targetPath);
-        if (!file.getParentFile().exists()) {
+        if (!file.getParentFile().exists())
+        {
             file.getParentFile().mkdirs();
         }
         String name = file.getName().toLowerCase();
         Bitmap.CompressFormat format;
-        if (name.contains("jpg") || name.contains("jpeg")) {
+        if (name.contains("jpg") || name.contains("jpeg"))
+        {
             format = Bitmap.CompressFormat.JPEG;
-        } else if (name.contains("png")) {
+        }
+        else if (name.contains("png"))
+        {
             format = Bitmap.CompressFormat.PNG;
-        } else if (name.contains("webp")) {
-            if (Build.VERSION.SDK_INT >= 14)
-                format = Bitmap.CompressFormat.WEBP;
-            else
-                format = Bitmap.CompressFormat.JPEG;
-        } else {
+        }
+        else if (name.contains("webp"))
+        {
+            if (Build.VERSION.SDK_INT >= 14) format = Bitmap.CompressFormat.WEBP;
+            else format = Bitmap.CompressFormat.JPEG;
+        }
+        else
+        {
             format = Bitmap.CompressFormat.JPEG;
         }
         //write to file
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-        OutputStream fileOut = new BufferedOutputStream(fileOutputStream);
-        bitmap.compress(format, 100, fileOut);
-        bitmap.recycle();
-        fileOut.flush();
-        fileOut.close();
-        fileOutputStream.close();
+        try
+        {
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStream fileOut = new BufferedOutputStream(fileOutputStream);
+            bitmap.compress(format, 100, fileOut);
+            bitmap.recycle();
+            fileOut.flush();
+            fileOut.close();
+            fileOutputStream.close();
+        }
+        catch (Exception e)
+        {
+            if (KCLog.DEBUG)
+            {
+                KCLog.e(e);
+            }
+        }
+        catch (OutOfMemoryError error)
+        {
+            if (KCLog.DEBUG)
+            {
+                KCLog.e(error);
+            }
+        }
     }
 }
