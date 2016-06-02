@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.FileObserver;
 
 import com.kercer.kercore.debug.KCLog;
-import com.kercer.kerkee.util.KCUtilFile;
+import com.kercer.kercore.io.KCUtilFile;
 import com.kercer.kernet.uri.KCURI;
 
 import java.io.File;
