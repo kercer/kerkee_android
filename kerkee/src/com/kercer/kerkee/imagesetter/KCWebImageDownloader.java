@@ -82,19 +82,18 @@ public class KCWebImageDownloader {
             @Override
             public void run() {
                 try {
-                    if (outputStream == null) return;
                     //load from cache
                     KCURI localUri = KCURI.parse(aUrl);
                     final String cacheUri = getCacheUri(localUri);
                     boolean hasCache = mWebImageCache.containsCache(localUri);
+                    InputStream inputStream = null;
                     if (KCScheme.ofUri(aUrl).equals(KCScheme.FILE)) {
                         Log.i("KCWebImageDownloader", "read file:" + aUrl);
-                        writeToOutStream(outputStream, mLoader.getStream(aUrl, null));
-
+                        inputStream = mLoader.getStream(aUrl, null);
                     } else if (hasCache) {
                         Log.i("KCWebImageDownloader", "read cache:" + cacheUri);
                         if (cacheUri != null) {
-                            writeToOutStream(outputStream, mLoader.getStream("file://" + cacheUri, null));
+                            inputStream = mLoader.getStream("file://" + cacheUri, null);
                         }
                     } else {
                         //download image from net
@@ -104,10 +103,17 @@ public class KCWebImageDownloader {
                             writeBitmapToFile(cacheUri, mLoader.getStream(aUrl, null));
                             mDownloadingImageMap.remove(aUrl);
                             //read from file
-                            writeToOutStream(outputStream, new FileInputStream(new File(cacheUri)));
+                            File file = new File(cacheUri);
+                            if (file.exists())
+                                inputStream = new FileInputStream(new File(cacheUri));
                             mWebImageCache.add(localUri);
                         }
                     }
+                    if (inputStream == null || inputStream.available() <= 0) {
+                        Log.i("KCWebImageDownloader", "error happen, read default image for:" + aUrl);
+                        inputStream = new KCDefaultImageStream(mContext).getInputStream();
+                    }
+                    writeToOutStream(outputStream, inputStream);
                 } catch (Exception e) {
                     KCLog.e(e);
                 }
@@ -122,15 +128,12 @@ public class KCWebImageDownloader {
                 while (inputStream.read(buffer) != -1) {
                     outputStream.write(buffer);
                 }
-                outputStream.close();
+                outputStream.flush();
             }
+            if (outputStream != null)
+                outputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            try {
-                outputStream.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            KCLog.e(e);
         }
     }
 
