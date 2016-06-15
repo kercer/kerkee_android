@@ -36,6 +36,10 @@ public class KCWebImageDownloader {
     Context mContext;
     KCDefaultDownloader mLoader;
     KCWebImageCache mWebImageCache;
+    /**
+     * create dirs lock object
+     */
+    private final Object object = new Object();
 
     public KCWebImageDownloader(final Context aContext, KCWebPath aWebPath) {
         mContext = aContext;
@@ -136,11 +140,12 @@ public class KCWebImageDownloader {
             KCLog.e(e);
         }
     }
-
     private void writeBitmapToFile(String targetPath, InputStream inputStream) throws IOException {
         File file = new File(targetPath);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
+        synchronized (object) {
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
         }
         String name = file.getName().toLowerCase();
         Bitmap.CompressFormat format;
