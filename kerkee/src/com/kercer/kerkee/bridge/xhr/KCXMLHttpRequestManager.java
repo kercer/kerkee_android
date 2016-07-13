@@ -66,7 +66,7 @@ public class KCXMLHttpRequestManager
 
             KCURI uriUrl = KCURI.parse(url);
             boolean isAbsolute = uriUrl.isAbsolute();
-            if (!isAbsolute)
+            if (!isAbsolute) //isRelative
             {
                 List<String> list = uriUrl.getPathSegments();
                 int nSegmentCount = list.size();
