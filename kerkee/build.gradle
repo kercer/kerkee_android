@@ -169,5 +169,5 @@ dependencies {
 }
 
 
-apply from: 'release.gradle'
+//apply from: 'release.gradle'
 //apply from: 'release_maven.gradle'
