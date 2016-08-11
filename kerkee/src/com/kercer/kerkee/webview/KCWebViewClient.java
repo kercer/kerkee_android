@@ -24,6 +24,7 @@ import java.net.FileNameMap;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 
 /**
  * @author zihong
@@ -37,6 +38,11 @@ public class KCWebViewClient extends WebViewClient
 
     private static KCDefaultImageStream mDefaultImageStream;
 
+    /**
+     * 图片完成通知
+     */
+    private KCWebViewImageFinish mWebViewImageFinish;
+    private KCInnerImageFinish mInnerImageFinsh;
 
     protected KCWebViewClient()
     {
@@ -47,6 +53,10 @@ public class KCWebViewClient extends WebViewClient
     {
         if (mInstance == null) mInstance = new KCWebViewClient();
         return mInstance;
+    }
+
+    void setWebViewImageFinish(KCWebViewImageFinish mWebViewImageFinish) {
+        this.mWebViewImageFinish = mWebViewImageFinish;
     }
 
     @Override
@@ -117,10 +127,12 @@ public class KCWebViewClient extends WebViewClient
     private WebResourceResponse handleImageRequest(final WebView aWebView, final WebResourceRequest request, String strMimeType)
     {
         KCWebView webView = (KCWebView) aWebView;
-        if (mImageDownloader == null)
+        if (mImageDownloader == null) {
             mImageDownloader = new KCWebImageDownloader(webView.getContext(), webView.getWebPath());
+            mInnerImageFinsh = new KCInnerImageFinish();
+        }
 
-        KCWebImage webImage = mImageDownloader.downloadImageFile(request.getUrl().toString());
+        KCWebImage webImage = mImageDownloader.downloadImageFile(request.getUrl().toString(),mInnerImageFinsh.add(request.getUrl().toString()));
         InputStream stream = webImage.getInputStream();
         if (stream == null)
         {
@@ -134,9 +146,11 @@ public class KCWebViewClient extends WebViewClient
     private WebResourceResponse handleImageRequest(final WebView aWebView, final String aUrl, String strMimeType)
     {
         KCWebView webView = (KCWebView) aWebView;
-        if (mImageDownloader == null)
+        if (mImageDownloader == null) {
             mImageDownloader = new KCWebImageDownloader(aWebView.getContext(), webView.getWebPath());
-        KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl);
+            mInnerImageFinsh = new KCInnerImageFinish();
+        }
+        KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl,mInnerImageFinsh.add(aUrl));
         InputStream stream = webImage.getInputStream();
         if (stream == null)
         {
@@ -202,7 +216,6 @@ public class KCWebViewClient extends WebViewClient
         return null;
     }
 
-
     public KCDefaultImageStream getSavedStream(Context aContext)
     {
         if (mDefaultImageStream == null)
@@ -212,4 +225,32 @@ public class KCWebViewClient extends WebViewClient
         return mDefaultImageStream;
     }
 
+    private class KCInnerImageFinish implements KCWebViewImageFinish
+    {
+        public HashMap<String,String> urls = new HashMap<>();
+
+        public KCInnerImageFinish add(String url){
+            if (!urls.containsKey(url))
+                urls.put(url,url);
+            return this;
+        }
+
+        @Override
+        public void onAllImageFinish()
+        {
+            if (mWebViewImageFinish!=null)
+                mWebViewImageFinish.onAllImageFinish();
+        }
+
+        @Override
+        public void onImageFinish(String url)
+        {
+            if (urls.containsKey(url))
+                urls.remove(url);
+            if (mWebViewImageFinish!=null)
+                mWebViewImageFinish.onImageFinish(url);
+            if (urls.size()<=0)
+                onAllImageFinish();
+        }
+    }
 }

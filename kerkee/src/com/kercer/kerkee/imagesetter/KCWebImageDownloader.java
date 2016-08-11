@@ -73,7 +73,7 @@ public class KCWebImageDownloader
         return cacheUri;
     }
 
-    public KCWebImage downloadImageFile(final String aUrl)
+    public KCWebImage downloadImageFile(final String aUrl,final KCOnImageFinish aOnImageFinish)
     {
         final PipedOutputStream out = new PipedOutputStream();
         final PipedInputStream inputStream;
@@ -82,7 +82,7 @@ public class KCWebImageDownloader
         {
             inputStream = new PipedInputStream(out);
             webImage.setInputStream(inputStream);
-            setImageToPipStream(out, aUrl);
+            setImageToPipStream(out, aUrl,aOnImageFinish);
         }
         catch (IOException e)
         {
@@ -91,7 +91,7 @@ public class KCWebImageDownloader
         return webImage;
     }
 
-    private void setImageToPipStream(final OutputStream outputStream, final String aUrl)
+    private void setImageToPipStream(final OutputStream outputStream, final String aUrl,final KCOnImageFinish aOnImageFinish)
     {
         executorService.execute(new Runnable()
         {
@@ -140,6 +140,8 @@ public class KCWebImageDownloader
                         inputStream = new KCDefaultImageStream(mContext).getInputStream();
                     }
                     writeToOutStream(outputStream, inputStream);
+                    if (aOnImageFinish!=null)
+                        aOnImageFinish.onImageFinish(aUrl);
                 }
                 catch (Exception e)
                 {
