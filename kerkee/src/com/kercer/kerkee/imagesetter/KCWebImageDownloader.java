@@ -73,7 +73,7 @@ public class KCWebImageDownloader
         return cacheUri;
     }
 
-    public KCWebImage downloadImageFile(final String aUrl,final KCOnImageFinish aOnImageFinish)
+    public KCWebImage downloadImageFile(final String aUrl,final KCWebImageListener aOnImageFinish)
     {
         final PipedOutputStream out = new PipedOutputStream();
         final PipedInputStream inputStream;
@@ -91,7 +91,7 @@ public class KCWebImageDownloader
         return webImage;
     }
 
-    private void setImageToPipStream(final OutputStream outputStream, final String aUrl,final KCOnImageFinish aOnImageFinish)
+    private void setImageToPipStream(final OutputStream outputStream, final String aUrl,final KCWebImageListener aOnImageFinish)
     {
         executorService.execute(new Runnable()
         {

@@ -17,6 +17,8 @@ import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
 import com.kercer.kerkee.imagesetter.KCDefaultImageStream;
 import com.kercer.kerkee.imagesetter.KCWebImage;
 import com.kercer.kerkee.imagesetter.KCWebImageDownloader;
+import com.kercer.kerkee.imagesetter.KCWebImageHandler;
+import com.kercer.kerkee.imagesetter.KCWebImageListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,6 @@ import java.net.FileNameMap;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
 
 /**
  * @author zihong
@@ -41,8 +42,8 @@ public class KCWebViewClient extends WebViewClient
     /**
      * 图片完成通知
      */
-    private KCWebViewImageFinish mWebViewImageFinish;
-    private KCInnerImageFinish mInnerImageFinsh;
+    private KCWebImageHandler mWebImageHandler;
+    private KCWebImageListener mWebImageListener;
 
     protected KCWebViewClient()
     {
@@ -55,8 +56,8 @@ public class KCWebViewClient extends WebViewClient
         return mInstance;
     }
 
-    void setWebViewImageFinish(KCWebViewImageFinish mWebViewImageFinish) {
-        this.mWebViewImageFinish = mWebViewImageFinish;
+    void setWebImageListener(KCWebImageListener mWebImageListener) {
+        this.mWebImageListener = mWebImageListener;
     }
 
     @Override
@@ -127,12 +128,12 @@ public class KCWebViewClient extends WebViewClient
     private WebResourceResponse handleImageRequest(final WebView aWebView, final WebResourceRequest request, String strMimeType)
     {
         KCWebView webView = (KCWebView) aWebView;
-        if (mImageDownloader == null) {
+        if (mImageDownloader == null)
             mImageDownloader = new KCWebImageDownloader(webView.getContext(), webView.getWebPath());
-            mInnerImageFinsh = new KCInnerImageFinish();
-        }
+        if (mWebImageHandler==null)
+            mWebImageHandler = new KCWebImageHandler(mWebImageListener);
 
-        KCWebImage webImage = mImageDownloader.downloadImageFile(request.getUrl().toString(),mInnerImageFinsh.add(request.getUrl().toString()));
+        KCWebImage webImage = mImageDownloader.downloadImageFile(request.getUrl().toString(), mWebImageHandler.add(request.getUrl().toString()));
         InputStream stream = webImage.getInputStream();
         if (stream == null)
         {
@@ -146,11 +147,12 @@ public class KCWebViewClient extends WebViewClient
     private WebResourceResponse handleImageRequest(final WebView aWebView, final String aUrl, String strMimeType)
     {
         KCWebView webView = (KCWebView) aWebView;
-        if (mImageDownloader == null) {
+        if (mImageDownloader == null)
             mImageDownloader = new KCWebImageDownloader(aWebView.getContext(), webView.getWebPath());
-            mInnerImageFinsh = new KCInnerImageFinish();
-        }
-        KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl,mInnerImageFinsh.add(aUrl));
+        if (mWebImageHandler==null)
+            mWebImageHandler = new KCWebImageHandler(mWebImageListener);
+
+        KCWebImage webImage = mImageDownloader.downloadImageFile(aUrl, mWebImageHandler.add(aUrl));
         InputStream stream = webImage.getInputStream();
         if (stream == null)
         {
@@ -223,34 +225,5 @@ public class KCWebViewClient extends WebViewClient
             mDefaultImageStream = new KCDefaultImageStream(aContext);
         }
         return mDefaultImageStream;
-    }
-
-    private class KCInnerImageFinish implements KCWebViewImageFinish
-    {
-        public HashMap<String,String> urls = new HashMap<>();
-
-        public KCInnerImageFinish add(String url){
-            if (!urls.containsKey(url))
-                urls.put(url,url);
-            return this;
-        }
-
-        @Override
-        public void onAllImageFinish()
-        {
-            if (mWebViewImageFinish!=null)
-                mWebViewImageFinish.onAllImageFinish();
-        }
-
-        @Override
-        public void onImageFinish(String url)
-        {
-            if (urls.containsKey(url))
-                urls.remove(url);
-            if (mWebViewImageFinish!=null)
-                mWebViewImageFinish.onImageFinish(url);
-            if (urls.size()<=0)
-                onAllImageFinish();
-        }
     }
 }

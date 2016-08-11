@@ -15,8 +15,7 @@ import android.webkit.WebViewClient;
 import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
-import com.kercer.kerkee.imagesetter.KCOnAllImageFinish;
-import com.kercer.kerkee.imagesetter.KCOnImageFinish;
+import com.kercer.kerkee.imagesetter.KCWebImageListener;
 
 import java.util.Map;
 
@@ -34,23 +33,14 @@ public class KCWebView extends WebView
     private KCUrlMapper mUrlMapper = null;
     protected KCWebPath mWebPath = null;
     private Object mAttach = null;
+    private WebViewClient mWebViewClient;
+    private KCWebImageListener mWebImageListener;
 
-    /**
-     * 某图片加载完成
-     */
-    private KCOnImageFinish mOnImageFinish;
-    /**
-     * 全部图片加载完成
-     */
-    private KCOnAllImageFinish mOnAllImageFinish;
-    private KCWebViewImageFinish mImageFinish;
-
-    public void setOnImageFinish(KCOnImageFinish mOnImageFinish) {
-        this.mOnImageFinish = mOnImageFinish;
-    }
-
-    public void setOnAllImageFinish(KCOnAllImageFinish mOnAllImageFinish) {
-        this.mOnAllImageFinish = mOnAllImageFinish;
+    public void setWebImageListener(KCWebImageListener mWebImageListener) {
+        this.mWebImageListener = mWebImageListener;
+        if (mWebViewClient instanceof KCWebViewClient){
+            ((KCWebViewClient)mWebViewClient).setWebImageListener(mWebImageListener);
+        }
     }
 
     public Object getmAttach()
@@ -135,26 +125,14 @@ public class KCWebView extends WebView
         setSoundEffectsEnabled(false);
         setLongClickable(true);
         setOnLongClickListener(M_WEB_VIEW_LONG_CLICK_LISTENER);
-        mImageFinish = new KCWebViewImageFinish() {
-            @Override
-            public void onAllImageFinish() {
-                if (mOnAllImageFinish!=null)
-                    mOnAllImageFinish.onAllImageFinish();
-            }
-
-            @Override
-            public void onImageFinish(String url) {
-                if (mOnImageFinish!=null)
-                    mOnImageFinish.onImageFinish(url);
-            }
-        };
     }
 
     @Override
     public void setWebViewClient(WebViewClient client) {
         super.setWebViewClient(client);
+        mWebViewClient = client;
         if (client instanceof KCWebViewClient){
-            ((KCWebViewClient)client).setWebViewImageFinish(mImageFinish);
+            ((KCWebViewClient)client).setWebImageListener(mWebImageListener);
         }
     }
 
