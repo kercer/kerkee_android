@@ -362,6 +362,10 @@ public class KCWebView extends WebView
             WebSettings webSettings = aWebView.getSettings();
             setCustomizedUA(webSettings);
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            }
             webSettings.setJavaScriptEnabled(true);
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
