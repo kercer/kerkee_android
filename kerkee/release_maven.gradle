@@ -22,8 +22,8 @@ uploadArchives {
     repositories.mavenDeployer {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
         repository(url: repoUrl) {
-            user = properties.getProperty("maven.user")
-            pw = properties.getProperty("maven.password")
+            def user = properties.getProperty("maven.user")
+            def pw = properties.getProperty("maven.password")
             authentication(userName: user,
                     password: pw)
         }
