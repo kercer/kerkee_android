@@ -158,6 +158,7 @@ public class KCWebImageDownloader
             if (outputStream != null && inputStream != null && inputStream.available() > 0)
             {
                 byte[] buffer = new byte[4096];
+                
                 while (inputStream.read(buffer) != -1)
                 {
                     outputStream.write(buffer);
