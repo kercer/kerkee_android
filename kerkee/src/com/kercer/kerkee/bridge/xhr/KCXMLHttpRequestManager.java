@@ -235,4 +235,5 @@ public class KCXMLHttpRequestManager
         }
         return defaultValue;
     }
+
 }

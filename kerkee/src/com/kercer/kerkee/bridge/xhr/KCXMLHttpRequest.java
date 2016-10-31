@@ -8,6 +8,7 @@ import com.kercer.kernet.KerNet;
 import com.kercer.kernet.http.KCHttpRequest;
 import com.kercer.kernet.http.KCHttpResponse;
 import com.kercer.kernet.http.KCHttpResult;
+import com.kercer.kernet.http.KCHttpStackDefault;
 import com.kercer.kernet.http.KCRetryPolicyDefault;
 import com.kercer.kernet.http.base.KCHeader;
 import com.kercer.kernet.http.base.KCHeaderGroup;
@@ -27,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  *
@@ -58,6 +61,8 @@ public class KCXMLHttpRequest
     private boolean mAborted;
 
     private String mBody;
+
+    private static SSLSocketFactory mDefaultSSLSocketFactory = null;
 
     public KCXMLHttpRequest(int id, String urlHash)
     {
@@ -323,7 +328,12 @@ public class KCXMLHttpRequest
             return;
         }
 
-        KerNet.newRequestRunner(webView.getContext()).startAsyn(mHttpRequest);
+        KCHttpStackDefault httpStack = new KCHttpStackDefault();
+
+        if (mDefaultSSLSocketFactory != null)
+            httpStack.setSSLSocketFactory(mDefaultSSLSocketFactory);
+
+        KerNet.newRequestRunner(webView.getContext(), httpStack).startAsyn(mHttpRequest);
     }
 
     /**
@@ -468,4 +478,13 @@ public class KCXMLHttpRequest
         }
     }
 
+    public static void setDefaultSSLSocketFactory(SSLSocketFactory aSSLSocketFactory)
+    {
+        mDefaultSSLSocketFactory = aSSLSocketFactory;
+    }
+
+    public static SSLSocketFactory getDefaultSSLSocketFactory()
+    {
+        return mDefaultSSLSocketFactory;
+    }
 }
