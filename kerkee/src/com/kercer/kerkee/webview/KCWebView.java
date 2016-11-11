@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.kercer.kercore.debug.KCLog;
+import com.kercer.kercore.task.KCTaskExecutor;
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.bridge.KCJSCompileExecutor;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
@@ -183,7 +184,16 @@ public class KCWebView extends WebView
         {
             doDestroy();
         }
-        KCJSCompileExecutor.release(mJSCompileIdentities);
+        
+        KCTaskExecutor.executeTask(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                KCJSCompileExecutor.release(mJSCompileIdentities);
+            }
+        });
+
     }
 
 
