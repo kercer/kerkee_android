@@ -116,31 +116,4 @@ public class KCJSExecutor
         callJSOnMainThread(aWebview, sb.toString());
     }
 
-    //    public static void callbackJS(KCWebView aWebview, String aCallbackId, String aStr)
-    //    {
-    //        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append("ApiBridge.onCallback(");
-    //        if (aStr != null)
-    //            sb.append(aCallbackId).append(", '").append(aStr).append("')");
-    //        else
-    //            sb.append(aCallbackId).append(",null)");
-    //        callJSOnMainThread(aWebview, sb.toString());
-    //    }
-
-    //    public static void callbackJS(KCWebView aWebview, String aCallbackId, JSONObject aJSONObject)
-    //    {
-    //        String strData = (aJSONObject != null) ? aJSONObject.toString() : "null";
-    //        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append("ApiBridge.onCallback(");
-    //        sb.append(aCallbackId).append(',').append(strData).append(')');
-    //        callJSOnMainThread(aWebview, sb.toString());
-    //    }
-    //
-    //    public static void callbackJS(KCWebView aWebview, String aCallbackId, JSONArray aJSONArray)
-    //    {
-    //        String strData = (aJSONArray != null) ? aJSONArray.toString() : "null";
-    //        StringBuilder sb = KCUtil.getThreadSafeStringBuilder().append("ApiBridge.onCallback(");
-    //        sb.append(aCallbackId).append(',').append(strData).append(')');
-    //        callJSOnMainThread(aWebview, sb.toString());
-    //    }
-
-
 }
