@@ -2,20 +2,15 @@ package com.kercer.kerkee.browser;
 
 import android.view.ViewGroup;
 
-import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.KCApiBridge;
 import com.kercer.kerkee.bridge.KCClass;
 import com.kercer.kerkee.bridge.KCJSDefine;
 import com.kercer.kerkee.bridge.KCJSExecutor;
 import com.kercer.kerkee.bridge.KCJSObject;
-import com.kercer.kercore.io.KCAssetTool;
 import com.kercer.kerkee.webview.KCWebView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  *
@@ -24,25 +19,14 @@ import java.io.IOException;
  */
 public class KCJSBridge
 {
-    protected KCWebView mWebView;
-    private final String VERSION_NAME = "1.0.0";
 
-    public KCJSBridge(KCWebView aWebView)
+    public KCJSBridge()
     {
-        this.mWebView = aWebView;
-
-        if (!isExitAsset())
-            copyAssetHtmlDir();
-
 //        File wwwRoot = new File(getResRootPath() + "/");
 //        if(!KCHttpServer.isRunning())
 //        	KCHttpServer.startServer(KCHttpServer.getPort(), wwwRoot);
     }
 
-    public String getVersion()
-    {
-    	return VERSION_NAME;
-    }
 
 
     /********************************************************/
@@ -82,11 +66,9 @@ public class KCJSBridge
     }
 
 
-
-
     /********************************************************/
     /*
-     * js call
+     * js call, you call us KCJSExecutor
      */
     /********************************************************/
     public static void callJSOnMainThread(final KCWebView aWebview, final String aJS)
@@ -140,52 +122,20 @@ public class KCJSBridge
         KCApiBridge.setIsOpenJSLog(aWebview, aIsOpenJSLog);
     }
 
-    /********************************************************/
-    /*
-     *
-     */
-    /********************************************************/
 
-    private boolean isExitAsset()
+    public static void destroyWebview(KCWebView aWebview)
     {
-        String cfgPath = mWebView.getWebPath().getCfgPath();
-        File file = new File(cfgPath);
-        if (file.exists())
-            return true;
-        return false;
-    }
-
-    private void copyAssetHtmlDir()
-    {
-        KCAssetTool assetTool = new KCAssetTool(mWebView.getContext());
-        try
+        if(aWebview != null)
         {
-            assetTool.copyDir("html", mWebView.getWebPath().getResRootPath());
+            aWebview.loadUrl("about:blank");
+
+            ViewGroup vg = (ViewGroup) aWebview.getParent();
+            if (vg != null)
+                vg.removeView(aWebview);
+            aWebview.clearCache(true);
+            aWebview.destroy();
+            aWebview = null;
         }
-        catch (IOException e)
-        {
-            KCLog.e(e);
-        }
-    }
 
-
-    public KCWebView getWebView()
-    {
-        return mWebView;
-    }
-
-    public String getResRootPath()
-    {
-        return mWebView == null ? null : mWebView.getWebPath().getResRootPath();
-    }
-
-    public void destroy()
-    {
-        ViewGroup vg = (ViewGroup) mWebView.getParent();
-        if (vg != null)
-            vg.removeView(mWebView);
-        mWebView.clearCache(true);
-        mWebView.destroy();
-        mWebView = null;
     }
 }
