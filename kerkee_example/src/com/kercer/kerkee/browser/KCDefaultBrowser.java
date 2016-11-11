@@ -11,7 +11,6 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.kercer.kerkee.browser.page.KCPage;
 import com.kercer.kerkee.webview.KCWebChromeClient;
 import com.kercer.kerkee.webview.KCWebView;
 import com.kercer.kerkee.webview.KCWebViewClient;
