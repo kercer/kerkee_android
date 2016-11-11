@@ -14,9 +14,12 @@ import android.webkit.WebViewClient;
 
 import com.kercer.kercore.debug.KCLog;
 import com.kercer.kerkee.bridge.KCApiBridge;
+import com.kercer.kerkee.bridge.KCJSCompileExecutor;
 import com.kercer.kerkee.downloader.KCDownloader.KCScheme;
 import com.kercer.kerkee.imagesetter.KCWebImageListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +38,7 @@ public class KCWebView extends WebView
     private Object mAttach = null;
     private WebViewClient mWebViewClient;
     private KCWebImageListener mWebImageListener;
+    private List<Integer> mJSCompileIdentities = null;
 
     public void setWebImageListener(KCWebImageListener mWebImageListener) {
         this.mWebImageListener = mWebImageListener;
@@ -136,6 +140,18 @@ public class KCWebView extends WebView
         }
     }
 
+    public void addJSCompileIdentity(Integer aIdentity)
+    {
+        if (mJSCompileIdentities == null)
+            mJSCompileIdentities = new ArrayList<>();
+        mJSCompileIdentities.add(aIdentity);
+    }
+
+    public void removeJSCompileIdentity(Integer aIdentity)
+    {
+        mJSCompileIdentities.remove(aIdentity);
+    }
+
     public void documentReady(boolean aIsReady)
     {
         mIsDocumentReady = aIsReady;
@@ -167,6 +183,7 @@ public class KCWebView extends WebView
         {
             doDestroy();
         }
+        KCJSCompileExecutor.release(mJSCompileIdentities);
     }
 
 

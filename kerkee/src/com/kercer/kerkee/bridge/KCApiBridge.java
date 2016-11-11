@@ -180,7 +180,7 @@ public class KCApiBridge
 		String identity = aArgList.getString(KCJSDefine.kJS_identity);
 		String error = aArgList.getString(KCJSDefine.kJS_error);
 
-		KCJSCompileExecutor.didCompile(Integer.valueOf(identity), returnValue, error);
+		KCJSCompileExecutor.didCompile(aWebView, Integer.valueOf(identity), returnValue, error);
 	}
 
 	/**

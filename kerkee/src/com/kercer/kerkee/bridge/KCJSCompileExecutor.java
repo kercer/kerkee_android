@@ -7,6 +7,7 @@ import com.kercer.kerkee.bridge.type.KCCallback;
 import com.kercer.kerkee.webview.KCWebView;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -30,6 +31,7 @@ public class KCJSCompileExecutor
 	{
 		mIdentity ++;
 		mCallBackMap.put(mIdentity, aReturnCallback);
+		aWebview.addJSCompileIdentity(mIdentity);
 
 		String escapedJavascript = aJS.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"", "\\\\\"");
 		String finalCode =
@@ -45,9 +47,17 @@ public class KCJSCompileExecutor
 		compileJS(aWebview, aReturnCallback, KCMethod.toJS(aJSFunctionName, aJSArgs));
 	}
 
-
-	protected static void didCompile(Integer aIdentity, Object aReturnValue, String aError)
+	public static void release(List<Integer> aIdentities)
 	{
+		for (Integer identity: aIdentities)
+		{
+			mCallBackMap.remove(identity);
+		}
+	}
+
+	protected static void didCompile(KCWebView aWebView, Integer aIdentity, Object aReturnValue, String aError)
+	{
+		aWebView.removeJSCompileIdentity(aIdentity);
 		KCCallback callback = mCallBackMap.remove(aIdentity);
 		if (callback != null)
 		{
