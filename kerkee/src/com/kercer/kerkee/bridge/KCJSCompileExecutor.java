@@ -49,9 +49,11 @@ public class KCJSCompileExecutor
 
 	public static void release(List<Integer> aIdentities)
 	{
+		if (aIdentities == null) return;
 		for (Integer identity: aIdentities)
 		{
-			mCallBackMap.remove(identity);
+			if (identity != null)
+				mCallBackMap.remove(identity);
 		}
 	}
 
