@@ -2,7 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'com.android.library'
 
-version = '1.3.24'
+version = '1.3.25'
 
 def buildNdkLibsDir = new File("$buildDir/build-ndk/all")
 def thirdPartyNdkDir = new File("$buildDir/third-party-ndk")
