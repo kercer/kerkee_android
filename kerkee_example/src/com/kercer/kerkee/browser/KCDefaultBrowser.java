@@ -74,7 +74,7 @@ public class KCDefaultBrowser extends KCPage implements View.OnClickListener
         (mBtnBrowserBack = (ImageButton) findViewById(R.id.btnBrowserBack)).setOnClickListener(this);
         (mBtnBrowserForward = (ImageButton) findViewById(R.id.btnBrowserForward)).setOnClickListener(this);
 
-        mJSBridge = new KCJSBridge(mWebView);
+        mJSBridge = new KCJSBridge();
 
     }
 
@@ -116,7 +116,7 @@ public class KCDefaultBrowser extends KCPage implements View.OnClickListener
 
     public void destroy()
     {
-        mJSBridge.destroy();
+        mJSBridge.destroyWebview(mWebView);
     }
 
     public void reLoadBtnPressed()
