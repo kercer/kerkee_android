@@ -203,7 +203,7 @@ public class KCWebView extends WebView
         {
             super.stopLoading();
             super.removeAllViews();
-            super.clearCache(true);
+//            super.clearCache(true);
             super.clearHistory();
             super.destroyDrawingCache();
             super.destroy();
