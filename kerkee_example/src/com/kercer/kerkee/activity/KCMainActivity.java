@@ -6,11 +6,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.kercer.kercore.debug.KCLog;
+import com.kercer.kercore.io.KCAssetTool;
 import com.kercer.kerkee.api.KCRegistMgr;
 import com.kercer.kerkee.bridge.KCJSObject;
 import com.kercer.kerkee.bridge.KerkeeMethod;
 import com.kercer.kerkee.browser.KCDefaultBrowser;
+import com.kercer.kerkee.webview.KCWebPath;
 import com.kercer.kerkee_example.R;
+
+import java.io.File;
+import java.io.IOException;
 
 public class KCMainActivity extends Activity
 {
@@ -36,6 +42,12 @@ public class KCMainActivity extends Activity
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
 
+        //copy asset to html dir first
+        //if you use zip, you can unzip to html dir
+        if (!isExitAsset())
+            copyAssetHtmlDir();
+
+
         //create browser that use KCWebview
         KCDefaultBrowser browser = new KCDefaultBrowser(this);
         View view = browser.getView();
@@ -47,10 +59,37 @@ public class KCMainActivity extends Activity
         //you can registObject here;
 //        KCJSBridge.registObject(new KCTest());
 
-//        browser.loadTestPage();
-        browser.loadUrl("http://www.baidu.com");
+        browser.loadTestPage();
+//        browser.loadUrl("http://www.baidu.com");
 
     }
+
+
+
+
+    private boolean isExitAsset()
+    {
+        KCWebPath webPath = new KCWebPath(this);
+        String cfgPath = webPath.getCfgPath();
+        File file = new File(cfgPath);
+        if (file.exists())
+            return true;
+        return false;
+    }
+
+    private void copyAssetHtmlDir()
+    {
+        KCAssetTool assetTool = new KCAssetTool(this);
+        try
+        {
+            assetTool.copyDir("html", new KCWebPath(this).getResRootPath());
+        }
+        catch (IOException e)
+        {
+            KCLog.e(e);
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

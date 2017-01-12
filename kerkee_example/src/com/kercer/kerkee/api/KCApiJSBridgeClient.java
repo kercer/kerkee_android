@@ -24,21 +24,22 @@ public class KCApiJSBridgeClient
 {
     public static void testJSBrige(final KCWebView aWebView, KCArgList aArgList)
     {
-    	KCJSCompileExecutor.compileJS(aWebView, "XMLHttpRequest", new KCReturnCallback() {
+    	KCJSCompileExecutor.compileJS(aWebView , new KCReturnCallback() {
             @Override
             public void returnCallback(Object aObject, KCJSError aError) {
                 KCLog.i("");
             }
-        });
+        }, "XMLHttpRequest");
 
-//        KCJSCompileExecutor.compileJS(aWebView, "", new KCReturnCallback()
-//        {
-//            @Override
-//            public void returnCallback(Object aObject, KCJSError aError)
-//            {
-//                KCLog.i("");
-//            }
-//        });
+        //test get js object
+        KCJSCompileExecutor.compileJS(aWebView, new KCReturnCallback()
+        {
+            @Override
+            public void returnCallback(Object aObject, KCJSError aError)
+            {
+                KCLog.i("");
+            }
+        }, "document.title");
 
 //        try {
 //            JSONObject obj = new JSONObject("{key=a}");
