@@ -27,38 +27,48 @@ def getNdkBuildName() {
 }
 
 def findNdkBuildFullPath() {
-    // we allow to provide full path to ndk-build tool
-    if (hasProperty('ndk.command')) {
-        return property('ndk.command')
+    File propFile = project.rootProject.file('local.properties')
+    if (!propFile.exists()) {
+        return getNdkBuildName()
     }
-    // or just a path to the containing directory
-    if (hasProperty('ndk.path')) {
-        def ndkDir = property('ndk.path')
-        return new File(ndkDir, getNdkBuildName()).getAbsolutePath()
+    Properties properties = new Properties()
+    properties.load(propFile.newDataInputStream())
+    def ndkCommand = properties.getProperty('ndk.command')
+    if (ndkCommand != null) {
+        return ndkCommand
     }
-    if (System.getenv('ANDROID_NDK') != null) {
-        def ndkDir = System.getenv('ANDROID_NDK')
-        return new File(ndkDir, getNdkBuildName()).getAbsolutePath()
+    def path = null
+    def ndkPath = properties.getProperty('ndk.path')
+    if (ndkPath != null) {
+        path = ndkPath
+    } else {
+        def ndkDir = properties.getProperty('ndk.dir')
+        if (ndkDir != null) {
+            path = ndkDir
+        }
     }
-    def ndkDir = android.hasProperty('plugin') ? android.plugin.ndkFolder :
-            plugins.getPlugin('com.android.library').sdkHandler.getNdkFolder()
-    if (ndkDir) {
-        return new File(ndkDir, getNdkBuildName()).getAbsolutePath()
+    if (path != null) {
+        if (!path.endsWith(File.separator)) {
+            path += File.separator
+        }
+        return path + getNdkBuildName()
+    } else {
+        // if none of above is provided, we assume ndk-build is already in $PATH
+        return getNdkBuildName()
     }
-    return null
 }
 
 def getNdkBuildFullPath() {
     def ndkBuildFullPath = findNdkBuildFullPath()
     if (ndkBuildFullPath == null) {
-        throw new GradleScriptException(
+        throw new Exception(
                 "ndk-build binary cannot be found, check if you've set " +
                         "\$ANDROID_NDK environment variable correctly or if ndk.dir is " +
                         "setup in local.properties",
                 null)
     }
     if (!new File(ndkBuildFullPath).canExecute()) {
-        throw new GradleScriptException(
+        throw new Exception(
                 "ndk-build binary " + ndkBuildFullPath + " doesn't exist or isn't executable.\n" +
                         "Check that the \$ANDROID_NDK environment variable, or ndk.dir in local.proerties, is set correctly.\n" +
                         "(On Windows, make sure you escape backslashes in local.properties or use forward slashes, e.g. C:\\\\ndk or C:/ndk rather than C:\\ndk)",
@@ -99,8 +109,8 @@ task packageNdkLibs(dependsOn: cleanSo, type: Copy) {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25"
 
     defaultConfig {
         minSdkVersion 8
