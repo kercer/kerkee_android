@@ -6,10 +6,10 @@ name: 简介
 
 ### kerkee框架的诞生背景
 Hybrid App兼具了Native App的所有优势，也兼具了Web App使用HTML5跨平台开发低成本的优势。以及具有使用Native扩展Web接口以弥补web无法调用平台性API等优势。Hybrid App也是未来客户端技术的发展趋势。HTML5的出现，市面上已有很多应用（如淘宝、百度搜索、高德地图）使用了Hybrid App的开发模式，但遇到了一些瓶颈（如性能不如预期，无法操作浏览器内部数据流程，无法自定义请求的需求），用户体验没有预期的好。
-基于此，一种新一开发模式诞生了！Kerkee框架是市面上独一无二的多主体共存的灵活混合型开发模型。
+基于此，一种新一开发模式诞生了！kerkee框架是市面上独一无二的多主体共存的灵活混合型开发模型。
 
 ### kerkee框架是什么
-Kerkee是一个多主体共存型Hybrid框架，具有跨平台、用户体验好、性能高、扩展性好、灵活性强、易维护、规范化、集成云服务、具有Debug环境、彻底解决跨域问题。
+kerkee是一个多主体共存型Hybrid框架，具有跨平台、用户体验好、性能高、扩展性好、灵活性强、易维护、规范化、集成云服务、具有Debug环境、彻底解决跨域问题。
 
 ### kerkee官网
 -  **官网：** [http://www.kerkee.com](http://www.kerkee.com)
@@ -20,14 +20,15 @@ Kerkee是一个多主体共存型Hybrid框架，具有跨平台、用户体验�
 
 
 ### 使用kerkee案例
-Kerkee的Hybrid架构思想已使用在两款亿级用户量及多款千万级用户量的APP上
+kerkee的Hybrid架构思想已使用在两款亿级用户量及多款千万级用户量的APP上
 
 - UC游戏大厅
 - 九游游戏中心
 - 天翼导航
 - 搜狐新闻客户端
 - 搜狐News SDK（已应用到搜狐视频客户端中）
-- 斗米客户端（B端、C端）
+- 斗米客户端（商户端、用户端、斗米工作助手）
+- 汽车之家
 
 
 ### 基于kerkee框架的开发模式
@@ -53,15 +54,15 @@ Kerkee的Hybrid架构思想已使用在两款亿级用户量及多款千万级�
 >1. **灵活性强**
 <br/> kerkee内部实现runtime，自动把js接口转化了native接口，Web层与Native层严格隔离达到无耦合状态，开发者对整个流程和接口都是开放透明，无特殊约束。
 >1. **易维护**
-<br/> Kerkee框架使客户端严格模块化，使用了接口式的交互模型，具有动态更新特性，易于维护，便以运营。
+<br/> kerkee框架使客户端严格模块化，使用了接口式的交互模型，具有动态更新特性，易于维护，便以运营。
 >1. **规范化**
-<br/> Kerkee框架符合W3C标准，重新实现了XMLHttpRequest、WebSocket、LocalStorage、Application Cache等HTML5特性。Web前端开发者只需按W3C标准编写代码即可，即一次编写，到处运行的原则，无任何第三方库依赖。
+<br/> kerkee框架符合W3C标准，重新实现了XMLHttpRequest、WebSocket、LocalStorage、Application Cache等HTML5特性。Web前端开发者只需按W3C标准编写代码即可，即一次编写，到处运行的原则，无任何第三方库依赖。
 >1. **Debug工具**
-<br/> Kerkee内部集成Debug环境，web端log将会打印到控制台或文件中
+<br/> kerkee内部集成Debug环境，web端log将会打印到控制台或文件中
 >1. **彻底解决跨域**
-<br/> Kerkee框架采用一套特殊机制，解决了跨域问题，也就是说开发者可以操作互联网上任何一个Web页面的数据。
+<br/> kerkee框架采用一套特殊机制，解决了跨域问题，也就是说开发者可以操作互联网上任何一个Web页面的数据。
 >1. **使客户端架构更清晰**
-<br/> Kerkee框架会使得客户端的架构更为清晰。整体结构，自上而下分层如下图所示：
+<br/> kerkee框架会使得客户端的架构更为清晰。整体结构，自上而下分层如下图所示：
 <br/> [![client](http://src.linzihong.com/clientframe.jpg)](http://src.linzihong.com/clientframe.jpg)
 
 >1. **使用简便**
