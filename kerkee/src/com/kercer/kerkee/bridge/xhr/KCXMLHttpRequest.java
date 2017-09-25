@@ -300,7 +300,15 @@ public class KCXMLHttpRequest
         jsonObject.put("id", mId);
         jsonObject.put("readyState", DONE);
         jsonObject.put("status", statusCode);
-        jsonObject.put("statusText", reasonPhrase);
+        if (statusCode == 200)
+        {
+            jsonObject.put("statusText", "OK");
+        }
+        else
+        {
+            jsonObject.put("statusText", reasonPhrase);
+        }
+
         jsonObject.put("responseText", responseText);
         callJSSetProperties(webView, jsonObject);
 
