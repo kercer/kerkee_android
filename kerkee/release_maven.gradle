@@ -10,7 +10,7 @@ group = "com.kercer"
 //version = "1.3.0" //set in pom.project
 
 signing {
-    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
+    required { /*has("release") &&*/ gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
 
