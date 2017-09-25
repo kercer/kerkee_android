@@ -167,6 +167,8 @@ public class KCXMLHttpRequest
                 {
                     try
                     {
+                        if (mAborted)
+                            return;
                         // send the received response headers to the JS layer
                         setCookieToWebView(webView, aHeaderGroup);
                         handleHeaders(webView, aHeaderGroup, aStatusLine);
