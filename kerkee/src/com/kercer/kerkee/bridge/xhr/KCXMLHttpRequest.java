@@ -47,6 +47,8 @@ public class KCXMLHttpRequest
     private final static String GET = "GET";
     private final static String POST = "POST";
     private final static String HEAD = "HEAD";
+    private final static String PUT = "PUT";
+    private final static String DELETE = "DELETE";
 
     private KCStringRequest mHttpRequest;
 
@@ -134,6 +136,14 @@ public class KCXMLHttpRequest
         else if (HEAD.equalsIgnoreCase(method))
         {
             nMethod = KCHttpRequest.Method.HEAD;
+        }
+        else if (PUT.equalsIgnoreCase(method))
+        {
+            nMethod = KCHttpRequest.Method.PUT;
+        }
+        else if (DELETE.equalsIgnoreCase(method))
+        {
+            nMethod = KCHttpRequest.Method.DELETE;
         }
 
         if (nMethod >= 0)
