@@ -59,10 +59,8 @@
 -dontwarn android.support.**
 
 
--keep class com.kercer.kerkee.bridge.** {public *;}
--keep class com.kercer.kerkee.browser.KCJSBridge {public *;}
--keep class com.kercer.kerkee.log.KCLog {public *;}
--keep class com.kercer.kerkee.webview.** {public *;}
--keep class com.kercer.kerkee.util.** {public *;}
+-keep public class com.kercer.**{
+      *;
+      }
 
 -ignorewarnings

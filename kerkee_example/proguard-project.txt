@@ -35,7 +35,9 @@
 
 #-keep class com.sohu.android.plugin.** {*;}
 #-keep class com.sohu.push.** {*;}
--keep class com.kercer.kerkee.** {*;}
+-keep public class com.kercer.**{
+      *;
+      }
 
 -keep class * implements com.sohu.push.notification.NotificationFilter {public *;}
 
