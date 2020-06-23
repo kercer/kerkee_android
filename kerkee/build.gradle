@@ -78,9 +78,9 @@ def getNdkBuildFullPath() {
 }
 
 task buildNdkLibs(dependsOn: [prepareThird], type: Exec) {
-    inputs.file('jni')
+    inputs.files('jni')
 //    outputs.dir("$buildNdkLibsDir")
-    outputs.file("$buildNdkLibsDir")
+    outputs.dir("$buildNdkLibsDir")
     commandLine getNdkBuildFullPath(),
 //            'NDK_PROJECT_PATH=null',
             "NDK_APPLICATION_MK=$projectDir/jni/Application.mk",
@@ -109,11 +109,11 @@ task packageNdkLibs(dependsOn: cleanSo, type: Copy) {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 28
         versionCode 1
         versionName version
     }
